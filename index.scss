@@ -1,0 +1,275 @@
+//region VARIABLES
+$text-main: "Lato", sans-serif;
+$text-describe: "Roboto", sans-serif;
+$text-title: "DM Sans", sans-serif;
+
+$clr-title: rgba(208, 79, 79, 1);
+$clr-dark: rgba(0, 0, 0, 1);
+$clr-white: rgba(255, 255, 255, 1);
+$clr-lightgray: rgba(231, 231, 231, 1);
+$clr-darkgray: rgba(199, 190, 190, 1);
+$clr-blue: rgba(50, 130, 247, 1);
+$clr-green: rgba(104, 217, 164, 1);
+$clr-orange: rgba(237, 100, 84, 1);
+//endregion
+
+//region BASE
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:root {
+  scroll-behavior: smooth;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+//endregion
+
+@mixin filter() {
+  font-family: $text-main;
+  color: $clr-white;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: block;
+}
+
+header,
+main {
+  padding-inline: 7%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  flex-flow: column nowrap;
+  justify-content: center;
+  width: 100%;
+  padding-top: 50px;
+  row-gap: 5px;
+
+  h1 {
+    font-family: $text-title;
+    font-weight: bold;
+    color: $clr-title;
+  }
+
+  nav {
+    display: flex;
+    align-content: start;
+    flex-flow: nowrap column;
+    justify-content: space-evenly;
+    width: 100%;
+    row-gap: 15px;
+
+    label {
+      position: relative;
+      display: block;
+    }
+  }
+}
+
+.searchBar {
+  font-size: 18px;
+  width: 100%;
+  height: 65px;
+  padding: 15px;
+  border: none;
+  border-radius: 2px;
+  background-color: $clr-lightgray;
+
+  &::placeholder {
+    color: $clr-darkgray;
+  }
+
+  + span {
+    font-size: 30px;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+  }
+}
+
+.tagsWrapper {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 15px;
+}
+
+.tag {
+  @include filter();
+  font-size: 14px;
+  background-color: $clr-blue;
+
+  span {
+    font-size: 18px;
+    margin-left: 5px;
+  }
+}
+
+.filtres {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 15px;
+
+  .fa-chevron-down {
+    float: right;
+    transition: rotate 250ms ease-in-out;
+  }
+
+  &__filtre {
+    @include filter();
+
+    &--ingredient {
+      background-color: $clr-blue;
+    }
+
+    &--appareil {
+      background-color: $clr-green;
+    }
+
+    &--ustensile {
+      background-color: $clr-orange;
+    }
+
+    label {
+      display: none;
+    }
+
+    &[data-open="false"] {
+      display: flex;
+      align-content: center;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      width: 170px;
+      height: min-content;
+      padding: 20px;
+
+      h2 {
+        font-size: 18px;
+        display: block;
+      }
+
+      .searchFiltre,
+      ul {
+        display: none;
+      }
+    }
+
+    &[data-open="true"] {
+      width: 500px;
+
+      h2 {
+        display: none;
+      }
+
+      .fa-chevron-down {
+        rotate: 180deg;
+      }
+
+      .searchFiltre,
+      ul {
+        display: block;
+        width: 100%;
+      }
+
+      .searchFiltre {
+        color: $clr-white;
+        border: none;
+        background-color: rgba(0, 0, 0, 0);
+
+        &::placeholder {
+          font-size: 16px;
+          color: $clr-lightgray;
+        }
+      }
+
+      ul {
+        display: grid;
+        margin-top: 15px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px 30px;
+      }
+    }
+  }
+}
+
+.container {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  margin-block: 20px;
+  gap: 50px;
+}
+
+.recette {
+  width: 380px;
+  height: 365px;
+  border-radius: 5px;
+  overflow: hidden;
+
+  header {
+    height: 50%;
+    background-color: $clr-darkgray;
+  }
+
+  &__body {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: start;
+    background-color: $clr-lightgray;
+
+    h3 {
+      font-family: $text-main;
+      font-size: 18px;
+      font-weight: bold;
+      flex-basis: 100%;
+
+      + p {
+        font-family: $text-main;
+        font-size: 18px;
+        font-weight: bold;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+    }
+  }
+
+  &__ingredients {
+    flex-basis: 40%;
+    margin-top: 20px;
+
+    li {
+      font-size: 12px;
+
+      .key {
+        font-weight: bold;
+      }
+
+      .value {
+        font-weight: normal;
+      }
+    }
+  }
+
+  &__description {
+    margin-top: 20px;
+    font-family: $text-describe;
+    font-size: 12px;
+    flex-basis: 50%;
+  }
+}
