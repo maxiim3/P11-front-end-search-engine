@@ -5,7 +5,7 @@
     "servings": 1,
     "ingredients": [
       {
-        "ingredient": "Lait de coco",
+        "ingredient": "Lat de coco",
         "quantity": 400,
         "unit": "ml"
       },
@@ -60,7 +60,7 @@
         "quantity": 5
       },
       {
-        "ingredient": "Lait de Coco",
+        "ingredient": "Lat de coco",
         "quantity": 100,
         "unit": "ml"
       }
@@ -80,7 +80,7 @@
         "quantity": 1
       },
       {
-        "ingredient": "Lait de coco",
+        "ingredient": "Lat de coco",
         "quantity": 400,
         "unit": "ml"
       },
@@ -461,7 +461,7 @@
       {
         "ingredient": "huile d'olive",
         "quantity": 2,
-        "unit": "cuillère à soupe"
+        "unit": "cuillères à soupe"
       }
     ],
     "time": 40,
@@ -574,7 +574,7 @@
       {
         "ingredient": "huile d'olives",
         "quantity": 2,
-        "unit": "cuillère à soupe"
+        "unit": "cuillères à soupe"
       }
     ],
     "time": 45,
@@ -944,7 +944,7 @@
       {
         "ingredient": "Crème fraîche",
         "quantity": 4,
-        "unit": "cuillère à soupe"
+        "unit": "cuillères à soupe"
       },
       {
         "ingredient": "Vermicelles",
@@ -1120,7 +1120,7 @@
       {
         "ingredient": "Noix de muscade",
         "quantity": 1,
-        "unit": "pincées"
+        "unit": "pincée"
       }
     ],
     "time": 20,
@@ -1222,7 +1222,7 @@
       {
         "ingredient": "Noix de muscade",
         "quantity": 1,
-        "unit": "pincées"
+        "unit": "pincée"
       }
     ],
     "time": 25,

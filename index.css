@@ -22,6 +22,7 @@ main {
 }
 
 header {
+  z-index: 999;
   display: flex;
   align-items: center;
   flex-flow: column nowrap;
@@ -81,7 +82,15 @@ header nav label {
   border-radius: 5px;
   display: block;
   font-size: 14px;
+}
+.tag[data-tag=ingredients] {
   background-color: rgb(50, 130, 247);
+}
+.tag[data-tag=appareils] {
+  background-color: rgb(104, 217, 164);
+}
+.tag[data-tag=ustensiles] {
+  background-color: rgb(237, 100, 84);
 }
 .tag span {
   font-size: 18px;
@@ -94,8 +103,10 @@ header nav label {
   gap: 15px;
 }
 .filtres .fa-chevron-down {
-  float: right;
-  transition: rotate 250ms ease-in-out;
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  transition: rotate 450ms ease-in-out;
 }
 .filtres__filtre {
   font-family: "Lato", sans-serif;
@@ -104,51 +115,55 @@ header nav label {
   padding: 10px 15px;
   border-radius: 5px;
   display: block;
+  z-index: 999;
+  position: relative;
 }
-.filtres__filtre--ingredient {
+.filtres__filtre--ingredient, .filtres__filtre--ingredient button {
   background-color: rgb(50, 130, 247);
 }
-.filtres__filtre--appareil {
+.filtres__filtre--appareil, .filtres__filtre--appareil button {
   background-color: rgb(104, 217, 164);
 }
-.filtres__filtre--ustensile {
+.filtres__filtre--ustensile, .filtres__filtre--ustensile button {
   background-color: rgb(237, 100, 84);
 }
 .filtres__filtre label {
   display: none;
 }
-.filtres__filtre[data-open=false] {
-  display: flex;
-  align-content: center;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  width: 170px;
-  height: min-content;
-  padding: 20px;
+.filtres__filtre li {
+  visibility: visible;
+  transition: opacity 300ms ease-in-out, visibility 200ms;
+  cursor: pointer;
 }
-.filtres__filtre[data-open=false] h2 {
-  font-size: 18px;
+.filtres__filtre button {
+  font-family: "Lato", sans-serif;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
   display: block;
-}
-.filtres__filtre[data-open=false] .searchFiltre,
-.filtres__filtre[data-open=false] ul {
-  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  cursor: pointer;
 }
 .filtres__filtre[data-open=true] {
-  width: 500px;
+  width: 600px;
+  transition: all 350ms ease-in-out;
+  height: fit-content;
 }
-.filtres__filtre[data-open=true] h2 {
-  display: none;
+.filtres__filtre[data-open=true] button {
+  visibility: hidden;
 }
 .filtres__filtre[data-open=true] .fa-chevron-down {
   rotate: 180deg;
 }
-.filtres__filtre[data-open=true] .searchFiltre,
-.filtres__filtre[data-open=true] ul {
-  display: block;
-  width: 100%;
-}
 .filtres__filtre[data-open=true] .searchFiltre {
+  display: block;
+  width: 80%;
   color: rgb(255, 255, 255);
   border: none;
   background-color: rgba(0, 0, 0, 0);
@@ -163,10 +178,38 @@ header nav label {
   grid-template-columns: repeat(3, 1fr);
   gap: 15px 30px;
 }
+.filtres__filtre[data-open=false] {
+  display: flex;
+  align-content: center;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 170px;
+  height: 60px;
+  padding: 20px;
+  transition: all 350ms ease-in-out;
+}
+.filtres__filtre[data-open=false] button {
+  font-size: 18px;
+  visibility: visible;
+}
+.filtres__filtre[data-open=false] .searchFiltre,
+.filtres__filtre[data-open=false] ul {
+  display: none;
+}
+.filtres__filtre[data-open=false] .searchFiltre li,
+.filtres__filtre[data-open=false] ul li {
+  opacity: 0;
+}
+
+main {
+  z-index: 0;
+  position: absolute;
+  top: 380px;
+}
 
 .container {
   display: grid;
-  width: 100%;
+  width: 86vw;
   height: 100%;
   grid-template-columns: repeat(3, 1fr);
   margin-block: 20px;
@@ -174,41 +217,55 @@ header nav label {
 }
 
 .recette {
+  overflow: hidden;
   width: 380px;
   height: 365px;
   border-radius: 5px;
-  overflow: hidden;
 }
 .recette header {
   height: 50%;
   background-color: rgb(199, 190, 190);
 }
 .recette__body {
+  height: 50%;
   position: relative;
   display: flex;
-  flex-flow: row wrap;
-  padding: 20px;
-  justify-content: space-between;
   align-items: start;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: 20px;
   background-color: rgb(231, 231, 231);
 }
-.recette__body h3 {
-  font-family: "Lato", sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  flex-basis: 100%;
+.recette__title {
+  display: flex;
+  align-items: start;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  width: 100%;
+  row-gap: 10px;
 }
-.recette__body h3 + p {
+.recette__title h3 {
+  font-family: "Lato", sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  flex-basis: 75%;
+}
+.recette__title h3 + p {
   font-family: "Lato", sans-serif;
   font-size: 18px;
   font-weight: bold;
-  position: absolute;
-  top: 20px;
-  right: 20px;
+}
+.recette__title h3 + p span {
+  margin-right: 5px;
+}
+.recette__informations {
+  display: flex;
+  align-items: flex-start;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
 .recette__ingredients {
   flex-basis: 40%;
-  margin-top: 20px;
 }
 .recette__ingredients li {
   font-size: 12px;
@@ -220,10 +277,15 @@ header nav label {
   font-weight: normal;
 }
 .recette__description {
-  margin-top: 20px;
   font-family: "Roboto", sans-serif;
   font-size: 12px;
+  display: -webkit-box !important;
+  overflow: hidden;
   flex-basis: 50%;
+  white-space: normal;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
 }
 
 /*# sourceMappingURL=index.css.map */

@@ -32,8 +32,14 @@ li {
   list-style: none;
 }
 
+header,
+main {
+  padding-inline: 7%;
+}
+
 //endregion
 
+//region mixins
 @mixin filter() {
   font-family: $text-main;
   color: $clr-white;
@@ -43,12 +49,11 @@ li {
   display: block;
 }
 
-header,
-main {
-  padding-inline: 7%;
-}
+//endregion
 
+//region Header
 header {
+  z-index: 999;
   display: flex;
   align-items: center;
   flex-flow: column nowrap;
@@ -78,6 +83,7 @@ header {
   }
 }
 
+//region Search bar
 .searchBar {
   font-size: 18px;
   width: 100%;
@@ -99,6 +105,9 @@ header {
   }
 }
 
+//endregion
+
+//region tags
 .tagsWrapper {
   display: flex;
   flex-flow: row wrap;
@@ -108,7 +117,18 @@ header {
 .tag {
   @include filter();
   font-size: 14px;
-  background-color: $clr-blue;
+
+  &[data-tag="ingredients"] {
+    background-color: $clr-blue;
+  }
+
+  &[data-tag="appareils"] {
+    background-color: $clr-green;
+  }
+
+  &[data-tag="ustensiles"] {
+    background-color: $clr-orange;
+  }
 
   span {
     font-size: 18px;
@@ -116,28 +136,38 @@ header {
   }
 }
 
+//endregion
+
+//region Filtres
 .filtres {
   display: flex;
   flex-flow: row wrap;
   gap: 15px;
 
   .fa-chevron-down {
-    float: right;
-    transition: rotate 250ms ease-in-out;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    transition: rotate 450ms ease-in-out;
   }
 
   &__filtre {
     @include filter();
+    z-index: 999;
+    position: relative;
 
-    &--ingredient {
+    &--ingredient,
+    &--ingredient button {
       background-color: $clr-blue;
     }
 
-    &--appareil {
+    &--appareil,
+    &--appareil button {
       background-color: $clr-green;
     }
 
-    &--ustensile {
+    &--ustensile,
+    &--ustensile button {
       background-color: $clr-orange;
     }
 
@@ -145,44 +175,39 @@ header {
       display: none;
     }
 
-    &[data-open="false"] {
-      display: flex;
-      align-content: center;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-      width: 170px;
-      height: min-content;
-      padding: 20px;
+    li {
+      visibility: visible;
+      transition: opacity 300ms ease-in-out, visibility 200ms;
+      cursor: pointer;
+    }
 
-      h2 {
-        font-size: 18px;
-        display: block;
-      }
-
-      .searchFiltre,
-      ul {
-        display: none;
-      }
+    button {
+      @include filter();
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: none;
+      cursor: pointer;
     }
 
     &[data-open="true"] {
-      width: 500px;
+      width: 600px;
+      transition: all 350ms ease-in-out;
+      height: fit-content;
 
-      h2 {
-        display: none;
+      button {
+        visibility: hidden;
       }
 
       .fa-chevron-down {
         rotate: 180deg;
       }
 
-      .searchFiltre,
-      ul {
-        display: block;
-        width: 100%;
-      }
-
       .searchFiltre {
+        display: block;
+        width: 80%;
         color: $clr-white;
         border: none;
         background-color: rgba(0, 0, 0, 0);
@@ -200,12 +225,48 @@ header {
         gap: 15px 30px;
       }
     }
+
+    &[data-open="false"] {
+      display: flex;
+      align-content: center;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      width: 170px;
+      height: 60px;
+      padding: 20px;
+
+      transition: all 350ms ease-in-out;
+
+      button {
+        font-size: 18px;
+        visibility: visible;
+      }
+
+      .searchFiltre,
+      ul {
+        display: none;
+
+        li {
+          opacity: 0;
+        }
+      }
+    }
   }
+}
+
+//endregion
+//endregion
+
+//region cards Recettes
+main {
+  z-index: 0;
+  position: absolute;
+  top: 380px;
 }
 
 .container {
   display: grid;
-  width: 100%;
+  width: calc(100vw - 14vw);
   height: 100%;
   grid-template-columns: repeat(3, 1fr);
   margin-block: 20px;
@@ -213,10 +274,10 @@ header {
 }
 
 .recette {
+  overflow: hidden;
   width: 380px;
   height: 365px;
   border-radius: 5px;
-  overflow: hidden;
 
   header {
     height: 50%;
@@ -224,34 +285,51 @@ header {
   }
 
   &__body {
+    height: 50%;
     position: relative;
     display: flex;
-    flex-flow: row wrap;
-    padding: 20px;
-    justify-content: space-between;
     align-items: start;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 20px;
     background-color: $clr-lightgray;
+  }
+
+  &__title {
+    display: flex;
+    align-items: start;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    width: 100%;
+    row-gap: 10px;
 
     h3 {
       font-family: $text-main;
       font-size: 18px;
-      font-weight: bold;
-      flex-basis: 100%;
+      font-weight: normal;
+      flex-basis: 75%;
 
       + p {
         font-family: $text-main;
         font-size: 18px;
         font-weight: bold;
-        position: absolute;
-        top: 20px;
-        right: 20px;
+
+        span {
+          margin-right: 5px;
+        }
       }
     }
   }
 
+  &__informations {
+    display: flex;
+    align-items: flex-start;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
   &__ingredients {
     flex-basis: 40%;
-    margin-top: 20px;
 
     li {
       font-size: 12px;
@@ -267,9 +345,16 @@ header {
   }
 
   &__description {
-    margin-top: 20px;
     font-family: $text-describe;
     font-size: 12px;
+    display: -webkit-box !important;
+    overflow: hidden;
     flex-basis: 50%;
+    white-space: normal;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
   }
 }
+
+//endregion

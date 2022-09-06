@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+  />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <script src="recipes.json" defer></script>
-    <script src="index.js" defer></script>
-    <link rel="stylesheet" href="index.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Lato:wght@400;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+  <script src="recipes.json" defer></script>
+  <script src="index.js" defer></script>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Lato:wght@400;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 
-    <title>Les Petits Plats</title>
-  </head>
-  <body>
-    <header>
+  <title>Les Petits Plats</title>
+</head>
+<body>
+<header>
       <span aria-label="logo"
-        ><svg
-          width="52"
-          height="47"
-          viewBox="0 0 52 47"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+      ><svg
+        width="52"
+        height="47"
+        viewBox="0 0 52 47"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
@@ -45,286 +45,136 @@
           />
         </svg>
       </span>
-      <h1>Les petits plats</h1>
-      <nav>
-        <label>
-          <input
-            type="text"
-            class="searchBar"
-            id="searchBar"
-            placeholder="Rechercher une recette"
-          />
-          <span aria-hidden="true" class="fa-solid fa-magnifying-glass"></span>
-        </label>
-        <section class="tagsWrapper" id="tagsWrapper">
-          <p class="tag" id="tag">
-            Coco
-            <span aria-hidden="true" class="fa-regular fa-circle-xmark"></span>
-          </p>
-        </section>
-        <section class="filtres" id="filtres">
-          <article
-            class="filtres__filtre filtres__filtre--ingredient"
-            data-open="false"
-          >
-            <h2>Ingrédients</h2>
-            <span class="fa-solid fa-chevron-down"></span>
-            <label for="filtreIngredients">Rechercher un ingrédient</label>
-            <input
-              type="text"
-              class="searchFiltre"
-              id="filtreIngredients"
-              placeholder="Rechercher un ingrédient"
-            />
-            <ul>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-              <li>Lorem ipsum dolor.</li>
-            </ul>
-          </article>
-          <article
-            class="filtres__filtre filtres__filtre--appareil"
-            data-open="false"
-          >
-            <h2>Appareils</h2>
-            <span class="fa-solid fa-chevron-down"></span>
-            <label for="filtreAppareils">Rechercher un appareil</label>
-            <input
-              type="text"
-              class="searchFiltre"
-              id="filtreAppareils"
-              placeholder="Rechercher un appareil"
-            />
-            <ul>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-              <li>Lorem ipsum dolor sit.</li>
-            </ul>
-          </article>
-          <article
-            class="filtres__filtre filtres__filtre--ustensile"
-            data-open="false"
-          >
-            <h2>Ustensiles</h2>
-            <span class="fa-solid fa-chevron-down"></span>
-            <label for="filtreUstensiles">Rechercher un ustensile</label>
-            <input
-              type="text"
-              class="searchFiltre"
-              id="filtreUstensiles"
-              placeholder="Rechercher un ustensile"
-            />
-            <ul>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-              <li>Lorem ipsum.</li>
-            </ul>
-          </article>
-        </section>
-      </nav>
-    </header>
-    <main>
-      <section class="container">
-       <!-- <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab
-              aliquid aspernatur eaque eius et exercitationem fugiat incidunt,
-              labore libero modi
-            </p>
-          </section>
-        </div>
-        <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Accusantium, corporis cum dolor doloribus expedita iste nobis
-              nulla quam quisquam?
-            </p>
-          </section>
-        </div>
-        <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor
-              dolorem doloremque eos eveniet laborum, maxime molestias,
-              necessitatibus officiis
-            </p>
-          </section>
-        </div>
-        <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias,
-              aliquam animi assumenda cum dignissimos doloremque dolores error
-              et ex explicabo inventore iste molestiae natus nihil odio officia
-              quaerat, quibusdam, quisquam quos repellendus repudiandae rerum
-              totam.
-            </p>
-          </section>
-        </div>
-        <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure
-              maiores nam perspiciatis quaerat quibusdam repellendus
-              repudiandae! Aliquam est, et eum illo neque nesciunt nihil odio
-              officia, perferendis perspiciatis placeat possimus quam quibusdam
-              repudiandae saepe vero?
-            </p>
-          </section>
-        </div>
-        <div class="recette">
-          <header></header>
-          <section class="recette__body">
-            <h3>Lorem ipsum dolor sit amet.</h3>
-            <p><span class="fa-regular fa-clock"></span> 10 min</p>
-            <ul class="recette__ingredients">
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-              <li>
-                <span class="key">lorem: </span><span class="value">450cl</span>
-              </li>
-            </ul>
-            <p class="recette__description">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque
-              cum cumque dolor, doloribus ipsa ipsam iure magnam maiores maxime
-              odio officia, rem, similique totam velit voluptatum! Aperiam iure
-              magnam maxime molestias sunt totam veritatis voluptate!
-            </p>
-          </section>-->
-        </div>
-      </section>
-    </main>
-  </body>
+  <h1>Les petits plats</h1>
+  <nav>
+    <!--    region SearchBar-->
+    <label>
+      <input
+        type="text"
+        class="searchBar"
+        id="searchBar"
+        placeholder="Rechercher une recette"
+      />
+      <span aria-hidden="true" class="fa-solid fa-magnifying-glass"></span>
+    </label>
+    <!--    endregion-->
+    <!--    region Tags-->
+    <section class="tagsWrapper" id="tagsWrapper">
+      <p class="tag" id="tag" data-tag="ingredients">
+        Coco
+        <span aria-hidden="true" class="fa-regular fa-circle-xmark"></span>
+      </p>
+    </section>
+    <!--    endregion-->
+    <!--    region Filtres-->
+    <section class="filtres" id="filtres">
+      <!--    region Ingredient-->
+      <article
+        class="filtres__filtre filtres__filtre--ingredient"
+        data-open="false"
+      >
+        <button>Ingrédients</button>
+        <span class="fa-solid fa-chevron-down"></span>
+        <label for="filtreIngredients">Rechercher un ingrédient</label>
+        <input
+          type="text"
+          class="searchFiltre"
+          id="filtreIngredients"
+          placeholder="Rechercher un ingrédient"
+        />
+        <ul class="filtres__list" data-filter-name="ingredients">
+<!--          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>
+          <li>Lorem ipsum dolor.</li>-->
+        </ul>
+      </article>    <!--    endregion-->
+      <!--    region Appareils-->
+      <article
+        class="filtres__filtre filtres__filtre--appareil"
+        data-open="false"
+      >
+        <button>Appareils</button>
+        <span class="fa-solid fa-chevron-down"></span>
+        <label for="filtreAppareils">Rechercher un appareil</label>
+        <input
+          type="text"
+          class="searchFiltre"
+          id="filtreAppareils"
+          placeholder="Rechercher un appareil"
+        />
+        <ul class="filtres__list" data-filter-name="appliance">
+<!--          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>
+          <li>Lorem ipsum dolor sit.</li>-->
+        </ul>
+      </article>    <!--    endregion-->
+      <!--    region Ustensiles-->
+      <article
+        class="filtres__filtre filtres__filtre--ustensile"
+        data-open="false"
+      >
+        <button>Ustensiles</button>
+        <span class="fa-solid fa-chevron-down"></span>
+        <label for="filtreUstensiles">Rechercher un ustensile</label>
+        <input
+          type="text"
+          class="searchFiltre"
+          id="filtreUstensiles"
+          placeholder="Rechercher un ustensile"
+        />
+        <ul class="filtres__list" data-filter-name="ustensiles">
+<!--          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>
+          <li>Lorem ipsum.</li>-->
+        </ul>
+      </article>    <!--    endregion-->
+    </section>
+    <!--    endregion-->
+  </nav>
+</header>
+<main>
+  <section class="container">
+
+    </div>
+  </section>
+</main>
+</body>
 </html>
 
 <!--close <i class="fa-regular fa-circle-xmark"></i>-->
