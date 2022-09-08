@@ -16,9 +16,16 @@ li {
   list-style: none;
 }
 
-header,
+header {
+  padding-inline: 5vw;
+}
+
 main {
-  padding-inline: 7%;
+  position: absolute;
+  z-index: 0;
+  top: 380px;
+  left: 5vw;
+  width: calc(100% - 10vw);
 }
 
 header {
@@ -81,20 +88,33 @@ header nav label {
   padding: 10px 15px;
   border-radius: 5px;
   display: block;
-  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
 }
 .tag[data-tag=ingredients] {
   background-color: rgb(50, 130, 247);
 }
-.tag[data-tag=appareils] {
+.tag[data-tag=appliance] {
   background-color: rgb(104, 217, 164);
 }
 .tag[data-tag=ustensiles] {
   background-color: rgb(237, 100, 84);
 }
-.tag span {
-  font-size: 18px;
+.tag__text {
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+}
+.tag__btn {
   margin-left: 5px;
+  border: none;
+  background: none;
+}
+.tag__btn:hover {
+  cursor: pointer;
+}
+.tag__btn .icon {
+  font-size: 18px;
+  color: rgb(255, 255, 255);
 }
 
 .filtres {
@@ -115,8 +135,8 @@ header nav label {
   padding: 10px 15px;
   border-radius: 5px;
   display: block;
-  z-index: 999;
   position: relative;
+  z-index: 999;
 }
 .filtres__filtre--ingredient, .filtres__filtre--ingredient button {
   background-color: rgb(50, 130, 247);
@@ -130,11 +150,6 @@ header nav label {
 .filtres__filtre label {
   display: none;
 }
-.filtres__filtre li {
-  visibility: visible;
-  transition: opacity 300ms ease-in-out, visibility 200ms;
-  cursor: pointer;
-}
 .filtres__filtre button {
   font-family: "Lato", sans-serif;
   color: rgb(255, 255, 255);
@@ -142,18 +157,20 @@ header nav label {
   padding: 10px 15px;
   border-radius: 5px;
   display: block;
-  width: 100%;
-  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  border: none;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
+  border: none;
+  padding-left: 25px;
+  text-align: left;
 }
 .filtres__filtre[data-open=true] {
   width: 600px;
-  transition: all 350ms ease-in-out;
   height: fit-content;
+  transition: all 350ms ease-in-out;
 }
 .filtres__filtre[data-open=true] button {
   visibility: hidden;
@@ -167,6 +184,8 @@ header nav label {
   color: rgb(255, 255, 255);
   border: none;
   background-color: rgba(0, 0, 0, 0);
+  padding: 10px 5px;
+  font-size: 16px;
 }
 .filtres__filtre[data-open=true] .searchFiltre::placeholder {
   font-size: 16px;
@@ -176,7 +195,23 @@ header nav label {
   display: grid;
   margin-top: 15px;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px 30px;
+  gap: 1px 5px;
+}
+.filtres__filtre[data-open=true] li {
+  opacity: 100%;
+  width: 100%;
+  padding: 10px 5px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 3px;
+  transition: opacity ease-in 650ms;
+}
+.filtres__filtre[data-open=true] li[data-active=true] {
+  color: gray;
+}
+.filtres__filtre[data-open=true] li[data-active=false]:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
 }
 .filtres__filtre[data-open=false] {
   display: flex;
@@ -192,47 +227,67 @@ header nav label {
   font-size: 18px;
   visibility: visible;
 }
-.filtres__filtre[data-open=false] .searchFiltre,
-.filtres__filtre[data-open=false] ul {
-  display: none;
-}
 .filtres__filtre[data-open=false] .searchFiltre li,
 .filtres__filtre[data-open=false] ul li {
   opacity: 0;
-}
-
-main {
-  z-index: 0;
-  position: absolute;
-  top: 380px;
+  transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
 }
 
 .container {
   display: grid;
-  width: 86vw;
+  width: 100%;
   height: 100%;
-  grid-template-columns: repeat(3, 1fr);
   margin-block: 20px;
-  gap: 50px;
+  gap: 2.5vw;
+  grid-template-columns: repeat(1, 1fr);
+}
+@media screen and (min-width: 750px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 1200px) {
+  .container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (min-width: 1900px) {
+  .container {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .recette {
   overflow: hidden;
-  width: 380px;
+  width: 100%;
   height: 365px;
   border-radius: 5px;
+}
+.recette[data-hidden=true] {
+  position: absolute;
+  z-index: -999;
+  right: 0;
+  bottom: 0;
+  visibility: hidden;
+}
+.recette[data-hidden=false] {
+  position: relative;
+  z-index: initial;
+  top: initial;
+  left: initial;
+  visibility: visible;
 }
 .recette header {
   height: 50%;
   background-color: rgb(199, 190, 190);
 }
 .recette__body {
-  height: 50%;
   position: relative;
   display: flex;
   align-items: start;
   flex-flow: row wrap;
   justify-content: space-between;
+  height: 50%;
   padding: 20px;
   background-color: rgb(231, 231, 231);
 }

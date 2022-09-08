@@ -8,9 +8,9 @@
   />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-  <script src="recipes.json" defer></script>
-  <script src="index.js" defer></script>
-  <link rel="stylesheet" href="index.css" />
+  <script src="data/recipes.json" defer></script>
+  <script src="js/index.js" defer></script>
+  <link rel="stylesheet" href="css/index.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -59,12 +59,8 @@
     </label>
     <!--    endregion-->
     <!--    region Tags-->
-    <section class="tagsWrapper" id="tagsWrapper">
-      <p class="tag" id="tag" data-tag="ingredients">
-        Coco
-        <span aria-hidden="true" class="fa-regular fa-circle-xmark"></span>
-      </p>
-    </section>
+    <ul class="tagsWrapper" id="tagsWrapper">
+    </ul>
     <!--    endregion-->
     <!--    region Filtres-->
     <section class="filtres" id="filtres">
@@ -73,7 +69,7 @@
         class="filtres__filtre filtres__filtre--ingredient"
         data-open="false"
       >
-        <button>Ingrédients</button>
+        <button class="filtres__button">Ingrédients</button>
         <span class="fa-solid fa-chevron-down"></span>
         <label for="filtreIngredients">Rechercher un ingrédient</label>
         <input
@@ -83,21 +79,21 @@
           placeholder="Rechercher un ingrédient"
         />
         <ul class="filtres__list" data-filter-name="ingredients">
-<!--          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>
-          <li>Lorem ipsum dolor.</li>-->
+          <!--          <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>
+                    <li>Lorem ipsum dolor.</li>-->
         </ul>
       </article>    <!--    endregion-->
       <!--    region Appareils-->
@@ -105,7 +101,7 @@
         class="filtres__filtre filtres__filtre--appareil"
         data-open="false"
       >
-        <button>Appareils</button>
+        <button class="filtres__button">Appareils</button>
         <span class="fa-solid fa-chevron-down"></span>
         <label for="filtreAppareils">Rechercher un appareil</label>
         <input
@@ -115,21 +111,21 @@
           placeholder="Rechercher un appareil"
         />
         <ul class="filtres__list" data-filter-name="appliance">
-<!--          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>
-          <li>Lorem ipsum dolor sit.</li>-->
+          <!--          <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>
+                    <li>Lorem ipsum dolor sit.</li>-->
         </ul>
       </article>    <!--    endregion-->
       <!--    region Ustensiles-->
@@ -137,7 +133,7 @@
         class="filtres__filtre filtres__filtre--ustensile"
         data-open="false"
       >
-        <button>Ustensiles</button>
+        <button class="filtres__button">Ustensiles</button>
         <span class="fa-solid fa-chevron-down"></span>
         <label for="filtreUstensiles">Rechercher un ustensile</label>
         <input
@@ -147,21 +143,21 @@
           placeholder="Rechercher un ustensile"
         />
         <ul class="filtres__list" data-filter-name="ustensiles">
-<!--          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>
-          <li>Lorem ipsum.</li>-->
+          <!--          <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>
+                    <li>Lorem ipsum.</li>-->
         </ul>
       </article>    <!--    endregion-->
     </section>

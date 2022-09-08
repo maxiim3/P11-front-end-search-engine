@@ -11,6 +11,8 @@ $clr-darkgray: rgba(199, 190, 190, 1);
 $clr-blue: rgba(50, 130, 247, 1);
 $clr-green: rgba(104, 217, 164, 1);
 $clr-orange: rgba(237, 100, 84, 1);
+
+$marges: 5vw;
 //endregion
 
 //region BASE
@@ -32,9 +34,16 @@ li {
   list-style: none;
 }
 
-header,
+header {
+  padding-inline: $marges;
+}
+
 main {
-  padding-inline: 7%;
+  position: absolute;
+  z-index: 0;
+  top: 380px;
+  left: $marges;
+  width: calc(100% - $marges * 2);
 }
 
 //endregion
@@ -116,13 +125,14 @@ header {
 
 .tag {
   @include filter();
-  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
 
   &[data-tag="ingredients"] {
     background-color: $clr-blue;
   }
 
-  &[data-tag="appareils"] {
+  &[data-tag="appliance"] {
     background-color: $clr-green;
   }
 
@@ -130,9 +140,24 @@ header {
     background-color: $clr-orange;
   }
 
-  span {
-    font-size: 18px;
+  &__text {
+    font-size: 14px;
+    color: $clr-white;
+  }
+
+  &__btn {
     margin-left: 5px;
+    border: none;
+    background: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .icon {
+      font-size: 18px;
+      color: $clr-white;
+    }
   }
 }
 
@@ -153,8 +178,8 @@ header {
 
   &__filtre {
     @include filter();
-    z-index: 999;
     position: relative;
+    z-index: 999;
 
     &--ingredient,
     &--ingredient button {
@@ -175,27 +200,23 @@ header {
       display: none;
     }
 
-    li {
-      visibility: visible;
-      transition: opacity 300ms ease-in-out, visibility 200ms;
-      cursor: pointer;
-    }
-
     button {
       @include filter();
-      width: 100%;
-      height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      border: none;
+      width: 100%;
+      height: 100%;
       cursor: pointer;
+      border: none;
+      padding-left: 25px;
+      text-align: left;
     }
 
     &[data-open="true"] {
       width: 600px;
-      transition: all 350ms ease-in-out;
       height: fit-content;
+      transition: all 350ms ease-in-out;
 
       button {
         visibility: hidden;
@@ -211,6 +232,8 @@ header {
         color: $clr-white;
         border: none;
         background-color: rgba(0, 0, 0, 0);
+        padding: 10px 5px;
+        font-size: 16px;
 
         &::placeholder {
           font-size: 16px;
@@ -222,7 +245,28 @@ header {
         display: grid;
         margin-top: 15px;
         grid-template-columns: repeat(3, 1fr);
-        gap: 15px 30px;
+        gap: 1px 5px;
+      }
+
+      li {
+        opacity: 100%;
+        width: 100%;
+        padding: 10px 5px;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0);
+        border-radius: 3px;
+        transition: opacity ease-in 650ms;
+
+        &[data-active="true"] {
+          color: gray;
+        }
+
+        &[data-active="false"] {
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+          }
+        }
       }
     }
 
@@ -244,10 +288,11 @@ header {
 
       .searchFiltre,
       ul {
-        display: none;
+        //display: none;
 
         li {
           opacity: 0;
+          transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
         }
       }
     }
@@ -258,26 +303,47 @@ header {
 //endregion
 
 //region cards Recettes
-main {
-  z-index: 0;
-  position: absolute;
-  top: 380px;
-}
 
 .container {
   display: grid;
-  width: calc(100vw - 14vw);
+  width: 100%;
   height: 100%;
-  grid-template-columns: repeat(3, 1fr);
   margin-block: 20px;
-  gap: 50px;
+  gap: $marges/2;
+  grid-template-columns: repeat(1, 1fr);
+  @media screen and (min-width: 750px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: 1900px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .recette {
   overflow: hidden;
-  width: 380px;
+  //width: 380px;
+  width: 100%;
   height: 365px;
   border-radius: 5px;
+
+  &[data-hidden="true"] {
+    position: absolute;
+    z-index: -999;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+  }
+
+  &[data-hidden="false"] {
+    position: relative;
+    z-index: initial;
+    top: initial;
+    left: initial;
+    visibility: visible;
+  }
 
   header {
     height: 50%;
@@ -285,12 +351,12 @@ main {
   }
 
   &__body {
-    height: 50%;
     position: relative;
     display: flex;
     align-items: start;
     flex-flow: row wrap;
     justify-content: space-between;
+    height: 50%;
     padding: 20px;
     background-color: $clr-lightgray;
   }
