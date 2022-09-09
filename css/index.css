@@ -231,9 +231,14 @@ header nav label {
   border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 3px;
   transition: opacity ease-in 650ms;
+  cursor: pointer;
 }
 .filtres__filtre[data-open=true] li[data-active=true] {
   color: gray;
+  cursor: no-drop;
+}
+.filtres__filtre[data-open=true] li[data-active=false] {
+  cursor: pointer;
 }
 .filtres__filtre[data-open=true] li[data-active=false]:hover {
   border-color: rgba(255, 255, 255, 0.5);

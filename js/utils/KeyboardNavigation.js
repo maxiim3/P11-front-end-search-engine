@@ -1,4 +1,4 @@
-class Keyboard {
+class KeyboardNavigation {
 	escape(e) {
 		if (e.key === "Escape" || e.key === "Enter") {
 			this.$searchBar.blur()

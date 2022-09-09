@@ -1,4 +1,4 @@
-class FilterByMainSearch {
+class MainFilter {
 	constructor(data) {
 		this.data = data
 		this.$mainSearchBar = document.querySelector("#searchBar")
@@ -13,7 +13,7 @@ class FilterByMainSearch {
 		return FilterV1.mainFilter(data, input)
 	}
 
-	async updateData() {
+	async update() {
 		const input = this.$mainSearchBar.value
 		if (input.length < 3) {
 			this.$mainSearchBar.dataset.hasResults = ""

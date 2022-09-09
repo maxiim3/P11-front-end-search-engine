@@ -1,4 +1,4 @@
-class TagsTemplate {
+class SecondFilterTemplate {
 	constructor(data) {
 		this.data = data
 	}

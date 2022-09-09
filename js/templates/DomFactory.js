@@ -4,7 +4,7 @@ class DomFactory {
 	}
 
 	static async renderTagsFilter(data) {
-		const advancedFilter = new TagsTemplate(data)
+		const advancedFilter = new SecondFilterTemplate(data)
 		return advancedFilter.render()
 	}
 

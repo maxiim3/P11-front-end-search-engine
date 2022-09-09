@@ -311,12 +311,16 @@ header {
 				border: 1px solid rgba(255, 255, 255, 0);
 				border-radius: 3px;
 				transition: opacity ease-in 650ms;
+				cursor: pointer;
 
 				&[data-active="true"] {
 					color: gray;
+					cursor: no-drop;
 				}
 
 				&[data-active="false"] {
+					cursor: pointer;
+
 					&:hover {
 						border-color: rgba(255, 255, 255, 0.5);
 						background: rgba(255, 255, 255, 0.15);
