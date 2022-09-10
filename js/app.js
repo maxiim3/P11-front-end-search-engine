@@ -90,6 +90,8 @@ class App {
 		await this.handleFirstFilter(initialFetchedData)
 		await this.handleSecondFilter()
 		await this.observeTags()
+
+
 	}
 }
 
