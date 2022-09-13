@@ -2,10 +2,11 @@
   "name": "oc_projet_7",
   "version": "1.0.0",
   "description": "",
-  "main": "js/app.js",
+  "main": "src/ts/app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "sass --watch ./css/index.scss ./css/index.css "
+    "sass": "sass --watch src/css/index.scss dist/css/index.css ",
+    "ts" : "tsc --watch src/ts/app.ts dist/js/app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/maxiim3/P11-front-end-search-engine#readme",
   "devDependencies": {
     "prettier": "^2.7.1",
-    "sass": "^1.54.8"
+    "sass": "^1.54.8",
+    "ts-node": "^10.9.1"
   }
 }

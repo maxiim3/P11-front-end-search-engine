@@ -1,10 +1,10 @@
-class StringUtility {
+export class StringUtility {
 	/**
 	 * Capitalize first Letter of word
 	 * @param word {string}
 	 * @return {string}
 	 */
-	static capitalize(word) {
+	static capitalize(word: string): string {
 		// words to array
 		const words = word.toLowerCase().split(" ")
 

@@ -1,4 +1,13 @@
+import {Api} from "./api/Api"
+import {DomFactory} from "./templates/DomFactory"
+
 class App {
+	private readonly url: string
+	private api: Api
+	private dataFilteredByMainSearch: Object[]
+	private dataFilteredByTags: any[]
+	private activeTags: any[]
+
 	constructor() {
 		this.url = "data/recipes.json"
 		this.api = new Api(this.url)
@@ -82,14 +91,22 @@ class App {
 	}
 
 	async init() {
-		const initialFetchedData = await this.api.fetch()
-		this.dataFilteredByMainSearch = initialFetchedData
+		const initialFetchedData : JSON[] = await this.api.fetch()
+		this.dataFilteredByMainSearch  = initialFetchedData
 
 		await DomFactory.renderDOM(initialFetchedData)
 
 		await this.handleFirstFilter(initialFetchedData)
 		await this.handleSecondFilter()
 		await this.observeTags()
+
+		/* todo render DOm
+		    Observe changes on selected Tags
+		    If change, rerender Data through filter
+		    	- .filter() by search bar, then .some() by tags attributes
+		    	- render DOM
+
+		 */
 
 
 	}
