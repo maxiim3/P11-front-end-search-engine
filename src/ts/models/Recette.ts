@@ -56,7 +56,7 @@ export class Recette {
 			else {
 				const switchUnit = this.unitAdapter(unit)
 				const quantityUnit = `${quantity}${switchUnit}`
-				return {ingredient, quantityUnit}
+				return [ingredient, quantityUnit]
 			}
 		})
 	}

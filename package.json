@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass": "sass --watch src/css/index.scss dist/css/index.css ",
-    "ts" : "tsc --watch src/ts/app.ts dist/js/app.js"
+    "ts" : "tsc --watch"
   },
   "repository": {
     "type": "git",

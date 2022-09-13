@@ -11,8 +11,7 @@ export class CardTemplate {
 		const $children = [...children]
 		const $card: HTMLDivElement = document.createElement("div") as HTMLDivElement
 		$card.classList.value = "recette"
-		$card?.dataset?.id = this.data?.id
-
+		$card.setAttribute("data-id", this.data?.id.toString())
 		$children.forEach(child => $card.appendChild(child))
 
 		return $card
@@ -51,23 +50,23 @@ export class CardTemplate {
 	}
 
 	generateInformations(): HTMLDivElement {
-		const description = document.createElement("p")
+		const description = document.createElement("p") as HTMLParagraphElement
 		description.classList.value = "recette__description"
 		description.textContent = this.data?.description
 
-		const ingredients = document.createElement("ul")
+		const ingredients = document.createElement("ul") as HTMLUListElement
 		ingredients.classList.value = "recette__ingredients"
 
-		this.data?.ingredients?.forEach(i => {
-			const ingredient = document.createElement("li")
+		this.data.ingredients.forEach((i) => {
+			const ingredient = document.createElement("li") as HTMLLIElement
 
-			const key = document.createElement("span")
+			const key = document.createElement("span") as HTMLSpanElement
 			key.classList.value = "key"
 			key.textContent = `${i.ingredient}`
 			ingredient.appendChild(key)
 
-			if (i.quantityUnit) {
-				const value = document.createElement("span")
+			if (i?.quantityUnit) {
+				const value = document.createElement("span") as HTMLSpanElement
 				value.classList.value = "value"
 				value.textContent = ` : ${i.quantityUnit}`
 				ingredient.appendChild(value)
@@ -76,9 +75,7 @@ export class CardTemplate {
 			ingredients.appendChild(ingredient)
 		})
 
-		const sectionInformation = document.createElement(
-			"section"
-		) as HTMLDivElement
+		const sectionInformation = document.createElement("section") as HTMLDivElement
 		sectionInformation.classList.value = "recette__informations"
 		sectionInformation.appendChild(ingredients)
 		sectionInformation.appendChild(description)

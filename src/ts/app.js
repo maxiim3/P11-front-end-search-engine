@@ -47,51 +47,19 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 exports.__esModule = true;
 var Api_1 = require("./api/Api");
 var DomFactory_1 = require("./templates/DomFactory");
+var FilterV1_1 = require("./utils/FilterV1");
+var MenuSwitcher_1 = require("./filters/SecondFilter/MenuSwitcher");
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
-        this.handleFirstFilter = function (data) { return __awaiter(_this, void 0, void 0, function () {
-            var $mainSearchBar, filter;
+        this.handleTagSelection = function () { return __awaiter(_this, void 0, void 0, function () {
+            var buttons, parentNode;
             var _this = this;
             return __generator(this, function (_a) {
-                $mainSearchBar = document.querySelector("#searchBar");
-                filter = new MainFilter(data);
-                $mainSearchBar.addEventListener("input", function () { return __awaiter(_this, void 0, void 0, function () {
-                    var _a, tagsInList, activeTagsContainer, activeTags;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
-                                _a = this;
-                                return [4 /*yield*/, filter.update()];
-                            case 1:
-                                _a.dataFilteredByMainSearch = _b.sent();
-                                tagsInList = __spreadArray([], document.querySelectorAll(".filtres__list li"), true);
-                                activeTagsContainer = document.querySelector("#tagsWrapper");
-                                activeTags = __spreadArray([], activeTagsContainer.querySelectorAll(".tag"), true);
-                                activeTags.forEach(function (tag) {
-                                    if (tag) {
-                                        var that = tagsInList.find(function (li) { return li.textContent === tag.textContent; });
-                                        that.dataset.active = "false";
-                                        that.dataset.hidden = "false";
-                                        that.disabled = false;
-                                        activeTagsContainer.removeChild(tag);
-                                    }
-                                });
-                                return [2 /*return*/, this.dataFilteredByMainSearch];
-                        }
-                    });
-                }); });
-                return [2 /*return*/];
-            });
-        }); };
-        this.handleSecondFilter = function () { return __awaiter(_this, void 0, void 0, function () {
-            var parentNode, buttons;
-            var _this = this;
-            return __generator(this, function (_a) {
-                parentNode = __spreadArray([], document.querySelectorAll(".filtres__filtre"), true);
                 buttons = __spreadArray([], document.querySelectorAll(".filtres__button"), true);
+                parentNode = __spreadArray([], document.querySelectorAll(".filtres__filtre"), true);
                 buttons.forEach(function (btn) {
-                    var switcher = new MenuSwitcher(btn, parentNode, _this.dataFilteredByMainSearch);
+                    var switcher = new MenuSwitcher_1.MenuSwitcher(btn, parentNode, _this.initialData);
                     btn.addEventListener("click", function (e) {
                         e.preventDefault();
                         switcher.update();
@@ -102,100 +70,126 @@ var App = /** @class */ (function () {
         }); };
         this.url = "data/recipes.json";
         this.api = new Api_1.Api(this.url);
-        this.dataFilteredByMainSearch = [];
+        this.initialData = [];
         this.dataFilteredByTags = [];
-        this.activeTags = [];
     }
-    App.prototype.observeTags = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var $tagsContainer, config, observer;
-            var _this = this;
-            return __generator(this, function (_a) {
-                $tagsContainer = document.querySelector("#tagsWrapper");
-                config = {
-                    attributes: true,
-                    characterDataOldValue: true,
-                    childList: true,
-                    subtree: true
-                };
-                observer = new MutationObserver(function (mutationRecords, observer) { return __awaiter(_this, void 0, void 0, function () {
-                    var _i, _a, tag, _b;
-                    return __generator(this, function (_c) {
-                        switch (_c.label) {
-                            case 0:
-                                this.activeTags = __spreadArray([], mutationRecords[0].target.childNodes, true);
-                                console.log(this.activeTags);
-                                if (!this.activeTags[0]) return [3 /*break*/, 7];
-                                _i = 0, _a = this.activeTags;
-                                _c.label = 1;
-                            case 1:
-                                if (!(_i < _a.length)) return [3 /*break*/, 6];
-                                tag = _a[_i];
-                                _b = this;
-                                return [4 /*yield*/, FilterV1.advancedFilter(this.dataFilteredByMainSearch, tag)];
-                            case 2:
-                                _b.dataFilteredByTags = _c.sent();
-                                return [4 /*yield*/, DomFactory_1.DomFactory.resetDom()];
-                            case 3:
-                                _c.sent();
-                                return [4 /*yield*/, DomFactory_1.DomFactory.renderDOM(this.dataFilteredByTags)];
-                            case 4:
-                                _c.sent();
-                                console.log(this.dataFilteredByTags);
-                                _c.label = 5;
-                            case 5:
-                                _i++;
-                                return [3 /*break*/, 1];
-                            case 6: return [3 /*break*/, 10];
-                            case 7:
-                                console.log("no tag");
-                                return [4 /*yield*/, DomFactory_1.DomFactory.resetDom()];
-                            case 8:
-                                _c.sent();
-                                return [4 /*yield*/, DomFactory_1.DomFactory.renderDOM(this.dataFilteredByMainSearch)];
-                            case 9:
-                                _c.sent();
-                                _c.label = 10;
-                            case 10:
-                                observer.takeRecords();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                observer.observe($tagsContainer, config);
-                return [2 /*return*/];
-            });
+    App.prototype.removeTags = function () {
+        var $allTags = __spreadArray([], document.querySelectorAll(".filtres__list li"), true);
+        var $tagsContainer = document.querySelector("#tagsWrapper");
+        var $selectedTags = __spreadArray([], $tagsContainer.querySelectorAll(".tag"), true);
+        this.dataFilteredByTags = [];
+        $selectedTags.forEach(function (tag) {
+            if (tag) {
+                $allTags.filter(function (li) {
+                    if (li.textContent === tag.textContent) {
+                        li.dataset.active = "false";
+                        li.dataset.hidden = "false";
+                        li.setAttribute("disabled", "false");
+                        $tagsContainer.removeChild(li);
+                    }
+                });
+            }
         });
+    };
+    App.prototype.globalObserver = function () {
+        var _this = this;
+        var config = {
+            attributes: true,
+            characterDataOldValue: true,
+            childList: true,
+            subtree: true
+        };
+        var observerSearchBar = function () {
+            var $mainSearchBar = document.querySelector("#searchBar");
+            $mainSearchBar.addEventListener("input", function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.removeTags();
+                            this.keyWords.input = $mainSearchBar.value;
+                            return [4 /*yield*/, FilterKeyWords()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        };
+        var observerTagContainer = function () {
+            var $tagsContainer = document.querySelector("#tagsWrapper");
+            var observer = new MutationObserver(function (mutationRecords, observer) { return __awaiter(_this, void 0, void 0, function () {
+                var tags;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            tags = __spreadArray([], mutationRecords[0].target.childNodes, true);
+                            this.keyWords.tags = [];
+                            tags.forEach(function (tag) { return _this.keyWords.tags.push(tag); });
+                            return [4 /*yield*/, FilterKeyWords()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            observer.observe($tagsContainer, config);
+        };
+        var FilterKeyWords = function () { return __awaiter(_this, void 0, void 0, function () {
+            var _a, input, tags, dataFilteredByMainSearch, _i, tags_1, tag, data, _b, outputData;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _a = this.keyWords, input = _a.input, tags = _a.tags;
+                        return [4 /*yield*/, FilterV1_1.FilterV1.mainFilter(this.initialData, input)];
+                    case 1:
+                        dataFilteredByMainSearch = _c.sent();
+                        if (!(tags.length > 0)) return [3 /*break*/, 5];
+                        _i = 0, tags_1 = tags;
+                        _c.label = 2;
+                    case 2:
+                        if (!(_i < tags_1.length)) return [3 /*break*/, 5];
+                        tag = tags_1[_i];
+                        data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch;
+                        _b = this;
+                        return [4 /*yield*/, FilterV1_1.FilterV1.advancedFilter(data, tag)];
+                    case 3:
+                        _b.dataFilteredByTags = _c.sent();
+                        _c.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5:
+                        outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch;
+                        console.log(outputData);
+                        return [4 /*yield*/, DomFactory_1.DomFactory.resetDom()];
+                    case 6:
+                        _c.sent();
+                        return [4 /*yield*/, DomFactory_1.DomFactory.renderDOM(outputData)];
+                    case 7: return [2 /*return*/, _c.sent()];
+                }
+            });
+        }); };
+        observerSearchBar();
+        observerTagContainer();
     };
     App.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var initialFetchedData;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.api.fetch()];
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, this.api.fetch()];
                     case 1:
-                        initialFetchedData = _a.sent();
-                        this.dataFilteredByMainSearch = initialFetchedData;
-                        return [4 /*yield*/, DomFactory_1.DomFactory.renderDOM(initialFetchedData)];
+                        _a.initialData = _b.sent();
+                        return [4 /*yield*/, DomFactory_1.DomFactory.renderDOM(this.initialData)];
                     case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.handleFirstFilter(initialFetchedData)];
+                        _b.sent();
+                        return [4 /*yield*/, this.handleTagSelection()];
                     case 3:
-                        _a.sent();
-                        return [4 /*yield*/, this.handleSecondFilter()];
-                    case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.observeTags()
-                            /* todo render DOm
-                                Observe changes on selected Tags
-                                If change, rerender Data through filter
-                                    - .filter() by search bar, then .some() by tags attributes
-                                    - render DOM
-                    
-                             */
-                        ];
-                    case 5:
-                        _a.sent();
+                        _b.sent();
+                        this.globalObserver();
                         return [2 /*return*/];
                 }
             });

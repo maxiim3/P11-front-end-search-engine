@@ -1,55 +1,51 @@
 import {Api} from "./api/Api"
 import {DomFactory} from "./templates/DomFactory"
+import {FilterV1} from "./utils/FilterV1"
+import {MenuSwitcher} from "./filters/SecondFilter/MenuSwitcher"
 
 class App {
 	private readonly url: string
 	private api: Api
-	private dataFilteredByMainSearch: Object[]
-	private dataFilteredByTags: any[]
-	private activeTags: any[]
+	private initialData: Object[]
+	private dataFilteredByTags: Object[]
+	private keyWords = {
+		input: "",
+		tags: [],
+	}
 
 	constructor() {
 		this.url = "data/recipes.json"
 		this.api = new Api(this.url)
-		this.dataFilteredByMainSearch = []
+		this.initialData = []
 		this.dataFilteredByTags = []
-		this.activeTags = []
 	}
 
-	handleFirstFilter = async data => {
-		const $mainSearchBar = document.querySelector("#searchBar")
-		const filter = new MainFilter(data)
+	removeTags() {
+		const $allTags = [...document.querySelectorAll(".filtres__list li")] as HTMLLIElement[]
+		const $tagsContainer = document.querySelector("#tagsWrapper") as HTMLDivElement
+		const $selectedTags = [...$tagsContainer.querySelectorAll(".tag")] as HTMLDivElement[]
+		this.dataFilteredByTags = []
 
-		$mainSearchBar.addEventListener("input", async () => {
-			this.dataFilteredByMainSearch = await filter.update()
-
-			const tagsInList = [...document.querySelectorAll(".filtres__list li")]
-			const activeTagsContainer = document.querySelector("#tagsWrapper")
-			const activeTags = [...activeTagsContainer.querySelectorAll(".tag")]
-			activeTags.forEach(tag => {
-				if (tag) {
-					const that = tagsInList.find(
-						li => li.textContent === tag.textContent
-					)
-					that.dataset.active = "false"
-					that.dataset.hidden = "false"
-					that.disabled = false
-					activeTagsContainer.removeChild(tag)
-				}
-			})
-			return this.dataFilteredByMainSearch
+		$selectedTags.forEach((tag: HTMLDivElement) => {
+			if (tag) {
+				$allTags.filter(li => {
+					if (li.textContent === tag.textContent) {
+						li.dataset.active = "false"
+						li.dataset.hidden = "false"
+						li.setAttribute("disabled", "false")
+						$tagsContainer.removeChild(li)
+					}
+				})
+			}
 		})
 	}
 
-	handleSecondFilter = async () => {
-		const parentNode = [...document.querySelectorAll(".filtres__filtre")]
-		const buttons = [...document.querySelectorAll(".filtres__button")]
+	handleTagSelection = async () => {
+		const buttons = [...document.querySelectorAll(".filtres__button")] as HTMLButtonElement[]
+		const filters = [...document.querySelectorAll(".filtres__filtre")] as HTMLLIElement[]
+
 		buttons.forEach(btn => {
-			const switcher = new MenuSwitcher(
-				btn,
-				parentNode,
-				this.dataFilteredByMainSearch
-			)
+			const switcher = new MenuSwitcher(btn, filters, this.initialData)
 
 			btn.addEventListener("click", e => {
 				e.preventDefault()
@@ -58,57 +54,59 @@ class App {
 		})
 	}
 
-	async observeTags() {
-		const $tagsContainer = document.querySelector("#tagsWrapper")
+	globalObserver() {
 		const config = {
 			attributes: true,
 			characterDataOldValue: true,
 			childList: true,
 			subtree: true,
 		}
+		// todo faire le filtrage global dans le filtres pour keywords
+		const observerSearchBar = () => {
+			const $mainSearchBar = document.querySelector("#searchBar") as HTMLInputElement
+			$mainSearchBar.addEventListener("input", async () => {
+				this.removeTags()
+				this.keyWords.input = $mainSearchBar.value
+				await FilterKeyWords()
+			})
+		}
 
-		const observer = new MutationObserver(async (mutationRecords, observer) => {
-			this.activeTags = [...mutationRecords[0].target.childNodes]
-			console.log(this.activeTags)
-			if (this.activeTags[0]) {
-				for (const tag of this.activeTags) {
-					this.dataFilteredByTags = await FilterV1.advancedFilter(
-						this.dataFilteredByMainSearch,
-						tag
-					)
-					await DomFactory.resetDom()
-					await DomFactory.renderDOM(this.dataFilteredByTags)
-					console.log(this.dataFilteredByTags)
+		const observerTagContainer = () => {
+			const $tagsContainer = document.querySelector("#tagsWrapper") as HTMLDivElement
+			const observer = new MutationObserver(async mutationRecords => {
+				const tags: HTMLLIElement[] = [...mutationRecords[0].target.childNodes] as HTMLLIElement[]
+				this.keyWords.tags = []
+				if (tags.length > 0) tags.forEach(tag => this.keyWords.tags.push(tag))
+				await FilterKeyWords()
+			})
+			observer.observe($tagsContainer, config)
+		}
+
+		const FilterKeyWords = async () => {
+			const {input, tags} = this.keyWords
+			const dataFilteredByMainSearch = await FilterV1.mainFilter(this.initialData, input)
+			if (tags.length > 0) {
+				for (const tag of tags) {
+					const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+
+					this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
 				}
-			} else {
-				console.log("no tag")
-				await DomFactory.resetDom()
-				await DomFactory.renderDOM(this.dataFilteredByMainSearch)
 			}
-			observer.takeRecords()
-		})
-		observer.observe($tagsContainer, config)
+			const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+			console.log(outputData)
+			await DomFactory.resetDom()
+			return await DomFactory.renderDOM(outputData)
+		}
+		observerSearchBar()
+		observerTagContainer()
 	}
 
 	async init() {
-		const initialFetchedData : JSON[] = await this.api.fetch()
-		this.dataFilteredByMainSearch  = initialFetchedData
+		this.initialData = await this.api.fetch()
 
-		await DomFactory.renderDOM(initialFetchedData)
-
-		await this.handleFirstFilter(initialFetchedData)
-		await this.handleSecondFilter()
-		await this.observeTags()
-
-		/* todo render DOm
-		    Observe changes on selected Tags
-		    If change, rerender Data through filter
-		    	- .filter() by search bar, then .some() by tags attributes
-		    	- render DOM
-
-		 */
-
-
+		await DomFactory.renderDOM(this.initialData)
+		await this.handleTagSelection()
+		this.globalObserver()
 	}
 }
 
