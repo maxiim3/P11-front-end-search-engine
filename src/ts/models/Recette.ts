@@ -1,7 +1,11 @@
-export type Ingredient = {
+export type Ingredients = {
 	ingredient: string
 	quantity: number
-	unit: string | undefined | null
+	unit: string | null
+}
+export type MappedIngredients = {
+	ingredient: string
+	quantityUnit: string | null | undefined
 }
 
 export class Recette {
@@ -10,28 +14,20 @@ export class Recette {
 	private readonly _appliance: string
 	private readonly _name: string
 	private readonly _servings: number
-	private _ingredients: Ingredient[]
+	private ingredients: Ingredients[]
 	private readonly _time: string
 	private readonly _description: string
 
-	constructor({
-		id,
-		name,
-		servings,
-		ingredients,
-		time,
-		description,
-		appliance,
-		ustensiles,
-	}:Object) {
-		this._id = id
-		this._name = name
-		this._servings = servings
-		this._ingredients = ingredients
-		this._time = time
-		this._description = description
-		this._appliance = appliance
-		this._ustensiles = ustensiles
+	constructor(data: Recette) {
+		console.log(data)
+		this._id = data.id
+		this._name = data.name
+		this._servings = data.servings
+		this.ingredients = data.ingredients
+		this._time = data.time
+		this._description = data.description
+		this._appliance = data.appliance
+		this._ustensiles = data.ustensiles
 	}
 
 	get id(): number {
@@ -50,15 +46,18 @@ export class Recette {
 	 *
 	 * @return {Object}
 	 */
-	get ingredients(): Object[] {
-		return this._ingredients.map(({ingredient, quantity, unit}) => {
-			if (!quantity) return {ingredient}
+	get getIngredients(): MappedIngredients[] {
+		const mappedData: MappedIngredients[] = []
+		this.ingredients.map(data => {
+			if (!data.quantity) mappedData.push({ingredient: data.ingredient, quantityUnit: null})
 			else {
-				const switchUnit = this.unitAdapter(unit)
-				const quantityUnit = `${quantity}${switchUnit}`
-				return [ingredient, quantityUnit]
+				let quantityUnit: string = !data.unit
+					? `${data.quantity}`
+					: `${data.quantity}${this.unitAdapter(data.unit)}`
+				mappedData.push({ingredient: data.ingredient, quantityUnit})
 			}
 		})
+		return mappedData
 	}
 
 	unitAdapter(unit: string | undefined | null): string | undefined | null {

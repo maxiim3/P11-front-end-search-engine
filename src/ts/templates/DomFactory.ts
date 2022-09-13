@@ -3,9 +3,6 @@ import {SecondFilterTemplate} from "./SecondFilterTemplate"
 import {CardTemplate} from "./CardTemplate"
 
 export class DomFactory {
-	static mapData(data: Object[]): Recette[] {
-		return data.map(d => new Recette(d))
-	}
 
 	static async renderTagsFilter(data: Recette[]): Promise<void> {
 		const advancedFilter = new SecondFilterTemplate(data)
@@ -37,9 +34,8 @@ export class DomFactory {
 		await DomFactory.removeTagsFilter()
 	}
 
-	static async renderDOM(data: Object[]) {
-		const mapData = DomFactory.mapData(data)
-		await DomFactory.renderTagsFilter(mapData)
-		await DomFactory.renderRecettesCards(mapData)
+	static async renderDOM(data: Recette[]) {
+		await DomFactory.renderTagsFilter(data)
+		await DomFactory.renderRecettesCards(data)
 	}
 }

@@ -2,8 +2,9 @@ import {Api} from "./api/Api"
 import {DomFactory} from "./templates/DomFactory"
 import {FilterV1} from "./utils/FilterV1"
 import {MenuSwitcher} from "./filters/SecondFilter/MenuSwitcher"
+import {Recette} from "./models/Recette"
 
-class App {
+export class App {
 	private readonly url: string
 	private api: Api
 	private initialData: Object[]
@@ -18,6 +19,24 @@ class App {
 		this.api = new Api(this.url)
 		this.initialData = []
 		this.dataFilteredByTags = []
+	}
+
+	async mapData(data: Object[]): Promise<Recette[]> {
+		return data.map(d => new Recette(d))
+	}
+
+	handleTagSelection = async (data) => {
+		const buttons = [...document.querySelectorAll(".filtres__button")] as HTMLButtonElement[]
+		const filters = [...document.querySelectorAll(".filtres__filtre")] as HTMLLIElement[]
+
+		buttons.forEach(btn => {
+			const switcher = new MenuSwitcher(btn, filters, data)
+
+			btn.addEventListener("click", e => {
+				e.preventDefault()
+				switcher.update()
+			})
+		})
 	}
 
 	removeTags() {
@@ -40,21 +59,7 @@ class App {
 		})
 	}
 
-	handleTagSelection = async () => {
-		const buttons = [...document.querySelectorAll(".filtres__button")] as HTMLButtonElement[]
-		const filters = [...document.querySelectorAll(".filtres__filtre")] as HTMLLIElement[]
-
-		buttons.forEach(btn => {
-			const switcher = new MenuSwitcher(btn, filters, this.initialData)
-
-			btn.addEventListener("click", e => {
-				e.preventDefault()
-				switcher.update()
-			})
-		})
-	}
-
-	globalObserver() {
+	globalObserver(allData:Recette[]) {
 		const config = {
 			attributes: true,
 			characterDataOldValue: true,
@@ -76,23 +81,50 @@ class App {
 			const observer = new MutationObserver(async mutationRecords => {
 				const tags: HTMLLIElement[] = [...mutationRecords[0].target.childNodes] as HTMLLIElement[]
 				this.keyWords.tags = []
-				if (tags.length > 0) tags.forEach(tag => this.keyWords.tags.push(tag))
+				console.log(typeof tags)
+				// tags.forEach(tag => this.keyWords.tags.push(tag))
 				await FilterKeyWords()
 			})
 			observer.observe($tagsContainer, config)
 		}
 
+		/*		const FilterKeyWords = async () => {
+		 const {input, tags} = this.keyWords
+		 const dataFilteredByMainSearch = await FilterV1.mainFilter(this.initialData, input)
+		 if (tags.length > 0) {
+		 for (const tag of tags) {
+		 const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+
+		 this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
+		 }
+		 }
+		 const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+		 console.log(outputData)
+		 await DomFactory.resetDom()
+		 return await DomFactory.renderDOM(outputData)
+		 }*/
 		const FilterKeyWords = async () => {
+			let firstFilterOutput: Recette[] = []
 			const {input, tags} = this.keyWords
-			const dataFilteredByMainSearch = await FilterV1.mainFilter(this.initialData, input)
-			if (tags.length > 0) {
+			const regExp = new RegExp(input, "gi")
+
+			allData.forEach((card:Recette) => {
+				if (regExp.test(card.name) || regExp.test(card.description)) return firstFilterOutput.push(card)
+				else {
+					card.getIngredients.forEach((data) => {
+						if (regExp.test(data.ingredient)) return firstFilterOutput.push(card)
+					})
+				}
+			})
+
+			if (!!tags.length) {
 				for (const tag of tags) {
-					const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+					const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
 
 					this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
 				}
 			}
-			const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
+			const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
 			console.log(outputData)
 			await DomFactory.resetDom()
 			return await DomFactory.renderDOM(outputData)
@@ -103,12 +135,9 @@ class App {
 
 	async init() {
 		this.initialData = await this.api.fetch()
-
-		await DomFactory.renderDOM(this.initialData)
-		await this.handleTagSelection()
-		this.globalObserver()
+		const allReceipts = await this.mapData(this.initialData)
+		await DomFactory.renderDOM(allReceipts)
+		await this.handleTagSelection(allReceipts)
+		this.globalObserver(allReceipts)
 	}
 }
-
-const app = new App()
-app.init().catch(e => new Error("Error on loading page" + e))

@@ -1,20 +1,18 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.MenuSwitcher = void 0;
-var TagObserver_1 = require("./TagObserver");
-var MenuSwitcher = /** @class */ (function () {
-    function MenuSwitcher(btn, parent, data) {
+const TagObserver_1 = require("./TagObserver");
+class MenuSwitcher {
+    constructor(btn, filters, data) {
         this.btn = btn;
-        this.parent = parent;
+        this.allFilters = filters;
+        this.parent = this.btn.parentNode;
         this.data = data;
     }
-    MenuSwitcher.prototype.buttonSwitchState = function () {
-        var _this = this;
-        var _a;
-        var btnWrapper = (_a = this.btn) === null || _a === void 0 ? void 0 : _a.parentNode;
-        var tags = new TagObserver_1.TagObserver(this.data, btnWrapper);
-        this.parent.forEach(function (f) {
-            if (f === _this.btn.parentNode) {
+    buttonSwitchState() {
+        const tags = new TagObserver_1.TagObserver(this.data, this.parent);
+        this.allFilters.forEach(f => {
+            if (f === this.parent) {
                 f.dataset.open = "true";
                 tags.subscribe(f);
             }
@@ -24,10 +22,10 @@ var MenuSwitcher = /** @class */ (function () {
             }
         });
         tags.fire();
-    };
-    MenuSwitcher.prototype.update = function () {
+    }
+    update() {
         this.buttonSwitchState();
-    };
-    return MenuSwitcher;
-}());
+    }
+}
 exports.MenuSwitcher = MenuSwitcher;
+//# sourceMappingURL=MenuSwitcher.js.map

@@ -25,7 +25,7 @@
 			integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer" />
-<!--		<script
+		<!--		<script
 			src="src/ts/api/Api.ts"
 			defer></script>
 		<script
@@ -35,16 +35,16 @@
 			src="src/ts/utils/FilterV1.ts"
 			defer></script>
 		<script
-			src="src/ts/utils/FilterV2.js"
+			src="src/ts/utils/FilterV2.ts"
 			defer></script>
 		<script
-			src="src/ts/utils/FilterV3.js"
+			src="src/ts/utils/FilterV3.ts"
 			defer></script>
 		<script
-			src="src/ts/filters/MainFilter/MainFilter.js"
+			src="src/ts/filters/MainFilter/MainFilter.ts"
 			defer></script>
 		<script
-			src="src/ts/filters/SecondFilter/FilterByTags.js"
+			src="src/ts/filters/SecondFilter/FilterByTags.ts"
 			defer></script>
 		<script
 			src="src/ts/filters/SecondFilter/MenuSwitcher.ts"
@@ -68,7 +68,10 @@
 			src="src/ts/templates/DomFactory.ts"
 			defer></script>-->
 		<script
-			src="dist/js/app.js"
+			src="./dist/polyfill.bundle.js"
+			defer></script>
+		<script
+			src="dist/js/main-bundle.js"
 			defer></script>
 		<link
 			rel="stylesheet"
@@ -120,9 +123,7 @@
 						data-open="false">
 						<button class="filtres__button">Ingrédients</button>
 						<span class="fa-solid fa-chevron-down"></span>
-						<label for="filtreIngredients"
-							>Rechercher un ingrédient</label
-						>
+						<label for="filtreIngredients">Rechercher un ingrédient</label>
 						<input
 							type="text"
 							class="searchFiltre"
