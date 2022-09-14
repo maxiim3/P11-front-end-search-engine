@@ -57,7 +57,7 @@ export class CardTemplate {
 		const ingredients = document.createElement("ul") as HTMLUListElement
 		ingredients.classList.value = "recette__ingredients"
 
-		this.data.ingredients.forEach((i) => {
+		this.data.getIngredients.forEach((i) => {
 			const ingredient = document.createElement("li") as HTMLLIElement
 
 			const key = document.createElement("span") as HTMLSpanElement

@@ -1,31 +1,29 @@
 import {Api} from "./api/Api"
 import {DomFactory} from "./templates/DomFactory"
-import {FilterV1} from "./utils/FilterV1"
 import {MenuSwitcher} from "./filters/SecondFilter/MenuSwitcher"
-import {Recette} from "./models/Recette"
+import {JSONRecette, MappedIngredients, Recette} from "./models/Recette"
 
 export class App {
-	private readonly url: string
 	private api: Api
-	private initialData: Object[]
-	private dataFilteredByTags: Object[]
+	protected url: string
+	private initialData: JSONRecette[]
 	private keyWords = {
 		input: "",
 		tags: [],
 	}
 
-	constructor() {
-		this.url = "data/recipes.json"
+	constructor(url:string) {
+		this.url = url
 		this.api = new Api(this.url)
 		this.initialData = []
-		this.dataFilteredByTags = []
+		console.log(this)
 	}
 
-	async mapData(data: Object[]): Promise<Recette[]> {
+	async mapData(data: JSONRecette[]): Promise<Recette[]> {
 		return data.map(d => new Recette(d))
 	}
 
-	handleTagSelection = async (data) => {
+	handleTagSelection = async (data: Recette[]) => {
 		const buttons = [...document.querySelectorAll(".filtres__button")] as HTMLButtonElement[]
 		const filters = [...document.querySelectorAll(".filtres__filtre")] as HTMLLIElement[]
 
@@ -43,7 +41,6 @@ export class App {
 		const $allTags = [...document.querySelectorAll(".filtres__list li")] as HTMLLIElement[]
 		const $tagsContainer = document.querySelector("#tagsWrapper") as HTMLDivElement
 		const $selectedTags = [...$tagsContainer.querySelectorAll(".tag")] as HTMLDivElement[]
-		this.dataFilteredByTags = []
 
 		$selectedTags.forEach((tag: HTMLDivElement) => {
 			if (tag) {
@@ -59,14 +56,13 @@ export class App {
 		})
 	}
 
-	globalObserver(allData:Recette[]) {
+	globalObserver(allData: Recette[]) {
 		const config = {
 			attributes: true,
 			characterDataOldValue: true,
 			childList: true,
 			subtree: true,
 		}
-		// todo faire le filtrage global dans le filtres pour keywords
 		const observerSearchBar = () => {
 			const $mainSearchBar = document.querySelector("#searchBar") as HTMLInputElement
 			$mainSearchBar.addEventListener("input", async () => {
@@ -88,46 +84,49 @@ export class App {
 			observer.observe($tagsContainer, config)
 		}
 
-		/*		const FilterKeyWords = async () => {
-		 const {input, tags} = this.keyWords
-		 const dataFilteredByMainSearch = await FilterV1.mainFilter(this.initialData, input)
-		 if (tags.length > 0) {
-		 for (const tag of tags) {
-		 const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
-
-		 this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
-		 }
-		 }
-		 const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : dataFilteredByMainSearch
-		 console.log(outputData)
-		 await DomFactory.resetDom()
-		 return await DomFactory.renderDOM(outputData)
-		 }*/
 		const FilterKeyWords = async () => {
-			let firstFilterOutput: Recette[] = []
+			/*let firstFilterOutput: Recette[] = []
+			 const {input, tags} = this.keyWords
+			 const regExp = new RegExp(input, "gi")
+
+			 allData.forEach((card:Recette) => {
+			 if (regExp.test(card.name) || regExp.test(card.description)) return firstFilterOutput.push(card)
+			 else {
+			 card.getIngredients.forEach(({ingredient, quantityUnit}: MappedIngredients) => {
+			 if (regExp.test(ingredient)) return firstFilterOutput.push(card)
+			 })
+			 }
+			 })
+
+			 if (!!tags.length) {
+			 for (const tag of tags) {
+			 const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
+
+			 this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
+			 }
+			 }
+			 const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
+			 console.log(outputData)
+			 await DomFactory.resetDom()
+			 return await DomFactory.renderDOM(outputData)*/
 			const {input, tags} = this.keyWords
 			const regExp = new RegExp(input, "gi")
 
-			allData.forEach((card:Recette) => {
-				if (regExp.test(card.name) || regExp.test(card.description)) return firstFilterOutput.push(card)
-				else {
-					card.getIngredients.forEach((data) => {
-						if (regExp.test(data.ingredient)) return firstFilterOutput.push(card)
-					})
-				}
-			})
+			allData
+				.filter((card: Recette) => regExp.test(card.name) || (regExp.test(card.description) && card))
+				.filter((card: Recette) =>
+					card.getIngredients.forEach(({ingredient}: MappedIngredients) => regExp.test(ingredient) && card)
+				)
+				.some((card: Recette) => {
+					if (!!tags.length) {
+						for (let {textContent, dataset} of tags) {
+							console.log(textContent, dataset, card)
+						}
+					}
+				})
 
-			if (!!tags.length) {
-				for (const tag of tags) {
-					const data = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
-
-					this.dataFilteredByTags = await FilterV1.advancedFilter(data, tag)
-				}
-			}
-			const outputData = this.dataFilteredByTags.length > 0 ? this.dataFilteredByTags : firstFilterOutput
-			console.log(outputData)
-			await DomFactory.resetDom()
-			return await DomFactory.renderDOM(outputData)
+			/*await DomFactory.resetDom()
+			 return await DomFactory.renderDOM(outputData)*/
 		}
 		observerSearchBar()
 		observerTagContainer()
@@ -135,7 +134,7 @@ export class App {
 
 	async init() {
 		this.initialData = await this.api.fetch()
-		const allReceipts = await this.mapData(this.initialData)
+		const allReceipts: Recette[] = await this.mapData(this.initialData)
 		await DomFactory.renderDOM(allReceipts)
 		await this.handleTagSelection(allReceipts)
 		this.globalObserver(allReceipts)

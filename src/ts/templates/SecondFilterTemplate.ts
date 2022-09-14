@@ -1,5 +1,5 @@
 import {StringUtility} from "../utils/StringUtility"
-import {Recette} from "../models/Recette"
+import {MappedIngredients, Recette} from "../models/Recette"
 
 export class SecondFilterTemplate {
 	private data: Recette[]
@@ -8,27 +8,25 @@ export class SecondFilterTemplate {
 		this.data = data
 	}
 
-	async getAllIngredients(): Promise<Object[]> {
-		const arr: Object[] = []
-		this.data.forEach(d => {
-			// todo check filter debugger
-			d?.ingredients?.forEach(({ingredient}) => {
-				arr.push(StringUtility.capitalize(ingredient))
-			})
-		})
+	async getAllIngredients(): Promise<string[]> {
+		const arr: string[] = []
+		// todo check filter debugger
+		this.data.forEach(({getIngredients}: Recette) =>
+			getIngredients.forEach(({ingredient}: MappedIngredients) => arr.push(StringUtility.capitalize(ingredient)))
+		)
 		return [...new Set(arr)]
 	}
 
-	async getAllAppliance() {
-		const arr: Object[] = []
+	async getAllAppliance(): Promise<string[]> {
+		const arr: string[] = []
 		this.data.forEach(d => {
 			arr.push(d.appliance)
 		})
 		return [...new Set(arr)]
 	}
 
-	async getAllUstensiles(): Promise<Object[]> {
-		const arr: any[] = []
+	async getAllUstensiles(): Promise<string[]> {
+		const arr: string[] = []
 		this.data.forEach(d => {
 			d?.ustensiles.forEach(ustensile => {
 				arr.push(StringUtility.capitalize(ustensile))
@@ -37,16 +35,12 @@ export class SecondFilterTemplate {
 		return [...new Set(arr)]
 	}
 
-	async renderItems(filtres: {
-		ingredients: Object[]
-		appliance: Object[]
-		ustensiles: Object[]
-	}): Promise<void> {
-		const $categories: HTMLDivElement[] = [
-			...document.querySelectorAll(".filtres__list"),
-		] as HTMLDivElement[]
+	async renderItems(filtres: {ingredients: string[]; appliance: string[]; ustensiles: string[]}): Promise<void> {
+		const $categories: HTMLDivElement[] = [...document.querySelectorAll(".filtres__list")] as HTMLDivElement[]
 		return $categories.forEach($category => {
+			// @ts-ignore
 			const categoryType: string = $category?.dataset?.filterName
+			// @ts-ignore
 			const activeCategory: any[] = filtres?.[categoryType]
 
 			activeCategory.forEach(item => {
@@ -60,9 +54,9 @@ export class SecondFilterTemplate {
 	}
 
 	async render(): Promise<void> {
-		const ingredients: any[] = await this.getAllIngredients()
-		const appliance: any[] = await this.getAllAppliance()
-		const ustensiles: any[] = await this.getAllUstensiles()
+		const ingredients: string[] = await this.getAllIngredients()
+		const appliance: string[] = await this.getAllAppliance()
+		const ustensiles: string[] = await this.getAllUstensiles()
 		return await this.renderItems({ingredients, appliance, ustensiles})
 	}
 }

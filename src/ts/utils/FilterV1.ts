@@ -1,4 +1,5 @@
 export class FilterV1 {
+	/*
 	static async mainFilter(data: Object[], input: string) {
 		let output: [] = []
 		const pattern = new RegExp(input, "gi")
@@ -14,12 +15,12 @@ export class FilterV1 {
 		return output
 	}
 
-	static async advancedFilter(data: Object[], {textContent, dataset}: HTMLDataListElement) {
+	static async advancedFilter(data: Recette[], {textContent, dataset}: HTMLLIElement) {
 		const {tag: type} = dataset
 		let output: [] = []
 		const pattern = new RegExp(textContent, "gi")
 		console.log(textContent)
-		data.forEach((card: Object) => {
+		data.forEach((card: Recette) =>
 			switch (type) {
 				case "ingredients":
 					card.ingredients.forEach(ingredient => {
@@ -36,10 +37,10 @@ export class FilterV1 {
 					})
 					break
 			}
-		})
+		)
 		return output
 	}
-
+ */
 	static async handleTagFiltered(input: string, type: string): Promise<HTMLLIElement[]> {
 		const pattern: RegExp = new RegExp(input, "gi")
 		const selection: string = `ul[data-filter-name=${CSS.escape(type)}] li`
@@ -55,3 +56,4 @@ export class FilterV1 {
 		return [...document.querySelectorAll(selection + "[data-hidden=false]")] as HTMLLIElement[]
 	}
 }
+

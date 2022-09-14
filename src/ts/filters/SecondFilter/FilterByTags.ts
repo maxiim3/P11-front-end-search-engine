@@ -1,3 +1,4 @@
+/*
 class FilterByTags {
 	constructor(tag, data) {
 		this.tag = tag
@@ -26,3 +27,4 @@ class FilterByTags {
 		console.log(this.updatedData)
 	}
 }
+*/

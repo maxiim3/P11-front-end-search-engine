@@ -1,3 +1,4 @@
+/*
 class MainFilter {
 	constructor(data) {
 		this.data = data
@@ -29,3 +30,4 @@ class MainFilter {
 		return updatedData
 	}
 }
+*/

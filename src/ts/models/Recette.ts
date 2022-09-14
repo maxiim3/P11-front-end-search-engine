@@ -1,24 +1,45 @@
-export type Ingredients = {
-	ingredient: string
-	quantity: number
-	unit: string | null
+export type JSONRecette = {
+	id: number
+	name: string
+	servings: number
+	ingredients: {
+		ingredient: string
+		quantity: number
+		unit: string | null
+	}[]
+	time: number
+	description: string
+	appliance: string
+	ustensiles: string[]
 }
+
 export type MappedIngredients = {
 	ingredient: string
 	quantityUnit: string | null | undefined
 }
 
-export class Recette {
-	private readonly _id: number
-	private readonly _ustensiles: string[]
-	private readonly _appliance: string
-	private readonly _name: string
-	private readonly _servings: number
-	private ingredients: Ingredients[]
-	private readonly _time: string
-	private readonly _description: string
+export type RecetteOuput = {
+	id: number
+	name: string
+	servings: number
+	getIngredients: MappedIngredients[]
+	time: string
+	description: string
+	appliance: string
+	ustensiles: string[]
+}
 
-	constructor(data: Recette) {
+export class Recette  {
+	private readonly _id
+	private readonly _ustensiles
+	private readonly _appliance
+	private readonly _name
+	private readonly _servings
+	private ingredients
+	private readonly _time
+	private readonly _description
+
+	constructor(data: JSONRecette) {
 		console.log(data)
 		this._id = data.id
 		this._name = data.name
