@@ -40,7 +40,6 @@ export class Recette  {
 	private readonly _description
 
 	constructor(data: JSONRecette) {
-		console.log(data)
 		this._id = data.id
 		this._name = data.name
 		this._servings = data.servings

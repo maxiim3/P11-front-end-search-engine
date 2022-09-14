@@ -1,7 +1,7 @@
-import {Api} from "./api/Api"
-import {DomFactory} from "./templates/DomFactory"
-import {MenuSwitcher} from "./filters/SecondFilter/MenuSwitcher"
-import {JSONRecette, MappedIngredients, Recette} from "./models/Recette"
+import {Api} from "../service/Api"
+import {DomFactory} from "../templates/DomFactory"
+import {MenuSwitcher} from "../filters/SecondFilter/MenuSwitcher"
+import {JSONRecette, MappedIngredients, Recette} from "../models/Recette"
 
 export class App {
 	private api: Api
@@ -12,7 +12,8 @@ export class App {
 		tags: [],
 	}
 
-	constructor(url:string) {
+	constructor(url: string) {
+		console.log(this)
 		this.url = url
 		this.api = new Api(this.url)
 		this.initialData = []
@@ -140,3 +141,8 @@ export class App {
 		this.globalObserver(allReceipts)
 	}
 }
+
+
+const app = new App("data/recipes.json")
+
+app.init().catch(e => new Error("Error on loading page" + e))

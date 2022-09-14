@@ -3,6 +3,7 @@ export class Api {
 
 	constructor(url: string) {
 		this.url = url
+		console.log("Depuis API")
 	}
 
 	async fetch() {
