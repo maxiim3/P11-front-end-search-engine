@@ -25,32 +25,31 @@
 			integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer" />
+
 		<script
-			src="js/api/Api.js"
+			src="js/api/fetchData.js"
 			defer></script>
 		<script
-			src="js/utils/StringUtility.js"
+			src="js/utils/Utility.js"
 			defer></script>
 		<script
-			src="js/utils/FilterV1.js"
+			src="js/tags/TagHandler.js"
+			defer></script>
+
+		<script
+			src="js/filters/_archiveFilter.js"
 			defer></script>
 		<script
-			src="js/utils/FilterV2.js"
+			src="js/filters/observers.js"
 			defer></script>
 		<script
-			src="js/utils/FilterV3.js"
+			src="js/filters/filtres.js"
 			defer></script>
 		<script
-			src="js/filters/MainFilter/MainFilter.js"
+			src="js/tags/MenuSwitcher.js"
 			defer></script>
 		<script
-			src="js/filters/SecondFilter/FilterByTags.js"
-			defer></script>
-		<script
-			src="js/filters/SecondFilter/MenuSwitcher.js"
-			defer></script>
-		<script
-			src="js/filters/SecondFilter/TagObserver.js"
+			src="js/tags/TagObserver.js"
 			defer></script>
 		<script
 			src="js/models/Recette.js"
@@ -59,7 +58,7 @@
 			src="js/templates/CardTemplate.js"
 			defer></script>
 		<script
-			src="js/templates/SecondFilterTemplate.js"
+			src="js/templates/FilterMenuTemplate.js"
 			defer></script>
 		<script
 			src="js/templates/TagsTemplate.js"
@@ -69,7 +68,6 @@
 			defer></script>
 		<script
 			src="js/app.js"
-			type="module"
 			defer></script>
 		<link
 			rel="stylesheet"
@@ -106,7 +104,7 @@
 						class="fa-solid fa-magnifying-glass"></span>
 				</label>
 				<!--    endregion-->
-				<!--    region Tags-->
+				<!--    region tags-->
 				<ul
 					class="tagsWrapper"
 					id="tagsWrapper"></ul>

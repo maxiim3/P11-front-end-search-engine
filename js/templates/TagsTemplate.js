@@ -1,4 +1,8 @@
 class TagsTemplate {
+	/**
+	 * render a tag element in tag Wrapper from selected tag in filter drop down menu
+	 * @param tag : HTMLLIElement
+	 */
 	constructor(tag) {
 		this.tag = tag
 		this.$tagsContainer = document.querySelector("#tagsWrapper")
@@ -28,6 +32,10 @@ class TagsTemplate {
 		return $tag
 	}
 
+	/**
+	 * @description append tag to selected tag wrapper | handle tag delete on click
+	 * @return {Promise<HTMLLIElement>}
+	 */
 	async appendTag() {
 		const $tag = await this.createTag()
 		if (this.$tagsContainer.childNodes.length < 3) {
@@ -41,6 +49,5 @@ class TagsTemplate {
 			})
 			return $tag
 		}
-		// this.$tagsContainer.replaceChild($tag, this.$tagsContainer.lastChild)
 	}
 }

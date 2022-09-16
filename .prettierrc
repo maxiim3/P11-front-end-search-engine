@@ -7,7 +7,7 @@
   "tabWidth": 4,
   "semi": false,
   "singleQuote" : false,
-  "printWidth": 85,
+  "printWidth": 112,
   "singleAttributePerLine": true,
   "embeddedLanguageFormatting": "auto",
   "htmlWhitespaceSensitivity": "css",

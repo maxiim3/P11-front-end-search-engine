@@ -1,13 +1,19 @@
 class DomFactory {
-	static async mapData(data) {
-		return await data.map(d => new Recette(d))
-	}
-
+	/**
+	 *
+	 * @param data: Recette[]
+	 * @return {Promise<void>}
+	 */
 	static async renderTagsFilter(data) {
-		const advancedFilter = new SecondFilterTemplate(data)
+		const advancedFilter = new FilterMenuTemplate(data)
 		return advancedFilter.render()
 	}
 
+	/**
+	 *
+	 * @param data : Recette[]
+	 * @return {Promise<void>}
+	 */
 	static async renderRecettesCards(data) {
 		return data.forEach(d => {
 			const cardTemplate = new CardTemplate(d)
@@ -16,24 +22,41 @@ class DomFactory {
 		})
 	}
 
+	/**
+	 * @description Removes Cards
+	 * @return {Promise<void>}
+	 */
 	static async removeRecettesCards() {
-		return (document.querySelector(".container").innerHTML = "")
+		(document.querySelector(".container").innerHTML = "")
 	}
 
+	/**
+	 * @description Removes tags
+	 * @return {Promise<void>}
+	 */
 	static async removeTagsFilter() {
 		return [...document.querySelectorAll(".filtres__filtre ul")].forEach(
 			filter => (filter.innerHTML = "")
 		)
 	}
 
+	/**
+	 * @requires removeTagsFilter
+	 * @requires removeRecettesCards
+	 * @description Removes tags and Cards
+	 * @return {Promise<void>}
+	 */
 	static async resetDom() {
 		await DomFactory.removeRecettesCards()
 		await DomFactory.removeTagsFilter()
 	}
 
+	/**
+	 * @param data : Recette[]
+	 * @return {Promise<void>}
+	 */
 	static async renderDOM(data) {
-		const mapData = await DomFactory.mapData(data)
-		await DomFactory.renderTagsFilter(mapData)
-		await DomFactory.renderRecettesCards(mapData)
+		await DomFactory.renderTagsFilter(data)
+		await DomFactory.renderRecettesCards(data)
 	}
 }

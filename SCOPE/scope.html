@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<script defer>
+			class Scope {
+				/**
+				 * @description -  🌈 - La **référence** de la fonction est passée pour l'eventListener
+				 * @description - On ne pourra pas utiliser les membres de la classes car le **scope (this) à changé** et fait référence à #document
+				 * @description - ☀️ -
+				 * @description - 💥 - Si on fait removeEventListener en utilisant une **fonction fléchée** (ligne du dessous), celui-ci ne sera **pas retiré** (pas de référence à la fonction)
+				 * */
+				constructor() {
+					this.message = "COUCOU"
+
+					// Add event listeners
+					document.addEventListener("click", this.callFunctionReference) // calls function reference
+					document.addEventListener("click", () => this.callWithArrowFunction()) // execute function
+
+					// Remove event listeners après 3s
+					setTimeout(() => {
+						console.log(
+							"\n %clisteners Removed \n",
+							"font-weight: black; text-transform : uppercase; background-color: white; color: red; font-size: 32px"
+						)
+						document.removeEventListener("click", this.callFunctionReference)
+						/*document.removeEventListener("click", () => this.callWithoutParenthesis()) // Cette fois-ci ne retirera pas l' eventListener*/
+
+						document.removeEventListener("click", this.callWithArrowFunction)
+						/*document.removeEventListener("click", () => this.callWithArrowFunction()) // Même résultat que ligne précédente car dans l'eventListener, la fonction est appelée avec une fonction fléchée et non une référence de celle-ci...*/
+					}, 3000)
+				}
+
+				callFunctionReference() {
+					console.log(`
+1. document.addEventListener("click", this.callWithoutParenthesis):
+
+	- On utilise la reference de la fonction dans l'event listener
+	- reference = fonction sans ()
+	- Si on appelle la meme reference dans 'removeEnventListener', l'evenement sera supprimee
+	- Le probleme est que l'on ne pourra pas utiliser les membres de la classe car le scope est changé...
+		La variable this.message, declaree en constructor n'est plus reconnue : ${this.message}
+		=> comment faire pour utiliser des props dans la fonction si le scope est change?
+							`)
+					console.warn(this) // Scopes #Document
+					console.log(`
+					\n`)
+				}
+
+				callWithArrowFunction() {
+					console.log(`
+2. document.addEventListener("click", () => this.callWithArrowFunction())
+
+	- On utilise la fonction flechee dans l'event listener
+	- Si on appelle la meme fonction dans 'removeEnventListener', l'evenement ne sera PAS supprimee
+	- cependant le scope reste inchangee, et l'on a access aux membres de la classe...
+		Le message est reconnu : ${this.message}
+						`)
+					console.warn(this)
+					console.log(`
+	\n`)
+				}
+			}
+
+			// Lancer une nouvelle instance de Scope
+			new Scope()
+		</script>
+
+		<style>
+			html {
+				font-family: sans-serif;
+				text-align: center;
+			}
+
+			body {
+				display: grid;
+				place-content: center;
+			}
+
+			p:first-of-type {
+				font-weight: bold;
+			}
+
+			p:last-of-type {
+				color: tomato;
+			}
+		</style>
+		<title>SCOPE</title>
+	</head>
+	<body>
+		<h1>Scope test</h1>
+		<p>OUVRIR LA CONSOLE ET RECHARGER LE DOCUMENT</p>
+		<p>CLIQUER SUR LE DOCUMENT pour voir les messages apparaitre dans la console</p>
+	</body>
+</html>
