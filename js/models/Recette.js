@@ -26,7 +26,7 @@ class Recette {
    *
    * @return {Object} {ingredient <String>, quantityUnit <String>}
    */
-  get ingredients() {
+  get getIngredients() {
     return this._ingredients.map((list) => {
       let { ingredient, quantity, unit } = list;
 
