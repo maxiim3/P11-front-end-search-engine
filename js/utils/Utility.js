@@ -24,6 +24,7 @@ class Utility {
 		return [joinFirstWord, ...words].join(" ")
 	}
 
+	
 	static removeAccent(words) {
 		const e = ["é", "è", "ê", "ë", "ē", "ė"]
 		const a = ["à", "á", "â", "ä"]
@@ -45,4 +46,10 @@ class Utility {
 		})
 		return out.join("")
 	}
+	static delay = async ms => new Promise(resolve => {
+		setTimeout(() => {
+			resolve()
+		}, ms)
+	})
+	
 }

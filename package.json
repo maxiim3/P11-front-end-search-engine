@@ -1,25 +1,25 @@
 {
-  "name": "oc_projet_7",
-  "version": "1.0.0",
-  "description": "",
-  "main": "js/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "sass --watch ./css/index.scss ./css/index.css "
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maxiim3/P11-front-end-search-engine.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/maxiim3/P11-front-end-search-engine/issues"
-  },
-  "homepage": "https://github.com/maxiim3/P11-front-end-search-engine#readme",
-  "devDependencies": {
-    "prettier": "^2.7.1",
-    "sass": "^1.54.8"
-  }
+	"name": "oc_projet_7",
+	"version": "1.0.0",
+	"description": "",
+	"main": "js/app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"sass": "sass --watch ./css/index.scss ./css/index.css "
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/maxiim3/P11-front-end-search-engine.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/maxiim3/P11-front-end-search-engine/issues"
+	},
+	"homepage": "https://github.com/maxiim3/P11-front-end-search-engine#readme",
+	"devDependencies": {
+		"prettier": "^2.7.1",
+		"sass": "^1.54.8"
+	}
 }
