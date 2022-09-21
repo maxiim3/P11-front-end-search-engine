@@ -7,7 +7,11 @@
   "tabWidth": 4,
   "semi": false,
   "singleQuote" : false,
+<<<<<<< HEAD
   "printWidth": 112,
+=======
+  "printWidth": 122,
+>>>>>>> algo/test
   "singleAttributePerLine": true,
   "embeddedLanguageFormatting": "auto",
   "htmlWhitespaceSensitivity": "css",
