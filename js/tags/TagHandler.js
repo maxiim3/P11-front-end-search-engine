@@ -1,11 +1,19 @@
-class TagHandler {
+import {MenuSwitcher} from "./MenuSwitcher.js"
+import {TagsTemplate} from "../templates/TagsTemplate.js"
+
+/**
+ * @class
+ * @static
+ * @classdesc Handle Methods for Tags
+ */
+export class TagHandler {
 	/**
 	 * @description Handle drop down tags menu and tag selection
 	 * @requires MenuSwitcher
 	 * @return {Promise<void>}
+	 * @static
 	 */
 	static async handleDropDownMenuFilter() {
-		const tagContainers = [...document.querySelectorAll(".filtres__filtre")]
 		const filterButtons = [...document.querySelectorAll(".filtres__button")]
 		filterButtons.forEach(btn => {
 			const switcher = new MenuSwitcher(btn)
@@ -19,8 +27,9 @@ class TagHandler {
 
 	/**
 	 * @description Remove all tags from tag wrapper
+	 * @static
 	 */
-	static removeTags() {
+	static removeTagQueries() {
 		const $allTags = [...document.querySelectorAll(".filtres__list li")]
 		const $tagsContainer = document.querySelector("#tagsWrapper")
 
@@ -43,6 +52,7 @@ class TagHandler {
 	 * @description Filter the tags by input search
 	 * @return {Promise<HTMLLIElement[]>}
 	 * @param selectedTagContainer : ParentNode
+	 * @static
 	 */
 	static async handleSearchForTags(selectedTagContainer) {
 		const type = selectedTagContainer.querySelector("ul").dataset.filterName
@@ -67,6 +77,7 @@ class TagHandler {
 	 * @param tags : HTMLLIElement[]
 	 * @param selectedTagContainer : ParentNode
 	 * @return void
+	 * @static
 	 */
 	static handleClickOnTags(tags, selectedTagContainer) {
 		tags.forEach($tag => {
@@ -84,8 +95,9 @@ class TagHandler {
 
 	/**
 	 * Select all none *[data-hidden=true]* li in observer
-	 * @param observer : HTMLButtonElement
+	 * @param observer : HTMLDivElement
 	 * @return {HTMLLIElement[]}
+	 * @static
 	 */
 	static getAllTags(observer) {
 		return [...observer.querySelectorAll("li:not([data-hidden=true])")]

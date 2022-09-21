@@ -1,24 +1,29 @@
-class CardTemplate {
+export class CardTemplate {
+  /**
+   * @type Recette
+   * @private
+   */
+  #data
   /**
    * @param data : Recette
    */
   constructor(data) {
-    this.data = data
+    this.#data = data
   }
 
   /**
    * @return {HTMLDivElement}
    */
-  generateTitle() {
+  #generateTitle() {
     const timeIcon = document.createElement("span")
     timeIcon.classList.value = "fa-regular fa-clock"
 
     const time = document.createElement("p")
-    time.textContent = this.data.time
+    time.textContent = this.#data.time
     time.prepend(timeIcon)
 
     const title = document.createElement("h3")
-    title.textContent = this.data.name
+    title.textContent = this.#data.name
 
     const sectionTitle = document.createElement("section")
     sectionTitle.classList.value = "recette__title"
@@ -30,16 +35,17 @@ class CardTemplate {
 
   /**
    * @return {HTMLDivElement}
+   * @private
    */
-  generateInformations() {
+  #generateInformations() {
     const description = document.createElement("p")
     description.classList.value = "recette__description"
-    description.textContent = this.data.description
+    description.textContent = this.#data.description
 
     const ingredients = document.createElement("ul")
     ingredients.classList.value = "recette__ingredients"
 
-    this.data.getIngredients.forEach(i => {
+    this.#data.getIngredients.forEach(i => {
       const ingredient = document.createElement("li")
 
       const key = document.createElement("span")
@@ -65,10 +71,10 @@ class CardTemplate {
     return sectionInformation
   }
   /**
-   * @param children : HTMLDivElement
    * @return {HTMLDivElement}
+   * @param children : HTMLDivElement
    */
-  generateBody(...children) {
+  #generateBody(...children) {
     const $children = [...children]
     const $body = document.createElement("section")
     $body.classList.value = "recette__body"
@@ -80,7 +86,7 @@ class CardTemplate {
   /**
    * @return {HTMLDivElement}
    */
-  generateHeader() {
+  #generateHeader() {
     return document.createElement("header")
   }
 
@@ -88,11 +94,11 @@ class CardTemplate {
    * @param children : HTMLDivElement
    * @return {HTMLDivElement}
    */
-  generateCard(...children) {
+  #generateCard(...children) {
     const $children = [...children]
     const $card = document.createElement("div")
     $card.classList.value = "recette"
-    $card.dataset.id = this.data.id.toString()
+    $card.dataset.id = this.#data.id.toString()
 
     $children.forEach(child => $card.appendChild(child))
 
@@ -104,11 +110,11 @@ class CardTemplate {
    * @return {HTMLDivElement}
    */
   render() {
-    const $header = this.generateHeader()
-    const $informationsSection = this.generateInformations()
-    const $titleSection = this.generateTitle()
-    const $body = this.generateBody($titleSection, $informationsSection)
+    const $header = this.#generateHeader()
+    const $informationsSection = this.#generateInformations()
+    const $titleSection = this.#generateTitle()
+    const $body = this.#generateBody($titleSection, $informationsSection)
 
-    return this.generateCard($header, $body)
+    return this.#generateCard($header, $body)
   }
 }

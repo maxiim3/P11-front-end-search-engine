@@ -1,6 +1,7 @@
-class Utility {
+export class Utility {
 	/**
 	 * Capitalize first Letter of word
+	 * @static
 	 * @param word {string}
 	 * @return {string}
 	 */
@@ -24,7 +25,12 @@ class Utility {
 		return [joinFirstWord, ...words].join(" ")
 	}
 
-	
+
+	/**
+	 * @static
+	 * @param words {string}
+	 * @return {string}
+	 */
 	static removeAccent(words) {
 		const e = ["é", "è", "ê", "ë", "ē", "ė"]
 		const a = ["à", "á", "â", "ä"]
@@ -46,10 +52,18 @@ class Utility {
 		})
 		return out.join("")
 	}
-	static delay = async ms => new Promise(resolve => {
-		setTimeout(() => {
-			resolve()
-		}, ms)
-	})
-	
+
+	/**
+	 * @static
+	 * @param ms : number
+	 * @return {Promise<unknown>}
+	 */
+	static async delay(ms) {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve()
+			}, ms)
+		})
+	}
+
 }

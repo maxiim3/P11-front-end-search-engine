@@ -1,10 +1,16 @@
-class DomFactory {
+import {FilterMenuTemplate} from "./FilterMenuTemplate.js"
+import {CardTemplate} from "./CardTemplate.js"
+
+export class DomFactory {
 	/**
 	 *
 	 * @param data: Recette[]
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
+	 * @param {Recette[]} data
 	 */
-	static async renderTagsFilter(data) {
+	static async #renderTagsFilter(data) {
 		const advancedFilter = new FilterMenuTemplate(data)
 		return advancedFilter.render()
 	}
@@ -12,9 +18,11 @@ class DomFactory {
 	/**
 	 *
 	 * @param data : Recette[]
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async renderRecettesCards(data) {
+	static async #renderRecettesCards(data) {
 		return data.forEach(d => {
 			const cardTemplate = new CardTemplate(d)
 			const $card = cardTemplate.render()
@@ -24,39 +32,47 @@ class DomFactory {
 
 	/**
 	 * @description Removes Cards
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async removeRecettesCards() {
+	static async #removeRecettesCards() {
 		(document.querySelector(".container").innerHTML = "")
 	}
 
 	/**
 	 * @description Removes tags
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async removeTagsFilter() {
+	static async #removeTagsFilter() {
 		return [...document.querySelectorAll(".filtres__filtre ul")].forEach(
 			filter => (filter.innerHTML = "")
 		)
 	}
 
 	/**
-	 * @requires removeTagsFilter
-	 * @requires removeRecettesCards
+	 * @requires DomFactory
+	 * @requires DomFactory
 	 * @description Removes tags and Cards
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
 	 */
 	static async resetDom() {
-		await DomFactory.removeRecettesCards()
-		await DomFactory.removeTagsFilter()
+		await DomFactory.#removeRecettesCards()
+		await DomFactory.#removeTagsFilter()
 	}
 
 	/**
 	 * @param data : Recette[]
+	 * @static
+	 * @private
 	 * @return {Promise<void>}
 	 */
 	static async renderDOM(data) {
-		await DomFactory.renderTagsFilter(data)
-		await DomFactory.renderRecettesCards(data)
+		await DomFactory.#renderTagsFilter(data)
+		await DomFactory.#renderRecettesCards(data)
 	}
 }

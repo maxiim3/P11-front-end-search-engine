@@ -1,4 +1,28 @@
-class Filtres {
+import {Utility} from "../utils/Utility.js"
+
+export class FiltresV1 {
+	/**
+	 * @type Recette[]
+	 * @private
+	 */
+	#data
+	/**
+	 * @type string
+	 * @private
+	 */
+	#input
+	/**
+	 * @type HTMLLIElement[]
+	 * @private
+	 */
+	#tags
+	/**
+	 *
+	 * @type Recette[]
+	 * @private
+	 */
+	#filteredByTags
+
 	/**
 	 *
 	 * @param data : Recette[]
@@ -6,10 +30,11 @@ class Filtres {
 	 * @param tags : HTMLLIElement[]
 	 */
 	constructor(data, {input, tags}) {
-		this.data = data
-		this.input = input
-		this.tags = tags
-		this.filteredByTags = []
+		this.#data = data
+		this.#input = input
+		this.#tags = tags
+		// initialize filterByTags
+		this.#filteredByTags = []
 	}
 
 	/**
@@ -19,7 +44,7 @@ class Filtres {
 	 * @param recettes : Recette[]
 	 * @return {Promise<*[]|Recette[]>}
 	 */
-	filterBy = async (type, input, recettes) => {
+	async #filterBy(type, input, recettes) {
 		const result = []
 		switch (type) {
 			case "ingredients":
@@ -42,34 +67,13 @@ class Filtres {
 		}
 	}
 
-	filterBySearch = async () => {
-		const filterByName = await this.filterBy("name", this.input, this.data)
-		if (filterByName.length !== 0) return filterByName
-		else {
-			const filterByDescription = await this.filterBy("description", this.input, this.data)
-			if (filterByDescription.length !== 0) return filterByDescription
-			else {
-				const filterByIngredients = await this.filterBy("ingredients", this.input, this.data)
-				if (filterByIngredients.length !== 0) return filterByIngredients
-				else return []
-			}
-		}
-	}
-
-	filterByTags = async () => {
-		const allTags = [...this.tags]
-		const output = []
-		await this.recursiveFiltering(allTags, output)
-		return this.filteredByTags
-	}
-
 	/**
 	 *
 	 * @param tags : HTMLLIElement[]
 	 * @param dataAccumulator : Recette[]
-	 * @return {Promise<void>}
+	 * @return {Promise<Recette[]>}
 	 */
-	async recursiveFiltering(tags, dataAccumulator) {
+	async #recursiveFiltering(tags, dataAccumulator) {
 		// if there is minimum one tage in tags array
 		if (tags.length !== 0) {
 			// targeting first item of tags array : tags[0]
@@ -79,17 +83,38 @@ class Filtres {
 			// Tag Type, select the type fo filter
 			const tagType = Utility.removeAccent(firstTag.dataset.tag.toString())
 			// set data to initial data or accumulated data
-			const data = dataAccumulator.length !== 0 ? [...dataAccumulator] : [...this.data]
+			const data = dataAccumulator.length !== 0 ? [...dataAccumulator] : [...this.#data]
 			// get result from filter
-			const filterResult = await this.filterBy(tagType, tagValue, data)
+			const filterResult = await this.#filterBy(tagType, tagValue, data)
 			// remove the first item of the tags array
 			tags.shift()
 			// call back the recursive function with updated tags array and filtered data
-			await this.recursiveFiltering(tags, filterResult)
+			await this.#recursiveFiltering(tags, filterResult)
 		}
 		// if no tags in tags array, and of the loop, return the filtered data
 		else {
-			this.filteredByTags = [...dataAccumulator]
+			this.#filteredByTags = [...dataAccumulator]
 		}
+	}
+
+	async filterBySearch() {
+		const filterByName = await this.#filterBy("name", this.#input, this.#data)
+		if (filterByName.length !== 0) return filterByName
+		else {
+			const filterByDescription = await this.#filterBy("description", this.#input, this.#data)
+			if (filterByDescription.length !== 0) return filterByDescription
+			else {
+				const filterByIngredients = await this.#filterBy("ingredients", this.#input, this.#data)
+				if (filterByIngredients.length !== 0) return filterByIngredients
+				else return []
+			}
+		}
+	}
+
+	async filterByTags() {
+		const allTags = [...this.#tags]
+		const output = []
+		await this.#recursiveFiltering(allTags, output)
+		return this.#filteredByTags
 	}
 }

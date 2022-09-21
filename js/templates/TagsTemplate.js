@@ -1,15 +1,26 @@
-class TagsTemplate {
+export class TagsTemplate {
+	/**
+	 * @private
+	 * @type HTMLLIElement
+	 */
+	#tag
+	/**
+	 * @private
+	 * @type HTMLDivElement
+	 */
+	#$tagsContainer
+
 	/**
 	 * render a tag element in tag Wrapper from selected tag in filter drop down menu
 	 * @param tag : HTMLLIElement
 	 */
 	constructor(tag) {
-		this.tag = tag
-		this.$tagsContainer = document.querySelector("#tagsWrapper")
+		this.#tag = tag
+		this.#$tagsContainer = document.querySelector("#tagsWrapper")
 	}
 
-	async createTag() {
-		const {textContent: value, dataset} = this.tag
+	async #createTag() {
+		const {textContent: value, dataset} = this.#tag
 
 		const $icon = document.createElement("span")
 		$icon.classList.value = "fa-regular fa-circle-xmark icon"
@@ -37,15 +48,15 @@ class TagsTemplate {
 	 * @return {Promise<HTMLLIElement>}
 	 */
 	async appendTag() {
-		const $tag = await this.createTag()
-		if (this.$tagsContainer.childNodes.length < 3) {
-			this.$tagsContainer.appendChild($tag)
-			this.tag.dataset.active = "true"
-			this.tag.disabled = true
+		const $tag = await this.#createTag()
+		if (this.#$tagsContainer.childNodes.length < 3) {
+			this.#$tagsContainer.appendChild($tag)
+			this.#tag.dataset.active = "true"
+			this.#tag.disabled = true
 			$tag.querySelector(".tag__btn").addEventListener("click", e => {
-				this.tag.dataset.active = "false"
-				this.tag.disabled = false
-				this.$tagsContainer.removeChild($tag)
+				this.#tag.dataset.active = "false"
+				this.#tag.disabled = false
+				this.#$tagsContainer.removeChild($tag)
 			})
 			return $tag
 		}
