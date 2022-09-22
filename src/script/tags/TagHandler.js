@@ -7,17 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { MenuSwitcher } from "./MenuSwitcher.js";
 import { TagsTemplate } from "../templates/TagsTemplate.js";
 export class TagHandler {
     static handleDropDownMenuFilter() {
         return __awaiter(this, void 0, void 0, function* () {
             const filterButtons = [...document.querySelectorAll(".filtres__button")];
             filterButtons.forEach(btn => {
-                const switcher = new MenuSwitcher(btn);
                 btn.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
                     e.preventDefault();
-                    yield switcher.update();
                 }));
             });
         });
@@ -45,6 +42,7 @@ export class TagHandler {
             const type = ulElement.dataset.filterName;
             const inputElement = selectedTagContainer.querySelector("input");
             const inputQuery = inputElement.value;
+            console.log(inputQuery);
             const pattern = new RegExp(inputQuery, "gi");
             const selection = `ul[data-filter-name=${CSS.escape(type)}] li`;
             const $tags = [...document.querySelectorAll(selection)];

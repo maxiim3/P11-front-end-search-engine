@@ -18,6 +18,7 @@ import { Api } from "../api/Api.js";
 import { TagHandler } from "../tags/TagHandler.js";
 import { DomFactory } from "../templates/DomFactory.js";
 import { Observer } from "../filters/Observer.js";
+import { MenuSubject } from "../filters/MenuFilterState.js";
 export class App {
     constructor() {
         _App_instances.add(this);
@@ -48,6 +49,16 @@ _App_instances = new WeakSet(), _App_handleDataFromJson = function _App_handleDa
         yield TagHandler.handleDropDownMenuFilter();
         const globalObserver = new Observer(this._allReceipts);
         yield globalObserver.observeDomChange();
+        const filters = [...document.querySelectorAll(".filtres__filtre")];
+        const menuSubject = new MenuSubject();
+        filters.forEach(filter => {
+            const btn = filter.querySelector("button");
+            btn.addEventListener("click", () => {
+                menuSubject.subscribe(filter);
+                filters.filter(f => f !== filter).forEach(filter => menuSubject.unsubscribe(filter));
+                menuSubject.fire();
+            });
+        });
     });
 };
 //# sourceMappingURL=app.js.map

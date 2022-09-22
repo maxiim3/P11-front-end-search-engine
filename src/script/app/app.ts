@@ -3,6 +3,7 @@ import {Api} from "../api/Api.js"
 import {TagHandler} from "../tags/TagHandler.js"
 import {DomFactory} from "../templates/DomFactory.js"
 import {Observer} from "../filters/Observer.js"
+import {MenuSubject} from "../filters/MenuFilterState.js"
 
 export class App {
 	private _fetchedData: RecetteFromJSON[]
@@ -39,9 +40,9 @@ export class App {
 	 * @requires DomFactory
 	 * @return {Promise<void>}
 	 */
-		async #renderDOMOnLoad() {
-			await DomFactory.renderDOM(this._allReceipts)
-		}
+	async #renderDOMOnLoad() {
+		await DomFactory.renderDOM(this._allReceipts)
+	}
 
 	/**
 	 * @requires TagHandler
@@ -49,12 +50,25 @@ export class App {
 	 * @return {Promise<void>}
 	 */
 
-		async #globalObserver() {
-			// change to tag context
-			await TagHandler.handleDropDownMenuFilter()
-			const globalObserver = new Observer(this._allReceipts)
-			await globalObserver.observeDomChange()
-		}
+	async #globalObserver() {
+		// change to tag context
+		await TagHandler.handleDropDownMenuFilter()
+		const globalObserver = new Observer(this._allReceipts)
+		await globalObserver.observeDomChange()
+		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
+
+		const menuSubject = new MenuSubject()
+
+		filters.forEach(filter => {
+			const btn = filter.querySelector("button") as HTMLButtonElement
+
+			btn.addEventListener("click", () => {
+				menuSubject.subscribe(filter)
+				filters.filter(f => f !== filter).forEach(filter => menuSubject.unsubscribe(filter))
+				menuSubject.fire()
+			})
+		})
+	}
 
 	async init() {
 		await this.#handleDataFromJson()

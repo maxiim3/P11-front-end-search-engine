@@ -1,4 +1,3 @@
-import {MenuSwitcher} from "./MenuSwitcher.js"
 import {TagsTemplate} from "../templates/TagsTemplate.js"
 
 /**
@@ -8,18 +7,15 @@ import {TagsTemplate} from "../templates/TagsTemplate.js"
 export class TagHandler {
 	/**
 	 * @description Handle drop down tags menu and tag selection
-	 * @requires MenuSwitcher
 	 * @static
 	 * @return {Promise<void>}
 	 */
 	static async handleDropDownMenuFilter() {
 		const filterButtons = [...document.querySelectorAll(".filtres__button")] as HTMLButtonElement[]
 		filterButtons.forEach(btn => {
-			const switcher = new MenuSwitcher(btn)
 
 			btn.addEventListener("click", async e => {
 				e.preventDefault()
-				await switcher.update()
 			})
 		})
 	}
@@ -58,6 +54,7 @@ export class TagHandler {
 		const type = ulElement.dataset.filterName as string
 		const inputElement = selectedTagContainer.querySelector("input") as HTMLInputElement
 		const inputQuery = inputElement.value
+		console.log(inputQuery)
 		const pattern = new RegExp(inputQuery, "gi")
 		const selection = `ul[data-filter-name=${CSS.escape(type)}] li`
 		const $tags = [...document.querySelectorAll(selection)] as HTMLLIElement[]
