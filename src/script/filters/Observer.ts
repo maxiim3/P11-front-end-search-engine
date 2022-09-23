@@ -1,10 +1,10 @@
-import {TagHandler} from "../tags/TagHandler.js"
-import {DomFactory} from "../templates/DomFactory.js"
+import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
 import {Utility} from "../utils/Utility.js"
 import {FiltresV1} from "./FilterV1.js"
-import {Recette} from "../models/Recette"
+import {Recette} from "../models/Recette.js"
 
-export type KeyWordsType = {input: string, tags: HTMLLIElement[]}
+export type KeyWordsType = {input: string; tags: HTMLLIElement[]}
+
 export class Observer {
 	/**
 	 * @type Recette[]
@@ -61,7 +61,7 @@ export class Observer {
 		return this._recettes
 	}
 
-	private get keyWords() : KeyWordsType {
+	private get keyWords(): KeyWordsType {
 		return {input: this.input, tags: this.selectedTags}
 	}
 
@@ -104,7 +104,7 @@ export class Observer {
 	 * @async
 	 * @inner
 	 * @private
-	 * @requires DomFactory
+	 * @requires DomFactoryMethods
 	 * @requires TagHandler
 	 * @memberOf observeDomChange
 	 * @return {Promise<void>}
@@ -118,12 +118,11 @@ export class Observer {
 			if (this.input.length > 2) {
 				const Filter = new FiltresV1(this.recettes, this.keyWords)
 				this.resultsFromQuerySearch = await Filter.filterBySearch()
-				TagHandler.removeTagQueries()
-				await DomFactory.resetDom()
-				await DomFactory.renderDOM(this.resultsFromQuerySearch)
+				await DomFactoryMethods.resetDom()
+				await DomFactoryMethods.renderDOM(this.resultsFromQuerySearch)
 			} else {
-				await DomFactory.resetDom()
-				await DomFactory.renderDOM(this.recettes)
+				await DomFactoryMethods.resetDom()
+				await DomFactoryMethods.renderDOM(this.recettes)
 			}
 		})
 	}
@@ -133,8 +132,7 @@ export class Observer {
 	 * @async
 	 * @inner
 	 * @private
-	 * @requires DomFactory
-	 * @requires TagHandler
+	 * @requires DomFactoryMethods
 	 * @memberOf observeDomChange
 	 * @return {Promise<void>}
 	 */
@@ -148,11 +146,11 @@ export class Observer {
 				tags.forEach(tag => this.selectedTags.push(tag))
 				const Filter = new FiltresV1(await this.dataByQuerySearch(), this.keyWords)
 				this.resultsFromQueryTags = await Filter.filterByTags()
-				await DomFactory.resetDom()
-				await DomFactory.renderDOM(this.resultsFromQueryTags)
+				await DomFactoryMethods.resetDom()
+				await DomFactoryMethods.renderDOM(this.resultsFromQueryTags)
 			} else {
-				await DomFactory.resetDom()
-				await DomFactory.renderDOM(await this.dataByQuerySearch())
+				await DomFactoryMethods.resetDom()
+				await DomFactoryMethods.renderDOM(await this.dataByQuerySearch())
 			}
 		})
 		observer.observe(this.$tagsContainer, this.config)

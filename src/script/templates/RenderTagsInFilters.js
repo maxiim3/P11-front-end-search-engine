@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Utility } from "../utils/Utility.js";
-export class FilterMenuTemplate {
+export class RenderTagsInFilters {
     constructor(data) {
         this.recettes = data;
     }
@@ -73,4 +73,4 @@ export class FilterMenuTemplate {
         });
     }
 }
-//# sourceMappingURL=FilterMenuTemplate.js.map
+//# sourceMappingURL=RenderTagsInFilters.js.map

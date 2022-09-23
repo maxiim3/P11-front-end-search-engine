@@ -7,8 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { TagHandler } from "../tags/TagHandler.js";
-import { DomFactory } from "../templates/DomFactory.js";
+import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { Utility } from "../utils/Utility.js";
 import { FiltresV1 } from "./FilterV1.js";
 export class Observer {
@@ -61,13 +60,12 @@ export class Observer {
                 if (this.input.length > 2) {
                     const Filter = new FiltresV1(this.recettes, this.keyWords);
                     this.resultsFromQuerySearch = yield Filter.filterBySearch();
-                    TagHandler.removeTagQueries();
-                    yield DomFactory.resetDom();
-                    yield DomFactory.renderDOM(this.resultsFromQuerySearch);
+                    yield DomFactoryMethods.resetDom();
+                    yield DomFactoryMethods.renderDOM(this.resultsFromQuerySearch);
                 }
                 else {
-                    yield DomFactory.resetDom();
-                    yield DomFactory.renderDOM(this.recettes);
+                    yield DomFactoryMethods.resetDom();
+                    yield DomFactoryMethods.renderDOM(this.recettes);
                 }
             }));
         });
@@ -82,12 +80,12 @@ export class Observer {
                     tags.forEach(tag => this.selectedTags.push(tag));
                     const Filter = new FiltresV1(yield this.dataByQuerySearch(), this.keyWords);
                     this.resultsFromQueryTags = yield Filter.filterByTags();
-                    yield DomFactory.resetDom();
-                    yield DomFactory.renderDOM(this.resultsFromQueryTags);
+                    yield DomFactoryMethods.resetDom();
+                    yield DomFactoryMethods.renderDOM(this.resultsFromQueryTags);
                 }
                 else {
-                    yield DomFactory.resetDom();
-                    yield DomFactory.renderDOM(yield this.dataByQuerySearch());
+                    yield DomFactoryMethods.resetDom();
+                    yield DomFactoryMethods.renderDOM(yield this.dataByQuerySearch());
                 }
             }));
             observer.observe(this.$tagsContainer, this.config);

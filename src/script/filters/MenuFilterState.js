@@ -7,6 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { Utility } from "../utils/Utility.js";
+import { TagsTemplate } from "../templates/TagsTemplate.js";
 export class MenuFilterState {
     constructor(filter) {
         this.filter = filter;
@@ -31,6 +33,28 @@ export class OpenMenu {
         this.filter.ariaHidden = "false";
         this.filter.focus();
         this.filter.dataset.color = this.filter.style.backgroundColor;
+        const inputSearch = this.filter.querySelector("input");
+        const tagWrapper = this.filter.querySelector("ul");
+        const $tags = [...tagWrapper.querySelectorAll("li")];
+        inputSearch.addEventListener("input", () => __awaiter(this, void 0, void 0, function* () {
+            const query = Utility.removeAccent(inputSearch.value);
+            $tags.map(($tag) => __awaiter(this, void 0, void 0, function* () {
+                const formatTagName = Utility.removeAccent($tag.innerText);
+                if (formatTagName.includes(query))
+                    $tag.setAttribute("data-hidden", "false");
+                else
+                    $tag.setAttribute("data-hidden", "true");
+            }));
+        }));
+        $tags.forEach($tag => {
+            $tag.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+                if ($tag.dataset.active === "false") {
+                    const tagTpl = new TagsTemplate($tag);
+                    yield tagTpl.appendTag();
+                    inputSearch.value = "";
+                }
+            }));
+        });
     }
     fire() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +71,13 @@ export class CloseMenu {
         this.filter.dataset.open = "false";
         this.filter.ariaHidden = "true";
         this.filter.blur();
+        const inputSearch = this.filter.querySelector("input");
+        const tagWrapper = this.filter.querySelector("ul");
+        const $tags = [...tagWrapper.querySelectorAll("li")];
+        inputSearch.value = "";
+        $tags.forEach($tag => {
+            $tag.setAttribute("data-hidden", "false");
+        });
     }
     fire() {
         this.setInactive();

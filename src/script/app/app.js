@@ -15,10 +15,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _App_instances, _App_handleDataFromJson, _App_renderDOMOnLoad, _App_globalObserver;
 import { Recette } from "../models/Recette.js";
 import { Api } from "../api/Api.js";
-import { TagHandler } from "../tags/TagHandler.js";
-import { DomFactory } from "../templates/DomFactory.js";
-import { Observer } from "../filters/Observer.js";
+import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { MenuSubject } from "../filters/MenuFilterState.js";
+import { Observer } from "../filters/Observer.js";
 export class App {
     constructor() {
         _App_instances.add(this);
@@ -42,11 +41,10 @@ _App_instances = new WeakSet(), _App_handleDataFromJson = function _App_handleDa
     });
 }, _App_renderDOMOnLoad = function _App_renderDOMOnLoad() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield DomFactory.renderDOM(this._allReceipts);
+        yield DomFactoryMethods.renderDOM(this._allReceipts);
     });
 }, _App_globalObserver = function _App_globalObserver() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield TagHandler.handleDropDownMenuFilter();
         const globalObserver = new Observer(this._allReceipts);
         yield globalObserver.observeDomChange();
         const filters = [...document.querySelectorAll(".filtres__filtre")];

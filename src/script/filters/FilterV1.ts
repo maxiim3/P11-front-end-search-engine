@@ -1,6 +1,6 @@
 import {Utility} from "../utils/Utility.js"
-import {Recette} from "../models/Recette"
-import {KeyWordsType} from "./Observer"
+import {Recette} from "../models/Recette.js"
+import {KeyWordsType} from "./Observer.js"
 
 export type TypeOfTags = "ingredients" | "ustensiles" | "name" | "description" | "appliance"
 

@@ -1,12 +1,12 @@
-import {FilterMenuTemplate} from "./FilterMenuTemplate.js"
+import {RenderTagsInFilters} from "./RenderTagsInFilters.js"
 import {CardTemplate} from "./CardTemplate.js"
-import {Recette} from "../models/Recette"
+import {Recette} from "../models/Recette.js"
 
 /**
- * @class DomFactory
+ * @class DomFactoryMethods
  * @classdesc static methods for rendering or deleting dom elements (cards | tags)
  */
-export class DomFactory {
+export class DomFactoryMethods {
 	private static container = document.querySelector(".container") as HTMLDivElement
 	private static filters = [...document.querySelectorAll(".filtres__filtre ul")] as HTMLUListElement[]
 
@@ -17,8 +17,8 @@ export class DomFactory {
 	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async #renderTagsFilter(data: Recette[]) {
-		const advancedFilter = new FilterMenuTemplate(data)
+	static async renderTagsFilter(data: Recette[]) {
+		const advancedFilter = new RenderTagsInFilters(data)
 		return advancedFilter.render()
 	}
 
@@ -29,11 +29,11 @@ export class DomFactory {
 	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async #renderRecettesCards(data: Recette[]) {
+	static async renderRecettesCards(data: Recette[]) {
 		return data.forEach(d => {
 			const cardTemplate = new CardTemplate(d)
 			const $card = cardTemplate.render()
-			DomFactory.container.appendChild($card)
+			DomFactoryMethods.container.appendChild($card)
 		})
 	}
 
@@ -43,8 +43,8 @@ export class DomFactory {
 	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async #removeRecettesCards() {
-		DomFactory.container.innerHTML = ""
+	static async removeRecettesCards() {
+		DomFactoryMethods.container.innerHTML = ""
 	}
 
 	/**
@@ -53,21 +53,21 @@ export class DomFactory {
 	 * @private
 	 * @return {Promise<void>}
 	 */
-	static async #removeTagsFilter() {
-		return DomFactory.filters.forEach(filter => (filter.innerHTML = ""))
+	static async removeTagsFilter() {
+		return DomFactoryMethods.filters.forEach(filter => (filter.innerHTML = ""))
 	}
 
 	/**
-	 * @requires DomFactory
-	 * @requires DomFactory
+	 * @requires DomFactoryMethods
+	 * @requires DomFactoryMethods
 	 * @description Removes tags and Cards
 	 * @static
 	 * @private
 	 * @return {Promise<void>}
 	 */
 	static async resetDom() {
-		await DomFactory.#removeRecettesCards()
-		await DomFactory.#removeTagsFilter()
+		await DomFactoryMethods.removeRecettesCards()
+		await DomFactoryMethods.removeTagsFilter()
 	}
 
 	/**
@@ -77,7 +77,7 @@ export class DomFactory {
 	 * @return {Promise<void>}
 	 */
 	static async renderDOM(data: Recette[]) {
-		await DomFactory.#renderTagsFilter(data)
-		await DomFactory.#renderRecettesCards(data)
+		await DomFactoryMethods.renderTagsFilter(data)
+		await DomFactoryMethods.renderRecettesCards(data)
 	}
 }

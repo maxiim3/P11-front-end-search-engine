@@ -1,7 +1,7 @@
 import {Utility} from "../utils/Utility.js"
 import {Recette} from "../models/Recette.js"
 
-export class FilterMenuTemplate {
+export class RenderTagsInFilters {
 	/**
 	 * @type Recette[]
 	 * @private

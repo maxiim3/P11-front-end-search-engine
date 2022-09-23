@@ -1,3 +1,6 @@
+import {Utility} from "../utils/Utility.js"
+import {TagsTemplate} from "../templates/TagsTemplate.js"
+
 export const enum StateEnums {
 	Close = "close",
 	Open = "open",
@@ -7,6 +10,8 @@ type StateType = {
 	close: CloseMenu
 	open: OpenMenu
 }
+type MousePositionProps = {x: number; y: number}
+type ContainerPositionProps = {positionXLeft: number; width: number; positionYTop: number; height: number}
 
 export class MenuFilterState {
 	private readonly states: StateType
@@ -43,6 +48,28 @@ export class OpenMenu {
 		this.filter.ariaHidden = "false"
 		this.filter.focus()
 		this.filter.dataset.color = this.filter.style.backgroundColor
+		const inputSearch = this.filter.querySelector("input") as HTMLInputElement
+		const tagWrapper = this.filter.querySelector("ul") as HTMLUListElement
+		const $tags = [...tagWrapper.querySelectorAll("li")] as HTMLLIElement[]
+
+		inputSearch.addEventListener("input", async () => {
+			const query = Utility.removeAccent(inputSearch.value) as string
+			$tags.map(async $tag => {
+				const formatTagName = Utility.removeAccent($tag.innerText) as string
+				if (formatTagName.includes(query)) $tag.setAttribute("data-hidden", "false")
+				else $tag.setAttribute("data-hidden", "true")
+			})
+		})
+
+		$tags.forEach($tag => {
+			$tag.addEventListener("click", async () => {
+				if ($tag.dataset.active === "false") {
+					const tagTpl = new TagsTemplate($tag)
+					await tagTpl.appendTag()
+					inputSearch.value = ""
+				}
+			})
+		})
 	}
 
 	async fire() {
@@ -63,15 +90,19 @@ export class CloseMenu {
 		this.filter.dataset.open = "false"
 		this.filter.ariaHidden = "true"
 		this.filter.blur()
+		const inputSearch = this.filter.querySelector("input") as HTMLInputElement
+		const tagWrapper = this.filter.querySelector("ul") as HTMLUListElement
+		const $tags = [...tagWrapper.querySelectorAll("li")] as HTMLLIElement[]
+		inputSearch.value = ""
+		$tags.forEach($tag => {
+			$tag.setAttribute("data-hidden", "false")
+		})
 	}
 
 	fire() {
 		this.setInactive()
 	}
 }
-
-type MousePositionProps = {x: number; y: number}
-type ContainerPositionProps = {positionXLeft: number; width: number; positionYTop: number; height: number}
 
 export class MenuSubject {
 	observers: MenuFilterState[]
@@ -98,13 +129,10 @@ export class MenuSubject {
 				const mouseProps = this.getMousePosition(ev)
 				const containerProps = this.getObserverPosition(observer)
 				if (this.mouseInObserver(mouseProps, containerProps)) {
-					// todo handle add tags
-					// handle input search
 					return
 				} else {
 					this.unsubscribe(observer)
 					this.fire()
-					//todo empty input tags
 				}
 			}
 		})
