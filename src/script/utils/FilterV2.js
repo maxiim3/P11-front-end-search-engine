@@ -12,11 +12,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _FiltresV1_instances, _FiltresV1_recursiveFiltering;
-import { Utility } from "../utils/Utility.js";
-export class FiltresV1 {
+var _FilterV2_instances, _FilterV2_recursiveFiltering;
+import { Utility } from "./Utility.js";
+export class FilterV2 {
     constructor(data, { input, tags }) {
-        _FiltresV1_instances.add(this);
+        _FilterV2_instances.add(this);
         this.recettes = data;
         this.input = input;
         this.tags = tags;
@@ -25,17 +25,22 @@ export class FiltresV1 {
     filterBy(type, input, recettes) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = [];
-            switch (type) {
-                case "ingredients":
-                    recettes.forEach(recette => {
-                        recette.ingredients.map(({ ingredient }) => Utility.removeAccent(ingredient).includes(input) && result.push(recette));
-                    });
-                    return result;
-                case "ustensiles":
-                    recettes.forEach(recette => recette.ustensiles.map(ustensile => Utility.removeAccent(ustensile).includes(input) && result.push(recette)));
-                    return result;
-                default:
-                    return recettes.filter(recette => Utility.removeAccent(recette[type]).includes(input));
+            if (type === "ingredients") {
+                for (let i = 0; i < recettes.length; i++) {
+                    const recette = recettes[i];
+                    recette.ingredients.map(({ ingredient }) => Utility.removeAccent(ingredient).includes(input) && result.push(recette));
+                }
+                return result;
+            }
+            else if (type === "ustensiles") {
+                for (let i = 0; i < recettes.length; i++) {
+                    const recette = recettes[i];
+                    recette.ustensiles.map(ustensile => Utility.removeAccent(ustensile).includes(input) && result.push(recette));
+                }
+                return result;
+            }
+            else {
+                return recettes.filter(recette => Utility.removeAccent(recette[type]).includes(input));
             }
         });
     }
@@ -62,12 +67,12 @@ export class FiltresV1 {
         return __awaiter(this, void 0, void 0, function* () {
             const allTags = [...this.tags];
             const output = [];
-            yield __classPrivateFieldGet(this, _FiltresV1_instances, "m", _FiltresV1_recursiveFiltering).call(this, allTags, output);
+            yield __classPrivateFieldGet(this, _FilterV2_instances, "m", _FilterV2_recursiveFiltering).call(this, allTags, output);
             return this.filteredByTags;
         });
     }
 }
-_FiltresV1_instances = new WeakSet(), _FiltresV1_recursiveFiltering = function _FiltresV1_recursiveFiltering(tags, dataAccumulator) {
+_FilterV2_instances = new WeakSet(), _FilterV2_recursiveFiltering = function _FilterV2_recursiveFiltering(tags, dataAccumulator) {
     return __awaiter(this, void 0, void 0, function* () {
         if (tags.length !== 0) {
             const firstTag = tags[0];
@@ -78,11 +83,11 @@ _FiltresV1_instances = new WeakSet(), _FiltresV1_recursiveFiltering = function _
             const data = dataAccumulator.length !== 0 ? [...dataAccumulator] : [...this.recettes];
             const filterResult = yield this.filterBy(tagType, tagValue, data);
             tags.shift();
-            yield __classPrivateFieldGet(this, _FiltresV1_instances, "m", _FiltresV1_recursiveFiltering).call(this, tags, filterResult);
+            yield __classPrivateFieldGet(this, _FilterV2_instances, "m", _FilterV2_recursiveFiltering).call(this, tags, filterResult);
         }
         else {
             this.filteredByTags = [...dataAccumulator];
         }
     });
 };
-//# sourceMappingURL=FilterV1.js.map
+//# sourceMappingURL=FilterV2.js.map

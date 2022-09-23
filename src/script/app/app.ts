@@ -1,8 +1,8 @@
 import {Recette, RecetteFromJSON} from "../models/Recette.js"
 import {Api} from "../api/Api.js"
 import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
-import {MenuSubject} from "../filters/MenuFilterState.js"
-import {Observer} from "../filters/Observer.js"
+import {QuerySearch} from "../filters/QuerySearch.js"
+import {MenuSubject} from "../filters/MenuSubject.js"
 
 export class App {
 	private _fetchedData: RecetteFromJSON[]
@@ -26,9 +26,11 @@ export class App {
 	/**
 	 * Fetch data and map JSON to Recette Constructor
 	 * @requires Api
+	 * @private
+	 * @async
 	 * @return {Promise<Recette[]>}
 	 */
-	async #handleDataFromJson() {
+	private async handleDataFromJson(): Promise<Recette[]> {
 		const api = new Api("/src/json/recipes.json")
 		this._fetchedData = await api.fetchData()
 		this._allReceipts = this._fetchedData.map(data => new Recette(data))
@@ -37,27 +39,25 @@ export class App {
 
 	/**
 	 * @requires DomFactoryMethods
+	 * @see DomFactoryMethods
+	 * @async
+	 * @private
 	 * @return {Promise<void>}
 	 */
-	async #renderDOMOnLoad() {
-		await DomFactoryMethods.renderDOM(this._allReceipts)
+	private async renderDOMOnLoad(): Promise<void> {
+		return await DomFactoryMethods.renderDOM(this._allReceipts)
 	}
 
 	/**
-	 * @requires TagHandler
-	 * @requires Observer
-	 * @return {Promise<void>}
+	 * @requires MenuSubject
+	 * @see MenuSubject
+	 * @description Handle Menu Context Observers
+	 * @private
 	 */
-
-	async #globalObserver() {
-		// change to tag context
-		const globalObserver = new Observer(this._allReceipts)
-		await globalObserver.observeDomChange()
-
+	private handleMenuContext() {
 		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
 		const menuSubject = new MenuSubject()
-
-		filters.forEach(filter => {
+		return filters.forEach(filter => {
 			const btn = filter.querySelector("button") as HTMLButtonElement
 
 			btn.addEventListener("click", () => {
@@ -68,9 +68,24 @@ export class App {
 		})
 	}
 
+	/**
+	 * @description Handle Updating the DOM by queries and tags
+	 * @async
+	 * @private
+	 * @requires QuerySearch
+	 * @see QuerySearch
+	 */
+	private async handleDataUpdate() {
+		const globalObserver = new QuerySearch(this._allReceipts)
+		return await globalObserver.observeDomChange()
+	}
+
 	async init() {
-		await this.#handleDataFromJson()
-		await this.#renderDOMOnLoad()
-		await this.#globalObserver()
+		await this.handleDataFromJson()
+		await this.renderDOMOnLoad()
+		// Handle Updating Recettes
+		await this.handleDataUpdate()
+		// Handle Filter Menu
+		return this.handleMenuContext()
 	}
 }

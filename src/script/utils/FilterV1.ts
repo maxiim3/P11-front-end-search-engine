@@ -1,10 +1,10 @@
-import {Utility} from "../utils/Utility.js"
+import {Utility} from "./Utility.js"
 import {Recette} from "../models/Recette.js"
-import {KeyWordsType} from "./Observer.js"
+import {KeyWordsType} from "../filters/QuerySearch.js"
 
 export type TypeOfTags = "ingredients" | "ustensiles" | "name" | "description" | "appliance"
 
-export class FiltresV1 {
+export class FilterV1 {
 	/**
 	 * @type Recette[]
 	 * @private
@@ -75,7 +75,7 @@ export class FiltresV1 {
 	 * @param dataAccumulator : Recette[]
 	 * @return {Promise<Recette[]>}
 	 */
-	async #recursiveFiltering(tags: HTMLLIElement[], dataAccumulator: Recette[]) {
+	private async recursiveFiltering(tags: HTMLLIElement[], dataAccumulator: Recette[]) {
 		// if there is minimum one tage in tags array
 		if (tags.length !== 0) {
 			// targeting first item of tags array : tags[0]
@@ -93,7 +93,7 @@ export class FiltresV1 {
 			// remove the first item of the tags array
 			tags.shift()
 			// call back the recursive function with updated tags array and filtered data
-			await this.#recursiveFiltering(tags, filterResult)
+			await this.recursiveFiltering(tags, filterResult)
 		}
 		// if no tags in tags array, and of the loop, return the filtered data
 		else {
@@ -118,7 +118,7 @@ export class FiltresV1 {
 	async filterByTags() {
 		const allTags = [...this.tags]
 		const output = [] as Recette[]
-		await this.#recursiveFiltering(allTags, output)
+		await this.recursiveFiltering(allTags, output)
 		return this.filteredByTags
 	}
 }

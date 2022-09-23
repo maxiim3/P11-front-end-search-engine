@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { Utility } from "../utils/Utility.js";
-import { FiltresV1 } from "./FilterV1.js";
-export class Observer {
+import { FilterV1 } from "../utils/FilterV1";
+export class QuerySearch {
     constructor(allReceipts) {
         this._recettes = allReceipts;
         this.$mainSearchBar = document.querySelector("#searchBar");
@@ -57,8 +57,9 @@ export class Observer {
                 this.selectedTags = [];
                 this.resultsFromQuerySearch = [];
                 this.resultsFromQueryTags = [];
+                this.$tagsContainer.innerHTML = "";
                 if (this.input.length > 2) {
-                    const Filter = new FiltresV1(this.recettes, this.keyWords);
+                    const Filter = new FilterV1(this.recettes, this.keyWords);
                     this.resultsFromQuerySearch = yield Filter.filterBySearch();
                     yield DomFactoryMethods.resetDom();
                     yield DomFactoryMethods.renderDOM(this.resultsFromQuerySearch);
@@ -78,7 +79,7 @@ export class Observer {
                 this.resultsFromQueryTags = [];
                 if (tags.length !== 0) {
                     tags.forEach(tag => this.selectedTags.push(tag));
-                    const Filter = new FiltresV1(yield this.dataByQuerySearch(), this.keyWords);
+                    const Filter = new FilterV1(yield this.dataByQuerySearch(), this.keyWords);
                     this.resultsFromQueryTags = yield Filter.filterByTags();
                     yield DomFactoryMethods.resetDom();
                     yield DomFactoryMethods.renderDOM(this.resultsFromQueryTags);
@@ -99,4 +100,4 @@ export class Observer {
         });
     }
 }
-//# sourceMappingURL=Observer.js.map
+//# sourceMappingURL=QuerySearch.js.map

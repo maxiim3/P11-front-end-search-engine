@@ -7,49 +7,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _App_instances, _App_handleDataFromJson, _App_renderDOMOnLoad, _App_globalObserver;
 import { Recette } from "../models/Recette.js";
 import { Api } from "../api/Api.js";
 import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
-import { MenuSubject } from "../filters/MenuFilterState.js";
-import { Observer } from "../filters/Observer.js";
+import { QuerySearch } from "../filters/QuerySearch.js";
+import { MenuSubject } from "../filters/MenuSubject.js";
 export class App {
     constructor() {
-        _App_instances.add(this);
         this._fetchedData = [];
         this._allReceipts = [];
     }
-    init() {
+    handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield __classPrivateFieldGet(this, _App_instances, "m", _App_handleDataFromJson).call(this);
-            yield __classPrivateFieldGet(this, _App_instances, "m", _App_renderDOMOnLoad).call(this);
-            yield __classPrivateFieldGet(this, _App_instances, "m", _App_globalObserver).call(this);
+            const api = new Api("/src/json/recipes.json");
+            this._fetchedData = yield api.fetchData();
+            this._allReceipts = this._fetchedData.map(data => new Recette(data));
+            return this._allReceipts;
         });
     }
-}
-_App_instances = new WeakSet(), _App_handleDataFromJson = function _App_handleDataFromJson() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const api = new Api("/src/json/recipes.json");
-        this._fetchedData = yield api.fetchData();
-        this._allReceipts = this._fetchedData.map(data => new Recette(data));
-        return this._allReceipts;
-    });
-}, _App_renderDOMOnLoad = function _App_renderDOMOnLoad() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield DomFactoryMethods.renderDOM(this._allReceipts);
-    });
-}, _App_globalObserver = function _App_globalObserver() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const globalObserver = new Observer(this._allReceipts);
-        yield globalObserver.observeDomChange();
+    renderDOMOnLoad() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield DomFactoryMethods.renderDOM(this._allReceipts);
+        });
+    }
+    handleMenuContext() {
         const filters = [...document.querySelectorAll(".filtres__filtre")];
         const menuSubject = new MenuSubject();
-        filters.forEach(filter => {
+        return filters.forEach(filter => {
             const btn = filter.querySelector("button");
             btn.addEventListener("click", () => {
                 menuSubject.subscribe(filter);
@@ -57,6 +41,20 @@ _App_instances = new WeakSet(), _App_handleDataFromJson = function _App_handleDa
                 menuSubject.fire();
             });
         });
-    });
-};
+    }
+    handleDataUpdate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const globalObserver = new QuerySearch(this._allReceipts);
+            return yield globalObserver.observeDomChange();
+        });
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.handleDataFromJson();
+            yield this.renderDOMOnLoad();
+            yield this.handleDataUpdate();
+            return this.handleMenuContext();
+        });
+    }
+}
 //# sourceMappingURL=app.js.map

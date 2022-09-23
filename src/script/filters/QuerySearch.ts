@@ -1,11 +1,11 @@
 import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
 import {Utility} from "../utils/Utility.js"
-import {FiltresV1} from "./FilterV1.js"
+import {FilterV1} from "../utils/FilterV1"
 import {Recette} from "../models/Recette.js"
 
 export type KeyWordsType = {input: string; tags: HTMLLIElement[]}
 
-export class Observer {
+export class QuerySearch {
 	/**
 	 * @type Recette[]
 	 */
@@ -105,7 +105,6 @@ export class Observer {
 	 * @inner
 	 * @private
 	 * @requires DomFactoryMethods
-	 * @requires TagHandler
 	 * @memberOf observeDomChange
 	 * @return {Promise<void>}
 	 */
@@ -115,8 +114,9 @@ export class Observer {
 			this.selectedTags = []
 			this.resultsFromQuerySearch = []
 			this.resultsFromQueryTags = []
+			this.$tagsContainer.innerHTML = ""
 			if (this.input.length > 2) {
-				const Filter = new FiltresV1(this.recettes, this.keyWords)
+				const Filter = new FilterV1(this.recettes, this.keyWords)
 				this.resultsFromQuerySearch = await Filter.filterBySearch()
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(this.resultsFromQuerySearch)
@@ -144,7 +144,7 @@ export class Observer {
 
 			if (tags.length !== 0) {
 				tags.forEach(tag => this.selectedTags.push(tag))
-				const Filter = new FiltresV1(await this.dataByQuerySearch(), this.keyWords)
+				const Filter = new FilterV1(await this.dataByQuerySearch(), this.keyWords)
 				this.resultsFromQueryTags = await Filter.filterByTags()
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(this.resultsFromQueryTags)

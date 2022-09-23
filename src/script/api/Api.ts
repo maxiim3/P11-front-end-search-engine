@@ -1,3 +1,4 @@
+import {RecetteFromJSON} from "../models/Recette.js"
 
 export class Api {
   /**
@@ -16,7 +17,7 @@ export class Api {
   /**
    * @return {Promise<RecetteFromJSON[]>}
    */
-  async fetchData() {
+  async fetchData():Promise<RecetteFromJSON[]> {
     const promise = await fetch(this._url)
     return await promise.json()
   }
