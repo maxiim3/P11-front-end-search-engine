@@ -30,7 +30,7 @@ export class CardTemplate {
 		time.textContent = this.recette.time
 		time.prepend(timeIcon)
 
-		const title = document.createElement("h3") as HTMLHeadingElement
+		const title = document.createElement("h2") as HTMLHeadingElement
 		title.textContent = this.recette.name
 
 		const sectionTitle = document.createElement("section") as HTMLDivElement
