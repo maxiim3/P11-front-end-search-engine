@@ -25,10 +25,6 @@
 			integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer" />
-		<script
-			src="src/script/index.js"
-			type="module"
-			defer></script>
 		<link
 			rel="stylesheet"
 			href="src/styles/index.css" />
@@ -53,7 +49,8 @@
 			<h1>Les petits plats</h1>
 			<nav>
 				<!--    region SearchBar-->
-				<label>
+				<div>
+					<label for="searchBar">input</label>
 					<input
 						type="text"
 						class="searchBar"
@@ -62,7 +59,7 @@
 					<span
 						aria-hidden="true"
 						class="fa-solid fa-magnifying-glass"></span>
-				</label>
+				</div>
 				<!--    endregion-->
 				<!--    region tags-->
 				<ul
@@ -133,5 +130,8 @@
 			<section class="container"></section>
 		</main>
 		<!--	endregion-->
+		<script
+			src="src/script/index.js"
+			type="module"></script>
 	</body>
 </html>

@@ -15,7 +15,7 @@ export class CardTemplate {
         const time = document.createElement("p");
         time.textContent = this.recette.time;
         time.prepend(timeIcon);
-        const title = document.createElement("h3");
+        const title = document.createElement("h2");
         title.textContent = this.recette.name;
         const sectionTitle = document.createElement("section");
         sectionTitle.classList.value = "recette__title";
