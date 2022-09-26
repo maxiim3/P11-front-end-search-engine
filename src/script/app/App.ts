@@ -57,6 +57,7 @@ export class App {
 	private handleMenuContext() {
 		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
 		const menuSubject = new MenuSubject()
+
 		return filters.forEach(filter => {
 			const btn = filter.querySelector("button") as HTMLButtonElement
 

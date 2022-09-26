@@ -3,7 +3,7 @@ import {TagsTemplate} from "../templates/TagsTemplate.js"
 import {StateEnums} from "./MenuObserver.js"
 import {IContext} from "./IContext.js"
 
-export class MenuContextOpen implements IContext{
+export class MenuContextOpen implements IContext {
 	state: StateEnums.Open
 	filter: HTMLDivElement
 

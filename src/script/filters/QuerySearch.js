@@ -9,14 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { Utility } from "../utils/Utility.js";
-import { FilterV1 } from "../utils/FilterV1";
+import { FilterV2 } from "../utils/FilterV2.js";
 export class QuerySearch {
     constructor(allReceipts) {
         this._recettes = allReceipts;
         this.$mainSearchBar = document.querySelector("#searchBar");
         this.$tagsContainer = document.querySelector("#tagsWrapper");
-        this.resultsFromQuerySearch = [];
-        this.resultsFromQueryTags = [];
+        this.recettesFilteredByQueries = [];
+        this.recettesFilteredByTags = [];
         this.selectedTags = [];
         this.input = "";
     }
@@ -36,16 +36,16 @@ export class QuerySearch {
     }
     dataByQuerySearch() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.resultsFromQuerySearch.length > 0)
-                return this.resultsFromQuerySearch;
+            if (this.recettesFilteredByQueries.length > 0)
+                return this.recettesFilteredByQueries;
             else
                 return this.recettes;
         });
     }
     dataByQueryTags() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.resultsFromQueryTags.length > 0)
-                return this.resultsFromQueryTags;
+            if (this.recettesFilteredByTags.length > 0)
+                return this.recettesFilteredByTags;
             else
                 yield this.dataByQuerySearch();
         });
@@ -55,14 +55,14 @@ export class QuerySearch {
             this.$mainSearchBar.addEventListener("input", () => __awaiter(this, void 0, void 0, function* () {
                 this.input = Utility.removeAccent(this.$mainSearchBar.value);
                 this.selectedTags = [];
-                this.resultsFromQuerySearch = [];
-                this.resultsFromQueryTags = [];
+                this.recettesFilteredByQueries = [];
+                this.recettesFilteredByTags = [];
                 this.$tagsContainer.innerHTML = "";
                 if (this.input.length > 2) {
-                    const Filter = new FilterV1(this.recettes, this.keyWords);
-                    this.resultsFromQuerySearch = yield Filter.filterBySearch();
+                    const Filter = new FilterV2(this.recettes, this.keyWords);
+                    this.recettesFilteredByQueries = yield Filter.filterBySearch();
                     yield DomFactoryMethods.resetDom();
-                    yield DomFactoryMethods.renderDOM(this.resultsFromQuerySearch);
+                    yield DomFactoryMethods.renderDOM(this.recettesFilteredByQueries);
                 }
                 else {
                     yield DomFactoryMethods.resetDom();
@@ -76,13 +76,13 @@ export class QuerySearch {
             const observer = new MutationObserver((mutationRecords) => __awaiter(this, void 0, void 0, function* () {
                 const tags = [...mutationRecords[0].target.childNodes];
                 this.selectedTags = [];
-                this.resultsFromQueryTags = [];
+                this.recettesFilteredByTags = [];
                 if (tags.length !== 0) {
                     tags.forEach(tag => this.selectedTags.push(tag));
-                    const Filter = new FilterV1(yield this.dataByQuerySearch(), this.keyWords);
-                    this.resultsFromQueryTags = yield Filter.filterByTags();
+                    const Filter = new FilterV2(yield this.dataByQuerySearch(), this.keyWords);
+                    this.recettesFilteredByTags = yield Filter.filterByTags();
                     yield DomFactoryMethods.resetDom();
-                    yield DomFactoryMethods.renderDOM(this.resultsFromQueryTags);
+                    yield DomFactoryMethods.renderDOM(this.recettesFilteredByTags);
                 }
                 else {
                     yield DomFactoryMethods.resetDom();

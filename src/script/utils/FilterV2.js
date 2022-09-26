@@ -27,21 +27,27 @@ export class FilterV2 {
             const result = [];
             if (type === "ingredients") {
                 for (let i = 0; i < recettes.length; i++) {
-                    const recette = recettes[i];
-                    recette.ingredients.map(({ ingredient }) => Utility.removeAccent(ingredient).includes(input) && result.push(recette));
+                    for (const { ingredient } of recettes[i].ingredients) {
+                        if (Utility.removeAccent(ingredient).includes(input))
+                            result.push(recettes[i]);
+                    }
                 }
-                return result;
             }
             else if (type === "ustensiles") {
                 for (let i = 0; i < recettes.length; i++) {
-                    const recette = recettes[i];
-                    recette.ustensiles.map(ustensile => Utility.removeAccent(ustensile).includes(input) && result.push(recette));
+                    for (const ustensile of recettes[i].ustensiles) {
+                        if (Utility.removeAccent(ustensile).includes(input))
+                            result.push(recettes[i]);
+                    }
                 }
-                return result;
             }
             else {
-                return recettes.filter(recette => Utility.removeAccent(recette[type]).includes(input));
+                for (let i = 0; i < recettes.length; i++) {
+                    if (Utility.removeAccent(recettes[i][type]).includes(input))
+                        result.push(recettes[i]);
+                }
             }
+            return result;
         });
     }
     filterBySearch() {

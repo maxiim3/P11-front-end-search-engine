@@ -1,28 +1,30 @@
 import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
 import {Utility} from "../utils/Utility.js"
-import {FilterV1} from "../utils/FilterV1"
+import {FilterV2} from "../utils/FilterV2.js"
 import {Recette} from "../models/Recette.js"
 
 export type KeyWordsType = {input: string; tags: HTMLLIElement[]}
 
 export class QuerySearch {
 	/**
-	 * @type Recette[]
-	 */
-	/**
 	 * @private
+	 * @readonly
+	 * @description Toutes les Recettes depuis le fichier JSON
+	 * @type Recette[]
 	 */
 	private readonly _recettes: Recette[]
 	/**
 	 * @private
+	 * @description Le résultat des recettes filtrées par les saisies dans la barre de recherche principale
 	 * @type Recette[]
 	 */
-	private resultsFromQuerySearch: Recette[]
+	protected recettesFilteredByQueries: Recette[]
 	/**
 	 * @private
+	 * @description Le résultat des recettes filtrées par les saisies dans la barre de recherche principale ET OU de la recherches par "tags"
 	 * @type Recette[]
 	 */
-	private resultsFromQueryTags: Recette[]
+	protected recettesFilteredByTags: Recette[]
 	/**
 	 * @private
 	 * @type string
@@ -48,13 +50,13 @@ export class QuerySearch {
 	 * @param allReceipts : Recette[]
 	 */
 	constructor(allReceipts: Recette[]) {
-		this._recettes = allReceipts
+		this._recettes = allReceipts as Recette[]
 		this.$mainSearchBar = document.querySelector("#searchBar") as HTMLInputElement
 		this.$tagsContainer = document.querySelector("#tagsWrapper") as HTMLDivElement
-		this.resultsFromQuerySearch = []
-		this.resultsFromQueryTags = []
-		this.selectedTags = []
-		this.input = ""
+		this.recettesFilteredByQueries = [] as Recette[]
+		this.recettesFilteredByTags = [] as Recette[]
+		this.selectedTags = [] as HTMLLIElement[]
+		this.input = "" as string
 	}
 
 	private get recettes() {
@@ -81,7 +83,7 @@ export class QuerySearch {
 	 * @return {Recette[]|*}
 	 */
 	private async dataByQuerySearch(): Promise<Recette[]> {
-		if (this.resultsFromQuerySearch.length > 0) return this.resultsFromQuerySearch
+		if (this.recettesFilteredByQueries.length > 0) return this.recettesFilteredByQueries
 		else return this.recettes
 	}
 
@@ -95,7 +97,7 @@ export class QuerySearch {
 	 * @return Recette[]
 	 */
 	private async dataByQueryTags(): Promise<Recette[] | void> {
-		if (this.resultsFromQueryTags.length > 0) return this.resultsFromQueryTags
+		if (this.recettesFilteredByTags.length > 0) return this.recettesFilteredByTags
 		else await this.dataByQuerySearch()
 	}
 
@@ -112,14 +114,14 @@ export class QuerySearch {
 		this.$mainSearchBar.addEventListener("input", async () => {
 			this.input = Utility.removeAccent(this.$mainSearchBar.value) as string
 			this.selectedTags = []
-			this.resultsFromQuerySearch = []
-			this.resultsFromQueryTags = []
+			this.recettesFilteredByQueries = []
+			this.recettesFilteredByTags = []
 			this.$tagsContainer.innerHTML = ""
 			if (this.input.length > 2) {
-				const Filter = new FilterV1(this.recettes, this.keyWords)
-				this.resultsFromQuerySearch = await Filter.filterBySearch()
+				const Filter = new FilterV2(this.recettes, this.keyWords)
+				this.recettesFilteredByQueries = await Filter.filterBySearch()
 				await DomFactoryMethods.resetDom()
-				await DomFactoryMethods.renderDOM(this.resultsFromQuerySearch)
+				await DomFactoryMethods.renderDOM(this.recettesFilteredByQueries)
 			} else {
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(this.recettes)
@@ -140,14 +142,14 @@ export class QuerySearch {
 		const observer = new MutationObserver(async mutationRecords => {
 			const tags = [...mutationRecords[0].target.childNodes] as HTMLLIElement[]
 			this.selectedTags = []
-			this.resultsFromQueryTags = []
+			this.recettesFilteredByTags = []
 
 			if (tags.length !== 0) {
 				tags.forEach(tag => this.selectedTags.push(tag))
-				const Filter = new FilterV1(await this.dataByQuerySearch(), this.keyWords)
-				this.resultsFromQueryTags = await Filter.filterByTags()
+				const Filter = new FilterV2(await this.dataByQuerySearch(), this.keyWords)
+				this.recettesFilteredByTags = await Filter.filterByTags()
 				await DomFactoryMethods.resetDom()
-				await DomFactoryMethods.renderDOM(this.resultsFromQueryTags)
+				await DomFactoryMethods.renderDOM(this.recettesFilteredByTags)
 			} else {
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(await this.dataByQuerySearch())
