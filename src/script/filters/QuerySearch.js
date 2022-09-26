@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { Utility } from "../utils/Utility.js";
-import { FilterV2 } from "../utils/FilterV2.js";
+import { FilterV1 } from "../utils/FilterV1.js";
 export class QuerySearch {
     constructor(allReceipts) {
         this._recettes = allReceipts;
@@ -59,7 +59,7 @@ export class QuerySearch {
                 this.recettesFilteredByTags = [];
                 this.$tagsContainer.innerHTML = "";
                 if (this.input.length > 2) {
-                    const Filter = new FilterV2(this.recettes, this.keyWords);
+                    const Filter = new FilterV1(this.recettes, this.keyWords);
                     this.recettesFilteredByQueries = yield Filter.filterBySearch();
                     yield DomFactoryMethods.resetDom();
                     yield DomFactoryMethods.renderDOM(this.recettesFilteredByQueries);
@@ -79,7 +79,7 @@ export class QuerySearch {
                 this.recettesFilteredByTags = [];
                 if (tags.length !== 0) {
                     tags.forEach(tag => this.selectedTags.push(tag));
-                    const Filter = new FilterV2(yield this.dataByQuerySearch(), this.keyWords);
+                    const Filter = new FilterV1(yield this.dataByQuerySearch(), this.keyWords);
                     this.recettesFilteredByTags = yield Filter.filterByTags();
                     yield DomFactoryMethods.resetDom();
                     yield DomFactoryMethods.renderDOM(this.recettesFilteredByTags);
