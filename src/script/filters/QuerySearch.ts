@@ -1,6 +1,6 @@
 import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
 import {Utility} from "../utils/Utility.js"
-import {FilterV2} from "../utils/FilterV2.js"
+import {FilterV1} from "../utils/FilterV1.js"
 import {Recette} from "../models/Recette.js"
 
 export type KeyWordsType = {input: string; tags: HTMLLIElement[]}
@@ -118,7 +118,7 @@ export class QuerySearch {
 			this.recettesFilteredByTags = []
 			this.$tagsContainer.innerHTML = ""
 			if (this.input.length > 2) {
-				const Filter = new FilterV2(this.recettes, this.keyWords)
+				const Filter = new FilterV1(this.recettes, this.keyWords)
 				this.recettesFilteredByQueries = await Filter.filterBySearch()
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(this.recettesFilteredByQueries)
@@ -146,7 +146,7 @@ export class QuerySearch {
 
 			if (tags.length !== 0) {
 				tags.forEach(tag => this.selectedTags.push(tag))
-				const Filter = new FilterV2(await this.dataByQuerySearch(), this.keyWords)
+				const Filter = new FilterV1(await this.dataByQuerySearch(), this.keyWords)
 				this.recettesFilteredByTags = await Filter.filterByTags()
 				await DomFactoryMethods.resetDom()
 				await DomFactoryMethods.renderDOM(this.recettesFilteredByTags)
