@@ -1,6 +1,6 @@
 import { MenuContextOpen } from "./MenuContextOpen.js";
 import { MenuContextClose } from "./MenuContextClose.js";
-export class MenuObserver {
+export class MenuStateObserver {
     constructor(filter) {
         this.filter = filter;
         this.states = { close: new MenuContextClose(filter), open: new MenuContextOpen(filter) };
@@ -13,4 +13,4 @@ export class MenuObserver {
         return this.currentState.handleContext();
     }
 }
-//# sourceMappingURL=MenuObserver.js.map
+//# sourceMappingURL=MenuStateObserver.js.map

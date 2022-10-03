@@ -1,4 +1,4 @@
-import {StateEnums} from "./MenuObserver.js"
+import {StateEnums} from "./MenuStateObserver"
 import {IContext} from "./IContext.js"
 
 export class MenuContextClose implements IContext{

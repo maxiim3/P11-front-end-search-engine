@@ -1,4 +1,4 @@
-import {StateEnums} from "./MenuObserver.js"
+import {StateEnums} from "./MenuStateObserver"
 
 export interface IContext {
 	state: StateEnums.Close | StateEnums.Open

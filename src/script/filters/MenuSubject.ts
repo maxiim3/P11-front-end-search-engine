@@ -1,20 +1,20 @@
-import {MenuObserver, StateEnums} from "./MenuObserver.js"
+import {MenuStateObserver, StateEnums} from "./MenuStateObserver.js"
 
 type MousePositionProps = {x: number; y: number}
 type ContainerPositionProps = {positionXLeft: number; width: number; positionYTop: number; height: number}
 
 export class MenuSubject {
-	observers: MenuObserver[]
+	contextObserver: MenuStateObserver[]
 	filters: HTMLDivElement[]
 
 	constructor() {
-		this.observers = [] as MenuObserver[]
+		this.contextObserver = [] as MenuStateObserver[]
 		this.filters = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
-		this.filters.forEach(filter => this.observers.push(new MenuObserver(filter)))
+		this.filters.forEach(filter => this.contextObserver.push(new MenuStateObserver(filter)))
 	}
 
 	subscribe(observer: HTMLDivElement) {
-		this.observers.filter(filter => filter.filter === observer)[0].setState(StateEnums.Open)
+		this.contextObserver.filter(filter => filter.filter === observer)[0].setState(StateEnums.Open)
 		document.addEventListener("keydown", ({key}) => {
 			if (observer.dataset.open === "true") {
 				if (key === "Escape" || key === "Enter") {
@@ -37,6 +37,11 @@ export class MenuSubject {
 		})
 	}
 
+
+	unsubscribe(observer: HTMLDivElement) {
+		this.contextObserver.filter(filter => filter.filter === observer)[0].setState(StateEnums.Close)
+	}
+
 	mouseInObserver(mouseProps: MousePositionProps, containerProps: ContainerPositionProps) {
 		return (
 			containerProps.positionXLeft < mouseProps.x &&
@@ -54,7 +59,6 @@ export class MenuSubject {
 			positionYTop: observer.offsetTop - 10,
 		}
 	}
-
 	getMousePosition(ev: MouseEvent): MousePositionProps {
 		return {
 			x: window.scrollX + ev.clientX,
@@ -62,11 +66,7 @@ export class MenuSubject {
 		}
 	}
 
-	unsubscribe(observer: HTMLDivElement) {
-		this.observers.filter(filter => filter.filter === observer)[0].setState(StateEnums.Close)
-	}
-
 	fire() {
-		this.observers.forEach(observer => observer.callContext())
+		this.contextObserver.forEach(observer => observer.callContext())
 	}
 }

@@ -116,8 +116,8 @@ export class FilterV1 {
 	}
 
 	async filterByTags() {
-		const allTags = [...this.tags]
-		const output = [] as Recette[]
+		const allTags: HTMLLIElement[] = [...this.tags]
+		const output: Recette[] = []
 		await this.recursiveFiltering(allTags, output)
 		return this.filteredByTags
 	}

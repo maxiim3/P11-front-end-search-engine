@@ -1,12 +1,12 @@
-import { MenuObserver } from "./MenuObserver.js";
+import { MenuStateObserver } from "./MenuStateObserver.js";
 export class MenuSubject {
     constructor() {
-        this.observers = [];
+        this.contextObserver = [];
         this.filters = [...document.querySelectorAll(".filtres__filtre")];
-        this.filters.forEach(filter => this.observers.push(new MenuObserver(filter)));
+        this.filters.forEach(filter => this.contextObserver.push(new MenuStateObserver(filter)));
     }
     subscribe(observer) {
-        this.observers.filter(filter => filter.filter === observer)[0].setState("open");
+        this.contextObserver.filter(filter => filter.filter === observer)[0].setState("open");
         document.addEventListener("keydown", ({ key }) => {
             if (observer.dataset.open === "true") {
                 if (key === "Escape" || key === "Enter") {
@@ -29,6 +29,9 @@ export class MenuSubject {
             }
         });
     }
+    unsubscribe(observer) {
+        this.contextObserver.filter(filter => filter.filter === observer)[0].setState("close");
+    }
     mouseInObserver(mouseProps, containerProps) {
         return (containerProps.positionXLeft < mouseProps.x &&
             mouseProps.x < containerProps.positionXLeft + containerProps.width &&
@@ -49,11 +52,8 @@ export class MenuSubject {
             y: window.scrollY + ev.clientY,
         };
     }
-    unsubscribe(observer) {
-        this.observers.filter(filter => filter.filter === observer)[0].setState("close");
-    }
     fire() {
-        this.observers.forEach(observer => observer.callContext());
+        this.contextObserver.forEach(observer => observer.callContext());
     }
 }
 //# sourceMappingURL=MenuSubject.js.map

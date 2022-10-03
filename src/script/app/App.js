@@ -36,8 +36,16 @@ export class App {
         return filters.forEach(filter => {
             const btn = filter.querySelector("button");
             btn.addEventListener("click", () => {
-                menuSubject.subscribe(filter);
-                filters.filter(f => f !== filter).forEach(filter => menuSubject.unsubscribe(filter));
+                const target = menuSubject.contextObserver.filter(obs => obs.filter === filter)[0];
+                menuSubject.subscribe(target.filter);
+                menuSubject.contextObserver
+                    .filter(obs => obs.filter !== filter)
+                    .forEach((observer) => {
+                    menuSubject.unsubscribe(observer.filter);
+                });
+                menuSubject.contextObserver.forEach(obs => {
+                    console.log(obs.currentState);
+                });
                 menuSubject.fire();
             });
         });

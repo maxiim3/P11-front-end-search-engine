@@ -1,6 +1,6 @@
 import {Utility} from "../utils/Utility.js"
 import {TagsTemplate} from "../templates/TagsTemplate.js"
-import {StateEnums} from "./MenuObserver.js"
+import {StateEnums} from "./MenuStateObserver"
 import {IContext} from "./IContext.js"
 
 export class MenuContextOpen implements IContext {

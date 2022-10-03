@@ -20,17 +20,6 @@ export type IngredientsConcat = {
 	quantityUnit?: string | null
 }
 
-export type RecetteModelDataType = {
-	id: number
-	name: string
-	servings: number
-	ingredients: IngredientsConcat[]
-	time: number
-	description: string
-	appliance: string
-	ustensiles: string[]
-}
-
 export class Recette {
 	/**
 	 * @type number

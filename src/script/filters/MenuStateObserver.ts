@@ -11,9 +11,9 @@ type StateType = {
 	open: MenuContextOpen
 }
 
-export class MenuObserver {
+export class MenuStateObserver {
 	private readonly states: StateType
-	protected currentState: MenuContextClose | MenuContextOpen
+	currentState: MenuContextClose | MenuContextOpen
 	filter: HTMLDivElement
 
 	constructor(filter: HTMLDivElement) {

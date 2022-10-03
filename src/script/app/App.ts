@@ -14,16 +14,6 @@ export class App {
 	}
 
 	/**
-	 * @requires Recette
-	 * @param _fetchedData : RecetteFromJSON[]
-	 * @return {Promise<RecetteModelDataType[]>} return Data fetched from JSON
-	 */
-
-	/*	private async mapData(_fetchedData) {
-			return _fetchedData.map((data)cetteFromJSON => new Recette(data))
-		}*/
-
-	/**
 	 * Fetch data and map JSON to Recette Constructor
 	 * @requires Api
 	 * @private
@@ -62,8 +52,15 @@ export class App {
 			const btn = filter.querySelector("button") as HTMLButtonElement
 
 			btn.addEventListener("click", () => {
-				menuSubject.subscribe(filter)
-				filters.filter(f => f !== filter).forEach(filter => menuSubject.unsubscribe(filter))
+				const target= menuSubject.contextObserver.filter(obs => obs.filter === filter)[0]
+				menuSubject.subscribe(target.filter)
+				menuSubject.contextObserver
+					.filter(obs => obs.filter !== filter)
+					.forEach((observer) => {
+						menuSubject.unsubscribe(observer.filter)
+					})
+				menuSubject.contextObserver.forEach(obs => {
+					console.log(obs.currentState)})
 				menuSubject.fire()
 			})
 		})
@@ -82,9 +79,11 @@ export class App {
 	}
 
 	async init() {
+		// fetch and map data to dataModel constructor
 		await this.handleDataFromJson()
+		// render data on DOM [filters, cards]
 		await this.renderDOMOnLoad()
-		// Handle Updating Recettes
+		// Handle Updating Recettes [filters tags, cards]
 		await this.handleDataUpdate()
 		// Handle Filter Menu
 		return this.handleMenuContext()
