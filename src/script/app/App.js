@@ -11,7 +11,7 @@ import { Recette } from "../models/Recette.js";
 import { Api } from "../api/Api.js";
 import { DomFactoryMethods } from "../templates/DomFactoryMethods.js";
 import { QuerySearch } from "../filters/QuerySearch.js";
-import { MenuSubject } from "../filters/MenuSubject.js";
+import { MenuStateObserver } from "../filters/MenuStateObserver.js";
 export class App {
     constructor() {
         this._fetchedData = [];
@@ -32,23 +32,25 @@ export class App {
     }
     handleMenuContext() {
         const filters = [...document.querySelectorAll(".filtres__filtre")];
-        const menuSubject = new MenuSubject();
-        return filters.forEach(filter => {
-            const btn = filter.querySelector("button");
-            btn.addEventListener("click", () => {
-                const target = menuSubject.contextObserver.filter(obs => obs.filter === filter)[0];
-                menuSubject.subscribe(target.filter);
-                menuSubject.contextObserver
-                    .filter(obs => obs.filter !== filter)
-                    .forEach((observer) => {
-                    menuSubject.unsubscribe(observer.filter);
-                });
-                menuSubject.contextObserver.forEach(obs => {
-                    console.log(obs.currentState);
-                });
-                menuSubject.fire();
-            });
+        const contextObservers = [];
+        filters.forEach(filter => contextObservers.push(new MenuStateObserver(filter)));
+        contextObservers.forEach(obs => {
+            const button = obs.filter.querySelector(".filtres__button");
+            button.addEventListener("click", onClickOnFilter);
         });
+        function onClickOnFilter() {
+            const clickedObserver = contextObservers.filter(({ filter }) => {
+                return filter.querySelector(".filtres__button") === this;
+            })[0];
+            contextObservers.forEach(observer => {
+                if (observer === clickedObserver) {
+                    observer.setState("open");
+                }
+                else {
+                    observer.setState("close");
+                }
+            });
+        }
     }
     handleDataUpdate() {
         return __awaiter(this, void 0, void 0, function* () {

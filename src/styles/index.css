@@ -169,17 +169,20 @@ header nav div {
 }
 .filtres__filtre--ingredient, .filtres__filtre--ingredient button {
   background-color: rgb(50, 130, 247);
+  color: white;
 }
 .filtres__filtre--appareil, .filtres__filtre--appareil button {
   background-color: rgb(104, 217, 164);
+  color: white;
 }
 .filtres__filtre--ustensile, .filtres__filtre--ustensile button {
   background-color: rgb(237, 100, 84);
+  color: white;
 }
 .filtres__filtre label {
   display: none;
 }
-.filtres__filtre button {
+.filtres__filtre .filtres__button {
   font-family: "Lato", sans-serif;
   color: rgb(255, 255, 255);
   font-weight: bold;
@@ -201,7 +204,7 @@ header nav div {
   height: fit-content;
   transition: all 350ms ease-in-out;
 }
-.filtres__filtre[data-open=true] button {
+.filtres__filtre[data-open=true] .filtres__button {
   visibility: hidden;
 }
 .filtres__filtre[data-open=true] .fa-chevron-down {
@@ -226,7 +229,7 @@ header nav div {
   grid-template-columns: repeat(3, 1fr);
   gap: 1px 5px;
 }
-.filtres__filtre[data-open=true] li {
+.filtres__filtre[data-open=true] li button {
   opacity: 100%;
   width: 100%;
   padding: 10px 5px;
@@ -234,27 +237,30 @@ header nav div {
   border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 3px;
   transition: opacity ease-in 650ms;
-  cursor: pointer;
+  font-family: "Lato", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
 }
-.filtres__filtre[data-open=true] li[data-active=true] {
+.filtres__filtre[data-open=true] li button:disabled {
   color: gray;
   cursor: no-drop;
 }
-.filtres__filtre[data-open=true] li[data-active=false] {
-  cursor: pointer;
+.filtres__filtre[data-open=true] li button:disabled:hover {
+  border-color: initial;
+  background: initial;
 }
-.filtres__filtre[data-open=true] li[data-active=false]:hover {
+.filtres__filtre[data-open=true] li button:hover {
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.15);
 }
-.filtres__filtre[data-open=true] li[data-hidden=true] {
+.filtres__filtre[data-open=true] li button[data-hidden=true] {
   position: absolute;
   z-index: -999;
   right: 0;
   bottom: 0;
   visibility: hidden;
 }
-.filtres__filtre[data-open=true] li[data-hidden=false] {
+.filtres__filtre[data-open=true] li button[data-hidden=false] {
   position: relative;
   z-index: initial;
   top: initial;
@@ -271,12 +277,12 @@ header nav div {
   padding: 20px;
   transition: all 350ms ease-in-out;
 }
-.filtres__filtre[data-open=false] button {
+.filtres__filtre[data-open=false] .filtres__button {
   font-size: 18px;
   visibility: visible;
 }
-.filtres__filtre[data-open=false] .searchFiltre li,
-.filtres__filtre[data-open=false] ul li {
+.filtres__filtre[data-open=false] .searchFiltre li button,
+.filtres__filtre[data-open=false] ul li button {
   opacity: 0;
   transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
 }

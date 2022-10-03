@@ -243,23 +243,26 @@ header {
 		&--ingredient,
 		&--ingredient button {
 			background-color: $clr-blue;
+			color: white;
 		}
 
 		&--appareil,
 		&--appareil button {
 			background-color: $clr-green;
+			color: white;
 		}
 
 		&--ustensile,
 		&--ustensile button {
 			background-color: $clr-orange;
+			color: white;
 		}
 
 		label {
 			display: none;
 		}
 
-		button {
+		.filtres__button {
 			@include filter();
 			position: absolute;
 			top: 0;
@@ -277,7 +280,7 @@ header {
 			height: fit-content;
 			transition: all 350ms ease-in-out;
 
-			button {
+			.filtres__button {
 				visibility: hidden;
 			}
 
@@ -307,7 +310,7 @@ header {
 				gap: 1px 5px;
 			}
 
-			li {
+			li button {
 				opacity: 100%;
 				width: 100%;
 				padding: 10px 5px;
@@ -315,20 +318,23 @@ header {
 				border: 1px solid rgba(255, 255, 255, 0);
 				border-radius: 3px;
 				transition: opacity ease-in 650ms;
-				cursor: pointer;
+				font-family: $text-main;
+				font-weight: bold;
+				font-size: 18px;
 
-				&[data-active="true"] {
+				&:disabled {
 					color: gray;
 					cursor: no-drop;
-				}
-
-				&[data-active="false"] {
-					cursor: pointer;
 
 					&:hover {
-						border-color: rgba(255, 255, 255, 0.5);
-						background: rgba(255, 255, 255, 0.15);
+						border-color: initial;
+						background: initial;
 					}
+				}
+
+				&:hover {
+					border-color: rgba(255, 255, 255, 0.5);
+					background: rgba(255, 255, 255, 0.15);
 				}
 
 				@include filterItems();
@@ -346,7 +352,7 @@ header {
 
 			transition: all 350ms ease-in-out;
 
-			button {
+			.filtres__button {
 				font-size: 18px;
 				visibility: visible;
 			}
@@ -355,7 +361,7 @@ header {
 			ul {
 				//display: none;
 
-				li {
+				li button {
 					opacity: 0;
 					transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
 				}

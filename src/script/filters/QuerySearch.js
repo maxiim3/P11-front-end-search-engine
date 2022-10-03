@@ -95,7 +95,6 @@ export class QuerySearch {
     observeDomChange() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.observerSearchBar();
-            yield this.observerTagContainer();
             return yield this.dataByQueryTags();
         });
     }

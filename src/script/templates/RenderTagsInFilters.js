@@ -54,9 +54,11 @@ export class RenderTagsInFilters {
                 const tags = [...arrayOfTags[categoryName]];
                 tags.forEach(tag => {
                     const li = document.createElement("li");
-                    li.textContent = tag;
-                    li.dataset.active = "false";
-                    li.dataset.filterType = categoryName;
+                    const btn = document.createElement("button");
+                    btn.textContent = tag;
+                    btn.value = tag;
+                    btn.dataset.filterType = categoryName;
+                    li.appendChild(btn);
                     $category.appendChild(li);
                 });
             });

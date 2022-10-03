@@ -2,7 +2,7 @@ import {Recette, RecetteFromJSON} from "../models/Recette.js"
 import {Api} from "../api/Api.js"
 import {DomFactoryMethods} from "../templates/DomFactoryMethods.js"
 import {QuerySearch} from "../filters/QuerySearch.js"
-import {MenuSubject} from "../filters/MenuSubject.js"
+import {MenuStateObserver} from "../filters/MenuStateObserver.js"
 
 export class App {
 	private _fetchedData: RecetteFromJSON[]
@@ -45,10 +45,40 @@ export class App {
 	 * @private
 	 */
 	private handleMenuContext() {
-		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
-		const menuSubject = new MenuSubject()
+		// document.addEventListener("click", ev => console.log(ev))
 
-		return filters.forEach(filter => {
+		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
+		const contextObservers = [] as MenuStateObserver[]
+		filters.forEach(filter => contextObservers.push(new MenuStateObserver(filter)))
+
+		contextObservers.forEach(obs => {
+			const button = obs.filter.querySelector(".filtres__button") as HTMLButtonElement
+			button.addEventListener("click", onClickOnFilter)
+		})
+
+		function onClickOnFilter(this: HTMLButtonElement) {
+			const clickedObserver = contextObservers.filter(({filter}) => {
+				return filter.querySelector(".filtres__button") === this
+			})[0]
+			contextObservers.forEach(observer => {
+				if (observer === clickedObserver) {
+					observer.setState("open")
+				} else {
+					observer.setState("close")
+				}
+				// observer.fire()
+			})
+			// console.table(contextObservers)
+
+			// obs.setState(StateEnums.Open)
+			/*contextObservers
+				.filter(other => other.filter !== obs.filter)
+				.forEach(observer => observer.setState(StateEnums.Close) /!* && observer.fire()*!/)
+			contextObservers.forEach(obs => obs.fire())*/
+		}
+
+		/*return filters.forEach(filter => {
+
 			const btn = filter.querySelector("button") as HTMLButtonElement
 
 			btn.addEventListener("click", () => {
@@ -63,7 +93,7 @@ export class App {
 					console.log(obs.currentState)})
 				menuSubject.fire()
 			})
-		})
+		})*/
 	}
 
 	/**

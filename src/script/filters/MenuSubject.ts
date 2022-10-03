@@ -1,3 +1,4 @@
+/*
 import {MenuStateObserver, StateEnums} from "./MenuStateObserver.js"
 
 type MousePositionProps = {x: number; y: number}
@@ -67,6 +68,7 @@ export class MenuSubject {
 	}
 
 	fire() {
-		this.contextObserver.forEach(observer => observer.callContext())
+		this.contextObserver.forEach(observer => observer.fire())
 	}
 }
+*/

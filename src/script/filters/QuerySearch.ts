@@ -160,7 +160,7 @@ export class QuerySearch {
 
 	async observeDomChange() {
 		await this.observerSearchBar()
-		await this.observerTagContainer()
+		// await this.observerTagContainer() // todo le pb vient de la
 		return await this.dataByQueryTags()
 	}
 }

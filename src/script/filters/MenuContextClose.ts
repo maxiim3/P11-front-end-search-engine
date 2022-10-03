@@ -1,13 +1,9 @@
-import {StateEnums} from "./MenuStateObserver"
-import {IContext} from "./IContext.js"
-
-export class MenuContextClose implements IContext{
-	state: StateEnums.Close
+/*
+export class MenuContextClose {
 	filter: HTMLDivElement
 
 	constructor(filter: HTMLDivElement) {
 		this.filter = filter
-		this.state = StateEnums.Close
 	}
 
 	setInactive() {
@@ -27,3 +23,4 @@ export class MenuContextClose implements IContext{
 		this.setInactive()
 	}
 }
+*/

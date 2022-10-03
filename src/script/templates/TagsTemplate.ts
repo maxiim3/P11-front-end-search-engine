@@ -1,15 +1,13 @@
 export class TagsTemplate {
-	private readonly tag: HTMLLIElement
-	private $tagsContainer: HTMLDivElement
+	private readonly dataset: {filterType: string}
+	private readonly textContent: string
 
-	constructor(tag: HTMLLIElement) {
-		this.tag = tag
-		this.$tagsContainer = document.querySelector("#tagsWrapper") as HTMLDivElement
+	constructor({value, dataset}: inputTypeProps) {
+		this.textContent = value
+		this.dataset = dataset
 	}
 
 	createTag(): HTMLLIElement {
-		const {textContent: value, dataset} = this.tag
-
 		const $icon = document.createElement("span") as HTMLSpanElement
 		$icon.classList.value = "fa-regular fa-circle-xmark icon"
 		$icon.ariaHidden = "true"
@@ -23,28 +21,16 @@ export class TagsTemplate {
 
 		const $tag = document.createElement("li") as HTMLLIElement
 		$tag.classList.value = "tag"
-		$tag.dataset.tag = dataset.filterType
-		$tag.textContent = value
+		$tag.dataset.tag = this.dataset["filterType"]
+		$tag.textContent = this.textContent
 		$tag.appendChild($p)
 		$tag.appendChild($btn)
 
 		return $tag
 	}
+}
 
-	async appendTag(): Promise<HTMLLIElement | void> {
-		if (this.$tagsContainer.childNodes.length < 3) {
-			const $tag = this.createTag()
-			this.$tagsContainer.appendChild($tag)
-			this.tag.dataset.active = "true"
-			this.tag.setAttribute("disabled", "true")
-			const $button = $tag.querySelector(".tag__btn") as HTMLButtonElement
-
-			$button.addEventListener("click", () => {
-				this.tag.dataset.active = "false"
-				this.tag.setAttribute("disabled", "false")
-				this.$tagsContainer.removeChild($tag)
-			})
-			return $tag
-		}
-	}
+export type inputTypeProps = {
+	value: string
+	dataset: {filterType: string}
 }

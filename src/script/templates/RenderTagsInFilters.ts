@@ -72,12 +72,13 @@ export class RenderTagsInFilters {
 			const tags: string[] = [...arrayOfTags[categoryName]]
 			tags.forEach(tag => {
 				const li = document.createElement("li") as HTMLLIElement
-				li.textContent = tag
-				li.dataset.active = "false"
-				li.dataset.filterType = categoryName
+				const btn = document.createElement("button") as HTMLButtonElement
+				btn.textContent = tag
+				btn.value = tag
+				btn.dataset.filterType = categoryName
+				li.appendChild(btn)
 				$category.appendChild(li)
 			})
-
 		})
 	}
 
