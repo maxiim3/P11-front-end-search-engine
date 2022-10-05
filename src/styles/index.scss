@@ -34,16 +34,40 @@ li {
 	list-style: none;
 }
 
-header {
-	padding-inline: $marges;
+body {
+	//overflow-x: hidden;
+	//overflow-y: hidden;
+
+	&[data-filtre-is-open="true"] {
+		//overflow-y: visible;
+	}
+
+	&[data-filtre-is-open="false"] {
+		//overflow-y: hidden;
+	}
 }
 
 main {
-	position: absolute;
-	z-index: 0;
-	top: 380px;
-	left: $marges;
+	//height: calc(100vh - 380px);
+	overflow-x: hidden;
+	//overflow-y: scroll;
+	//box-sizing: content-box;
+	//padding-right: 200px;
+	position: relative;
+	z-index: -5;
+	top: 20px;
+	margin-inline: $marges;
+	//padding-top: 20px;
 	width: calc(100% - $marges * 2);
+	//padding-left: $marges;
+
+	&::-webkit-scrollbar {
+		opacity: 0;
+	}
+
+	&[data-filtre-is-open="true"] {
+		height: 1500px;
+	}
 }
 
 //endregion
@@ -114,7 +138,7 @@ main {
 //endregion
 
 //region Header
-header {
+body > header {
 	z-index: 999;
 	display: flex;
 	align-items: center;
@@ -123,6 +147,11 @@ header {
 	width: 100%;
 	padding-top: 50px;
 	row-gap: 5px;
+
+	padding-inline: $marges;
+
+	padding-bottom: 60px;
+	//overflow: hidden;
 
 	h1 {
 		font-family: $text-title;
@@ -170,6 +199,11 @@ header {
 		position: absolute;
 		top: 15px;
 		right: 20px;
+		transition: color ease-in-out 250ms;
+	}
+
+	&:focus-visible + span {
+		color: gray;
 	}
 }
 
@@ -222,11 +256,12 @@ header {
 
 //endregion
 
-//region Filtresv1
+//region Filtres
 .filtres {
 	display: flex;
 	flex-flow: row wrap;
 	gap: 15px;
+	contain: size;
 
 	.fa-chevron-down {
 		position: absolute;
@@ -275,6 +310,41 @@ header {
 			text-align: left;
 		}
 
+		li {
+			visibility: hidden;
+
+			button {
+				opacity: 100%;
+				width: 100%;
+				padding: 5px 5px;
+				cursor: pointer;
+				border: 1px solid rgba(255, 255, 255, 0);
+				border-radius: 3px;
+				transition: opacity ease-in 650ms;
+				font-family: $text-main;
+				font-weight: normal;
+				font-size: 16px;
+				text-align: left;
+
+				&:disabled {
+					color: #c3c1c1;
+					cursor: no-drop;
+
+					&:hover {
+						border-color: initial;
+						background: initial;
+					}
+				}
+
+				&:hover {
+					border-color: rgba(255, 255, 255, 0.5);
+					background: rgba(255, 255, 255, 0.15);
+				}
+
+				@include filterItems();
+			}
+		}
+
 		&[data-open="true"] {
 			width: 600px;
 			height: fit-content;
@@ -307,37 +377,22 @@ header {
 				display: grid;
 				margin-top: 15px;
 				grid-template-columns: repeat(3, 1fr);
-				gap: 1px 5px;
-			}
+				gap: 0 15px;
 
-			li button {
-				opacity: 100%;
-				width: 100%;
-				padding: 10px 5px;
-				cursor: pointer;
-				border: 1px solid rgba(255, 255, 255, 0);
-				border-radius: 3px;
-				transition: opacity ease-in 650ms;
-				font-family: $text-main;
-				font-weight: bold;
-				font-size: 18px;
+				li {
+					visibility: visible;
 
-				&:disabled {
-					color: gray;
-					cursor: no-drop;
+					&[data-visible="false"] {
+						visibility: hidden;
+						position: absolute;
+						top: 0;
+						left: 0;
+					}
 
-					&:hover {
-						border-color: initial;
-						background: initial;
+					&[data-visible="true"] {
+						visibility: visible;
 					}
 				}
-
-				&:hover {
-					border-color: rgba(255, 255, 255, 0.5);
-					background: rgba(255, 255, 255, 0.15);
-				}
-
-				@include filterItems();
 			}
 		}
 
@@ -378,7 +433,7 @@ header {
 .container {
 	display: grid;
 	width: 100%;
-	height: 100%;
+	//height: 100%;
 	margin-block: 20px;
 	gap: calc($marges / 2);
 	grid-template-columns: repeat(1, 1fr);
@@ -476,6 +531,18 @@ header {
 		text-overflow: ellipsis;
 		-webkit-line-clamp: 6;
 		-webkit-box-orient: vertical;
+	}
+
+	&[data-visible="false"] {
+		display: none;
+		visibility: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	&[data-visible="true"] {
+		visibility: visible;
 	}
 }
 

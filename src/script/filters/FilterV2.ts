@@ -1,6 +1,6 @@
-import {Utility} from "./Utility.js"
+import {StringUtility} from "../utils/StringUtility.js"
 import {Recette} from "../models/Recette.js"
-import {KeyWordsType} from "../filters/QuerySearch.js"
+import {KeyWordsType} from "./DomObserver"
 
 export type TypeOfTags = "ingredients" | "ustensiles" | "name" | "description" | "appliance"
 
@@ -52,18 +52,18 @@ export class FilterV2 {
 		if (type === "ingredients") {
 			for (let i = 0; i < recettes.length; i++) {
 				for (const {ingredient} of recettes[i].ingredients) {
-					if (Utility.removeAccent(ingredient).includes(input)) result.push(recettes[i])
+					if (StringUtility.removeAccent(ingredient).includes(input)) result.push(recettes[i])
 				}
 			}
 		} else if (type === "ustensiles") {
 			for (let i = 0; i < recettes.length; i++) {
 				for (const ustensile of recettes[i].ustensiles) {
-					if (Utility.removeAccent(ustensile).includes(input)) result.push(recettes[i])
+					if (StringUtility.removeAccent(ustensile).includes(input)) result.push(recettes[i])
 				}
 			}
 		} else {
 			for (let i = 0; i < recettes.length; i++) {
-				if (Utility.removeAccent(recettes[i][type]).includes(input)) result.push(recettes[i])
+				if (StringUtility.removeAccent(recettes[i][type]).includes(input)) result.push(recettes[i])
 			}
 		}
 		return result
@@ -83,9 +83,9 @@ export class FilterV2 {
 			const query = firstTag.innerText.toString() as string
 			const tagTypeDataset = firstTag.getAttribute("data-tag") as string
 			// Tag text Content , will be the input for the filter
-			const tagValue = Utility.removeAccent(query) as string
+			const tagValue = StringUtility.removeAccent(query) as string
 			// Tag Type, select the type fo filter
-			const tagType = Utility.removeAccent(tagTypeDataset) as TypeOfTags
+			const tagType = StringUtility.removeAccent(tagTypeDataset) as TypeOfTags
 			// set data to initial data or accumulated data
 			const data = dataAccumulator.length !== 0 ? [...dataAccumulator] : [...this.recettes]
 			// get result from filter

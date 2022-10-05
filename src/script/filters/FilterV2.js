@@ -13,7 +13,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _FilterV2_instances, _FilterV2_recursiveFiltering;
-import { Utility } from "./Utility.js";
+import { StringUtility } from "../utils/StringUtility.js";
 export class FilterV2 {
     constructor(data, { input, tags }) {
         _FilterV2_instances.add(this);
@@ -28,7 +28,7 @@ export class FilterV2 {
             if (type === "ingredients") {
                 for (let i = 0; i < recettes.length; i++) {
                     for (const { ingredient } of recettes[i].ingredients) {
-                        if (Utility.removeAccent(ingredient).includes(input))
+                        if (StringUtility.removeAccent(ingredient).includes(input))
                             result.push(recettes[i]);
                     }
                 }
@@ -36,14 +36,14 @@ export class FilterV2 {
             else if (type === "ustensiles") {
                 for (let i = 0; i < recettes.length; i++) {
                     for (const ustensile of recettes[i].ustensiles) {
-                        if (Utility.removeAccent(ustensile).includes(input))
+                        if (StringUtility.removeAccent(ustensile).includes(input))
                             result.push(recettes[i]);
                     }
                 }
             }
             else {
                 for (let i = 0; i < recettes.length; i++) {
-                    if (Utility.removeAccent(recettes[i][type]).includes(input))
+                    if (StringUtility.removeAccent(recettes[i][type]).includes(input))
                         result.push(recettes[i]);
                 }
             }
@@ -84,8 +84,8 @@ _FilterV2_instances = new WeakSet(), _FilterV2_recursiveFiltering = function _Fi
             const firstTag = tags[0];
             const query = firstTag.innerText.toString();
             const tagTypeDataset = firstTag.getAttribute("data-tag");
-            const tagValue = Utility.removeAccent(query);
-            const tagType = Utility.removeAccent(tagTypeDataset);
+            const tagValue = StringUtility.removeAccent(query);
+            const tagType = StringUtility.removeAccent(tagTypeDataset);
             const data = dataAccumulator.length !== 0 ? [...dataAccumulator] : [...this.recettes];
             const filterResult = yield this.filterBy(tagType, tagValue, data);
             tags.shift();

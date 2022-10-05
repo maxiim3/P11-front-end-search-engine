@@ -72,6 +72,7 @@ _CardTemplate_instances = new WeakSet(), _CardTemplate_generateCard = function _
     const $card = document.createElement("div");
     $card.classList.value = "recette";
     $card.dataset.id = this.recette.id.toString();
+    $card.dataset.visible = "true";
     $children.forEach(child => $card.appendChild(child));
     return $card;
 };

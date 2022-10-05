@@ -1,4 +1,4 @@
-export class Utility {
+export class StringUtility {
 	/**
 	 * Capitalize first Letter of word
 	 * @static
@@ -50,18 +50,5 @@ export class Utility {
 			out.push(letter.toLowerCase())
 		})
 		return out.join("")
-	}
-
-	/**
-	 * @static
-	 * @param ms : number
-	 * @return {Promise<unknown>}
-	 */
-	static async delay(ms : number): Promise<void> {
-		return new Promise<void>(resolve => {
-			setTimeout(() => {
-				resolve()
-			}, ms)
-		})
 	}
 }

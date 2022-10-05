@@ -16,16 +16,19 @@ li {
   list-style: none;
 }
 
-header {
-  padding-inline: 5vw;
-}
-
 main {
-  position: absolute;
-  z-index: 0;
-  top: 380px;
-  left: 5vw;
+  overflow-x: hidden;
+  position: relative;
+  z-index: -5;
+  top: 20px;
+  margin-inline: 5vw;
   width: calc(100% - 10vw);
+}
+main::-webkit-scrollbar {
+  opacity: 0;
+}
+main[data-filtre-is-open=true] {
+  height: 1500px;
 }
 
 @keyframes shake {
@@ -45,7 +48,7 @@ main {
     transform: translateX(-2px);
   }
 }
-header {
+body > header {
   z-index: 999;
   display: flex;
   align-items: center;
@@ -54,13 +57,15 @@ header {
   width: 100%;
   padding-top: 50px;
   row-gap: 5px;
+  padding-inline: 5vw;
+  padding-bottom: 60px;
 }
-header h1 {
+body > header h1 {
   font-family: "DM Sans", sans-serif;
   font-weight: bold;
   color: rgb(208, 79, 79);
 }
-header nav {
+body > header nav {
   display: flex;
   align-content: start;
   flex-flow: nowrap column;
@@ -68,10 +73,10 @@ header nav {
   width: 100%;
   row-gap: 15px;
 }
-header nav label {
+body > header nav label {
   display: none;
 }
-header nav div {
+body > header nav div {
   position: relative;
   display: block;
 }
@@ -102,6 +107,10 @@ header nav div {
   position: absolute;
   top: 15px;
   right: 20px;
+  transition: color ease-in-out 250ms;
+}
+.searchBar:focus-visible + span {
+  color: gray;
 }
 
 .tagsWrapper {
@@ -150,6 +159,7 @@ header nav div {
   display: flex;
   flex-flow: row wrap;
   gap: 15px;
+  contain: size;
 }
 .filtres .fa-chevron-down {
   position: absolute;
@@ -199,6 +209,48 @@ header nav div {
   padding-left: 25px;
   text-align: left;
 }
+.filtres__filtre li {
+  visibility: hidden;
+}
+.filtres__filtre li button {
+  opacity: 100%;
+  width: 100%;
+  padding: 5px 5px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 3px;
+  transition: opacity ease-in 650ms;
+  font-family: "Lato", sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+  text-align: left;
+}
+.filtres__filtre li button:disabled {
+  color: #c3c1c1;
+  cursor: no-drop;
+}
+.filtres__filtre li button:disabled:hover {
+  border-color: initial;
+  background: initial;
+}
+.filtres__filtre li button:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+.filtres__filtre li button[data-hidden=true] {
+  position: absolute;
+  z-index: -999;
+  right: 0;
+  bottom: 0;
+  visibility: hidden;
+}
+.filtres__filtre li button[data-hidden=false] {
+  position: relative;
+  z-index: initial;
+  top: initial;
+  left: initial;
+  visibility: visible;
+}
 .filtres__filtre[data-open=true] {
   width: 600px;
   height: fit-content;
@@ -227,44 +279,18 @@ header nav div {
   display: grid;
   margin-top: 15px;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px 5px;
+  gap: 0 15px;
 }
-.filtres__filtre[data-open=true] li button {
-  opacity: 100%;
-  width: 100%;
-  padding: 10px 5px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0);
-  border-radius: 3px;
-  transition: opacity ease-in 650ms;
-  font-family: "Lato", sans-serif;
-  font-weight: bold;
-  font-size: 18px;
+.filtres__filtre[data-open=true] ul li {
+  visibility: visible;
 }
-.filtres__filtre[data-open=true] li button:disabled {
-  color: gray;
-  cursor: no-drop;
-}
-.filtres__filtre[data-open=true] li button:disabled:hover {
-  border-color: initial;
-  background: initial;
-}
-.filtres__filtre[data-open=true] li button:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.15);
-}
-.filtres__filtre[data-open=true] li button[data-hidden=true] {
-  position: absolute;
-  z-index: -999;
-  right: 0;
-  bottom: 0;
+.filtres__filtre[data-open=true] ul li[data-visible=false] {
   visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-.filtres__filtre[data-open=true] li button[data-hidden=false] {
-  position: relative;
-  z-index: initial;
-  top: initial;
-  left: initial;
+.filtres__filtre[data-open=true] ul li[data-visible=true] {
   visibility: visible;
 }
 .filtres__filtre[data-open=false] {
@@ -290,7 +316,6 @@ header nav div {
 .container {
   display: grid;
   width: 100%;
-  height: 100%;
   margin-block: 20px;
   gap: 2.5vw;
   grid-template-columns: repeat(1, 1fr);
@@ -395,6 +420,16 @@ header nav div {
   text-overflow: ellipsis;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
+}
+.recette[data-visible=false] {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.recette[data-visible=true] {
+  visibility: visible;
 }
 
 /*# sourceMappingURL=index.css.map */

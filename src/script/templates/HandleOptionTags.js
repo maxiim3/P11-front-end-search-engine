@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { StringUtility } from "../utils/StringUtility.js";
-export class RenderTagsInFilters {
+export class HandleOptionTags {
     constructor(data) {
         this.recettes = data;
     }
@@ -46,26 +46,6 @@ export class RenderTagsInFilters {
             return [...new Set(allUstensiles)];
         });
     }
-    renderItems(arrayOfTags) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const $categories = [...document.querySelectorAll(".filtres__list")];
-            $categories.forEach($category => {
-                const categoryName = $category.dataset.filterName;
-                const tags = [...arrayOfTags[categoryName]];
-                tags.forEach(tag => {
-                    const btn = document.createElement("button");
-                    btn.textContent = tag;
-                    btn.value = tag;
-                    btn.dataset.filterType = categoryName;
-                    const li = document.createElement("li");
-                    li.dataset.value = StringUtility.removeAccent(tag);
-                    li.dataset.visible = "true";
-                    li.appendChild(btn);
-                    $category.appendChild(li);
-                });
-            });
-        });
-    }
     getAllOptionTags() {
         return __awaiter(this, void 0, void 0, function* () {
             const ingredients = (yield this.getAllIngredients());
@@ -78,9 +58,29 @@ export class RenderTagsInFilters {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.recettes.length !== 0) {
                 const allOptionTags = yield this.getAllOptionTags();
-                yield this.renderItems(Object.assign({}, allOptionTags));
+                yield this.appendOptionTagsToEachFilter(Object.assign({}, allOptionTags));
             }
         });
     }
+    appendOptionTagsToEachFilter(arrayOfTags) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const $filterType = [...document.querySelectorAll(".filtres__list")];
+            $filterType.forEach($filter => {
+                const categoryName = $filter.dataset.filterName;
+                const tags = [...arrayOfTags[categoryName]];
+                tags.forEach(tag => {
+                    const btn = document.createElement("button");
+                    btn.textContent = tag;
+                    btn.value = tag;
+                    btn.dataset.filterType = categoryName;
+                    const li = document.createElement("li");
+                    li.dataset.value = StringUtility.removeAccent(tag);
+                    li.dataset.visible = "true";
+                    li.appendChild(btn);
+                    $filter.appendChild(li);
+                });
+            });
+        });
+    }
 }
-//# sourceMappingURL=RenderTagsInFilters.js.map
+//# sourceMappingURL=HandleOptionTags.js.map

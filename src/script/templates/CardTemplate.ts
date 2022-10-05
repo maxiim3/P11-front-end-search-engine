@@ -108,7 +108,7 @@ export class CardTemplate {
 		const $card = document.createElement("div") as HTMLDivElement
 		$card.classList.value = "recette"
 		$card.dataset.id = this.recette.id.toString()
-
+		$card.dataset.visible = "true"
 		$children.forEach(child => $card.appendChild(child))
 
 		return $card
