@@ -30,10 +30,10 @@ export class DomObserver {
             li.dataset.visible = value;
         });
     }
-    updateCardsVisibility() {
+    updateCardsVisibility(recettes) {
         return __awaiter(this, void 0, void 0, function* () {
             this.resetAllCardsVisibility("false");
-            this.filteredReceipts.forEach(({ id }) => {
+            recettes.forEach(({ id }) => {
                 const $nodeId = CSS.escape(id.toString());
                 const selector = `.recette[data-id ="${$nodeId}"]`;
                 const $recetteNode = document.querySelector(selector);
@@ -41,10 +41,10 @@ export class DomObserver {
             });
         });
     }
-    updateFilterOptions() {
+    updateFilterOptions(recettes) {
         return __awaiter(this, void 0, void 0, function* () {
             this.resetAllOptionsVisibility("false");
-            const newInstance = new HandleOptionTags(this.filteredReceipts);
+            const newInstance = new HandleOptionTags(recettes);
             const promesse = yield newInstance.getAllOptionTags();
             const allFilteredTags = [[...promesse.appliance], [...promesse.ingredients], [...promesse.ustensiles]];
             allFilteredTags.forEach(filterType => {
@@ -120,8 +120,8 @@ export class DomObserver {
                 this.filteredReceipts = yield this.handleMainFilter();
                 this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false";
                 console.log(this.filteredReceipts);
-                yield this.updateCardsVisibility();
-                yield this.updateFilterOptions();
+                yield this.updateCardsVisibility(this.filteredReceipts);
+                yield this.updateFilterOptions(this.filteredReceipts);
             }
             else {
                 this.resetAllCardsVisibility("true");
@@ -141,38 +141,84 @@ export class DomObserver {
     }
     observerTagContainer(mutations) {
         return __awaiter(this, void 0, void 0, function* () {
+            let initialReceipts = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts;
+            let $1stFilter;
+            let $2ndFilter;
+            let $3rdFilter;
             const event = mutations[0];
-            const appendTag = event.addedNodes;
-            const removeTag = event.removedNodes;
-            if (appendTag.length > 0) {
-                const { dataset, innerText } = appendTag[0];
-                const value = StringUtility.removeAccent(innerText);
-                if (dataset.tag) {
-                    const type = dataset.tag;
-                    const secondFilter = yield this.handleFilterByTag(value, type);
-                    console.log(secondFilter);
-                    navigator.clipboard.writeText(value).then();
-                }
+            const children = [...event.target.childNodes];
+            const numberOfTags = children.length;
+            const $1stNode = children[0];
+            const $1stTag = {
+                value: $1stNode && StringUtility.removeAccent($1stNode.textContent),
+                type: $1stNode && $1stNode.dataset.tag,
+            };
+            const $2ndNode = children[1];
+            const $2ndTag = {
+                value: $2ndNode && StringUtility.removeAccent($2ndNode.textContent),
+                type: $2ndNode && $2ndNode.dataset.tag,
+            };
+            const $3rdNode = children[2];
+            const $3rdTag = {
+                value: $3rdNode && StringUtility.removeAccent($3rdNode.textContent),
+                type: $3rdNode && $3rdNode.dataset.tag,
+            };
+            switch (numberOfTags) {
+                case 0:
+                    console.log("0 tag");
+                    yield this.updateCardsVisibility(initialReceipts);
+                    yield this.updateFilterOptions(initialReceipts);
+                    break;
+                case 1:
+                    console.log("1 tag");
+                    $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
+                    yield this.updateCardsVisibility($1stFilter);
+                    yield this.updateFilterOptions($1stFilter);
+                    console.log($1stFilter);
+                    break;
+                case 2:
+                    console.log("2 tag");
+                    $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
+                    yield this.updateCardsVisibility($1stFilter);
+                    yield this.updateFilterOptions($1stFilter);
+                    $2ndFilter = yield this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter);
+                    yield this.updateCardsVisibility($2ndFilter);
+                    yield this.updateFilterOptions($2ndFilter);
+                    console.log($1stFilter);
+                    console.log($2ndFilter);
+                    break;
+                case 3:
+                    console.log("3 tag");
+                    $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
+                    yield this.updateCardsVisibility($1stFilter);
+                    yield this.updateFilterOptions($1stFilter);
+                    $2ndFilter = yield this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter);
+                    yield this.updateCardsVisibility($2ndFilter);
+                    yield this.updateFilterOptions($2ndFilter);
+                    $3rdFilter = yield this.filterByTag($3rdTag.value, $3rdTag.type, $2ndFilter);
+                    yield this.updateCardsVisibility($3rdFilter);
+                    yield this.updateFilterOptions($3rdFilter);
+                    console.log($1stFilter);
+                    console.log($2ndFilter);
+                    console.log($3rdFilter);
+                    break;
+                default:
+                    break;
             }
-            else if (removeTag.length > 0) {
-            }
-            else
-                return;
         });
     }
-    handleFilterByTag(value, type) {
+    filterByTag(value, type, recettes) {
         return __awaiter(this, void 0, void 0, function* () {
             const results = [];
-            const data = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts;
             switch (type) {
                 case "appliance":
-                    data.forEach(recette => {
+                    recettes.forEach(recette => {
                         if (StringUtility.removeAccent(recette.appliance).includes(value))
                             results.push(recette);
                     });
                     return results;
                 case "ustensiles":
-                    data.forEach(recette => {
+                    recettes.forEach(recette => {
                         recette.ustensiles.map(ustensile => {
                             if (StringUtility.removeAccent(ustensile).includes(value))
                                 results.push(recette);
@@ -180,7 +226,7 @@ export class DomObserver {
                     });
                     return results;
                 case "ingredients":
-                    data.forEach(recette => {
+                    recettes.forEach(recette => {
                         recette.ingredients.map(({ ingredient }) => {
                             if (StringUtility.removeAccent(ingredient).includes(value))
                                 results.push(recette);

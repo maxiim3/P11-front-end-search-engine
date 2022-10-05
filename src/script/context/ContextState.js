@@ -58,6 +58,7 @@ export class ContextState {
             const tagBtn = $tag.firstChild;
             tagBtn.onclick = () => {
                 this.appendTagToContainer(tagBtn);
+                $tag.dataset.visivle = "true";
             };
         });
     }

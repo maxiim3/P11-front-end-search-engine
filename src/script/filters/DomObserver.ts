@@ -74,11 +74,11 @@ export class DomObserver {
 	 * @async
 	 * @return void
 	 */
-	private async updateCardsVisibility(): Promise<void> {
+	private async updateCardsVisibility(recettes: Recette[]): Promise<void> {
 		// 1. Met toutes les cartes invisibles au début de la recherche
 		this.resetAllCardsVisibility("false")
 
-		this.filteredReceipts.forEach(({id}) => {
+		recettes.forEach(({id}) => {
 			const $nodeId = CSS.escape(id.toString())
 			const selector = `.recette[data-id ="${$nodeId}"]`
 			const $recetteNode: HTMLDivElement = document.querySelector(selector) as HTMLDivElement
@@ -91,9 +91,9 @@ export class DomObserver {
 	 * @description Update option-tags in filters with filtered Data from main search. Set the [data-visible] attribute
 	 * @private
 	 */
-	private async updateFilterOptions() {
+	private async updateFilterOptions(recettes: Recette[]) {
 		this.resetAllOptionsVisibility("false")
-		const newInstance = new HandleOptionTags(this.filteredReceipts)
+		const newInstance = new HandleOptionTags(recettes)
 		const promesse = await newInstance.getAllOptionTags()
 		const allFilteredTags = [[...promesse.appliance], [...promesse.ingredients], [...promesse.ustensiles]]
 
@@ -189,9 +189,9 @@ export class DomObserver {
 			// USER INPUT : plus de deux caractères
 			this.filteredReceipts = await this.handleMainFilter()
 			this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false" // User Visual Feedback
-			console.log(this.filteredReceipts )
-			await this.updateCardsVisibility()
-			await this.updateFilterOptions()
+			console.log(this.filteredReceipts)
+			await this.updateCardsVisibility(this.filteredReceipts)
+			await this.updateFilterOptions(this.filteredReceipts)
 		} else {
 			// USER INPUT : moins de deux caractères
 			this.resetAllCardsVisibility("true")
@@ -225,43 +225,99 @@ export class DomObserver {
 	 * @return {Promise<void>}
 	 */
 	private async observerTagContainer(mutations: MutationRecord[]): Promise<void> {
+		let initialReceipts = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts
+		let $1stFilter: Recette[]
+		let $2ndFilter: Recette[]
+		let $3rdFilter: Recette[]
+
 		const event: MutationRecord = mutations[0]
-		const appendTag: NodeList = event.addedNodes
-		const removeTag: NodeList = event.removedNodes
-		if (appendTag.length > 0) {
-			const {dataset, innerText}: HTMLLIElement = appendTag[0] as HTMLLIElement
-			const value: string = StringUtility.removeAccent(innerText)
-			if (dataset.tag) {
-				const type: TagFilterType = dataset.tag as TagFilterType
-				const secondFilter = await this.handleFilterByTag(value, type)
-				console.log(secondFilter)
-				navigator.clipboard.writeText(value).then()
-				//
-				// await this.updateCardsVisibility()
-				// await this.updateFilterOptions()
-			}
-		} else if (removeTag.length > 0) {
-		} else return
+		// const newTag: HTMLLIElement = event.addedNodes[0] as HTMLLIElement
+		// const removedTag: HTMLLIElement = event?.removedNodes[0] as HTMLLIElement
+		const children: HTMLLIElement[] = [...event.target.childNodes] as HTMLLIElement[]
+		const numberOfTags: 0 | 1 | 2 | 3 = children.length as 0 | 1 | 2 | 3
+
+		const $1stNode: HTMLLIElement = children[0] as HTMLLIElement
+		const $1stTag: TagObjectProps = {
+			value: $1stNode && StringUtility.removeAccent($1stNode.textContent as string),
+			type: $1stNode && ($1stNode.dataset.tag as TagFilterType),
+		}
+
+		const $2ndNode: HTMLLIElement = children[1] as HTMLLIElement
+		const $2ndTag: TagObjectProps = {
+			value: $2ndNode && StringUtility.removeAccent($2ndNode.textContent as string),
+			type: $2ndNode && ($2ndNode.dataset.tag as TagFilterType),
+		}
+
+		const $3rdNode: HTMLLIElement = children[2] as HTMLLIElement
+		const $3rdTag: TagObjectProps = {
+			value: $3rdNode && StringUtility.removeAccent($3rdNode.textContent as string),
+			type: $3rdNode && ($3rdNode.dataset.tag as TagFilterType),
+		}
+
+		switch (numberOfTags) {
+			case 0:
+				console.log("0 tag")
+				await this.updateCardsVisibility(initialReceipts)
+				await this.updateFilterOptions(initialReceipts)
+				break
+			case 1:
+				console.log("1 tag")
+				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
+				await this.updateCardsVisibility($1stFilter)
+				await this.updateFilterOptions($1stFilter)
+				console.log($1stFilter)
+				break
+			case 2:
+				console.log("2 tag")
+
+				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
+				await this.updateCardsVisibility($1stFilter)
+				await this.updateFilterOptions($1stFilter)
+				$2ndFilter = await this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter)
+				await this.updateCardsVisibility($2ndFilter)
+				await this.updateFilterOptions($2ndFilter)
+				console.log($1stFilter)
+				console.log($2ndFilter)
+				break
+			case 3:
+				console.log("3 tag")
+
+				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
+				await this.updateCardsVisibility($1stFilter)
+				await this.updateFilterOptions($1stFilter)
+				$2ndFilter = await this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter)
+				await this.updateCardsVisibility($2ndFilter)
+				await this.updateFilterOptions($2ndFilter)
+				$3rdFilter = await this.filterByTag($3rdTag.value, $3rdTag.type, $2ndFilter)
+				await this.updateCardsVisibility($3rdFilter)
+				await this.updateFilterOptions($3rdFilter)
+
+				console.log($1stFilter)
+				console.log($2ndFilter)
+				console.log($3rdFilter)
+				break
+			default:
+				break
+		}
 	}
 
-	private async handleFilterByTag(value: string, type: TagFilterType) {
+	private async filterByTag(value: string, type: TagFilterType, recettes: Recette[]) {
 		const results = [] as Recette[]
-		const data = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts
 		switch (type) {
 			case "appliance":
-				data.forEach(recette => {
+				recettes.forEach(recette => {
 					if (StringUtility.removeAccent(recette.appliance).includes(value)) results.push(recette)
 				})
 				return results
 			case "ustensiles":
-				data.forEach(recette => {
+				recettes.forEach(recette => {
 					recette.ustensiles.map(ustensile => {
 						if (StringUtility.removeAccent(ustensile).includes(value)) results.push(recette)
 					})
 				})
 				return results
 			case "ingredients":
-				data.forEach(recette => {
+				recettes.forEach(recette => {
 					recette.ingredients.map(({ingredient}) => {
 						if (StringUtility.removeAccent(ingredient).includes(value)) results.push(recette)
 					})
@@ -276,3 +332,7 @@ export class DomObserver {
 
 type MainFilterTypes = "name" | "description" | "ingredients"
 type TagFilterType = "appliance" | "ustensiles" | "ingredients"
+type TagObjectProps = {
+	value: string
+	type: TagFilterType
+}

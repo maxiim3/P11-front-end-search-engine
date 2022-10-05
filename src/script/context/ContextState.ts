@@ -54,14 +54,14 @@ export class ContextState {
 		this.filter.removeEventListener("keydown", this.closeOnKeyPress)
 		this.filter.removeEventListener("click", this.closeOnClick)
 
-/*		// régler la scroll bar et overflow sur le #body
-		const filterList = this.filter.querySelector(".filtres__list") as HTMLUListElement
-		if (filterList.dataset.filterName === "ingredients") {
-			const $main = document.querySelector("main") as HTMLDivElement
-			const body = document.querySelector("body") as HTMLBodyElement
-			// $main.dataset.filtreIsOpen === "true" && ($main.dataset.filtreIsOpen = "false")
-			// body.dataset.filtreIsOpen === "true" && (body.dataset.filtreIsOpen = "false")
-		}*/
+		/*		// régler la scroll bar et overflow sur le #body
+				const filterList = this.filter.querySelector(".filtres__list") as HTMLUListElement
+				if (filterList.dataset.filterName === "ingredients") {
+					const $main = document.querySelector("main") as HTMLDivElement
+					const body = document.querySelector("body") as HTMLBodyElement
+					// $main.dataset.filtreIsOpen === "true" && ($main.dataset.filtreIsOpen = "false")
+					// body.dataset.filtreIsOpen === "true" && (body.dataset.filtreIsOpen = "false")
+				}*/
 	}
 
 	private setActive() {
@@ -92,9 +92,12 @@ export class ContextState {
 			const tagBtn = $tag.firstChild as HTMLButtonElement
 			tagBtn.onclick = () => {
 				this.appendTagToContainer(tagBtn)
+				$tag.dataset.visivle = "true"
 			}
 		})
 	}
+
+	// todo Bug : When data filtered bu tag, if open menu filter once, OK (tags are filtered), but reset on reopen
 
 	/**
 	 * Handle filter tags from filter search bar
