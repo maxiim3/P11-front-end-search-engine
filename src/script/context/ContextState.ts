@@ -68,18 +68,20 @@ export class ContextState {
 		this.filter.dataset.open = "true"
 		this.filter.tabIndex = 0
 		this.filter.ariaHidden = "false"
-		const filterList = this.filter.querySelector(".filtres__list") as HTMLUListElement
+		// const filterList = this.filter.querySelector(".filtres__list") as HTMLUListElement
 
 		// régler la scroll bar et overflow sur le #body
-		if (filterList.dataset.filterName === "ingredients") {
-			const $main = document.querySelector("main") as HTMLDivElement
-			$main.dataset.filtreIsOpen = "true"
-
-			const body = document.querySelector("body") as HTMLBodyElement
-			body.dataset.filtreIsOpen = "true"
-		}
+		// if (filterList.dataset.filterName === "ingredients") {
+		// 	const $main = document.querySelector("main") as HTMLDivElement
+		// 	$main.dataset.filtreIsOpen = "true"
+		//
+		// 	const body = document.querySelector("body") as HTMLBodyElement
+		// 	body.dataset.filtreIsOpen = "true"
+		// }
 
 		// Event pour fermer la DIV
+
+		//todo Ingredient do not close if one tag selected
 		this.inputSearch.addEventListener("input", this.handleSearchForTags)
 		// Event pour fermer la DIV
 		document.addEventListener("keydown", this.closeOnKeyPress)

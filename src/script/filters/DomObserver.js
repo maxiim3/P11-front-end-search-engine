@@ -61,7 +61,6 @@ export class DomObserver {
                     optionNode.dataset.visible = "true";
                 });
             });
-            console.log("la reponse est 42");
         });
     }
     mainFilterByType(type) {
@@ -120,6 +119,7 @@ export class DomObserver {
             if (this.userInput.length > 2) {
                 this.filteredReceipts = yield this.handleMainFilter();
                 this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false";
+                console.log(this.filteredReceipts);
                 yield this.updateCardsVisibility();
                 yield this.updateFilterOptions();
             }
@@ -132,8 +132,64 @@ export class DomObserver {
     }
     observeDomChange() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.$mainSearchBar.addEventListener("input", () => __awaiter(this, void 0, void 0, function* () { return yield this.userInputEvent(); }));
+            this.$mainSearchBar.oninput = () => __awaiter(this, void 0, void 0, function* () { return yield this.userInputEvent(); });
+            const $tagsContainer = document.querySelector("#tagsWrapper");
+            const observer = new MutationObserver((mutations) => __awaiter(this, void 0, void 0, function* () { return yield this.observerTagContainer(mutations); }));
+            observer.observe($tagsContainer, { childList: true });
             return this.filteredReceipts;
+        });
+    }
+    observerTagContainer(mutations) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const event = mutations[0];
+            const appendTag = event.addedNodes;
+            const removeTag = event.removedNodes;
+            if (appendTag.length > 0) {
+                const { dataset, innerText } = appendTag[0];
+                const value = StringUtility.removeAccent(innerText);
+                if (dataset.tag) {
+                    const type = dataset.tag;
+                    const secondFilter = yield this.handleFilterByTag(value, type);
+                    console.log(secondFilter);
+                    navigator.clipboard.writeText(value).then();
+                }
+            }
+            else if (removeTag.length > 0) {
+            }
+            else
+                return;
+        });
+    }
+    handleFilterByTag(value, type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            const data = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts;
+            switch (type) {
+                case "appliance":
+                    data.forEach(recette => {
+                        if (StringUtility.removeAccent(recette.appliance).includes(value))
+                            results.push(recette);
+                    });
+                    return results;
+                case "ustensiles":
+                    data.forEach(recette => {
+                        recette.ustensiles.map(ustensile => {
+                            if (StringUtility.removeAccent(ustensile).includes(value))
+                                results.push(recette);
+                        });
+                    });
+                    return results;
+                case "ingredients":
+                    data.forEach(recette => {
+                        recette.ingredients.map(({ ingredient }) => {
+                            if (StringUtility.removeAccent(ingredient).includes(value))
+                                results.push(recette);
+                        });
+                    });
+                    return results;
+                default:
+                    return results;
+            }
         });
     }
 }

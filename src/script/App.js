@@ -28,10 +28,10 @@ export class App {
     }
     hydrateCardContainer() {
         return __awaiter(this, void 0, void 0, function* () {
+            const container = document.querySelector(".container");
             return this._allReceipts.forEach(d => {
                 const cardTemplate = new CardTemplate(d);
                 const $card = cardTemplate.render();
-                const container = document.querySelector(".container");
                 container.appendChild($card);
             });
         });

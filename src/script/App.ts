@@ -34,10 +34,10 @@ export class App {
 	 * @return {Promise<void>}
 	 */
 	private async hydrateCardContainer() {
+		const container: HTMLDivElement = document.querySelector(".container") as HTMLDivElement
 		return this._allReceipts.forEach(d => {
 			const cardTemplate = new CardTemplate(d)
 			const $card = cardTemplate.render()
-			const container: HTMLDivElement = document.querySelector(".container") as HTMLDivElement
 			container.appendChild($card)
 		})
 	}
@@ -108,4 +108,4 @@ export class App {
 	}
 }
 
-// todo render DOM initialy, then on Upload filter recette that has $card ID data set - visible
+// todo render DOM initially, then on Upload filter recette that has $card ID data set - visible

@@ -87,6 +87,10 @@ export class DomObserver {
 		})
 	}
 
+	/**
+	 * @description Update option-tags in filters with filtered Data from main search. Set the [data-visible] attribute
+	 * @private
+	 */
 	private async updateFilterOptions() {
 		this.resetAllOptionsVisibility("false")
 		const newInstance = new HandleOptionTags(this.filteredReceipts)
@@ -110,73 +114,7 @@ export class DomObserver {
 				optionNode.dataset.visible = "true"
 			})
 		})
-		console.log("la reponse est 42")
-		/*
-				const filteredAppliance: string[] = [...allOptionTags.appliance]
-				const filteredIngredients: string[] = [...allOptionTags.ingredients]
-				const filteredUstensiles: string[] = [...allOptionTags.ustensiles]
-		
-				filteredAppliance.forEach(appliance => {
-					const parentSelector: string = '.filtres__list[data-filter-name="appliance"]'
-					const parentNode: HTMLUListElement = document.querySelector(parentSelector) as HTMLUListElement
-					const applianceSelector: string = `li[data-value=\"${CSS.escape(StringUtility.removeAccent(appliance))}\"]`
-					const optionNode: HTMLLIElement = parentNode.querySelector(applianceSelector) as HTMLLIElement
-					optionNode.dataset.visible = "true"
-				})
-		
-				filteredIngredients.forEach(ingredients => {
-					const parentSelector: string = '.filtres__list[data-filter-name="ingredients"] '
-					const applianceSelector: string = `li[data-value=\"${CSS.escape(StringUtility.removeAccent(ingredients))}\"]`
-					const fullSelector: string = parentSelector + applianceSelector
-					const optionNode: HTMLLIElement = document.querySelector(fullSelector) as HTMLLIElement
-					optionNode.dataset.visible = "true"
-				})
-				filteredUstensiles.forEach(ustensiles => {
-					const parentSelector: string = '.filtres__list[data-filter-name="ustensiles"] '
-					const ustensilesSelector: string = `li[data-value=\"${CSS.escape(StringUtility.removeAccent(ustensiles))}\"]`
-					const fullSelector: string = parentSelector + ustensilesSelector
-					const optionNode: HTMLLIElement = document.querySelector(fullSelector) as HTMLLIElement
-					optionNode.dataset.visible = "true"
-				})*/
 	}
-
-	// /**
-	//  * Search receipts by tag queries
-	//  * @async
-	//  * @inner
-	//  * @private
-	//  * @requires DOMUtility
-	//  * @memberOf observeDomChange
-	//  * @return {Promise<void>}
-	//  */
-	// private async observerTagContainer(): Promise<void> {
-	// 	document.onclick = async () => {
-	// 		this.nextTags = [...this.$tagsContainer.querySelectorAll("li")] as HTMLLIElement[]
-	//
-	// 		//No change in container
-	// 		if (this.previousTags.length === this.nextTags.length) {
-	// 			return
-	// 		}
-	//
-	// 		// change has occurred
-	// 		if (this.nextTags.length === 0) {
-	// 			// await DOMUtility.updateDOM()
-	// 			// await DOMUtility.renderDOM(await this.dataByQuerySearch())
-	//
-	// 			return
-	// 		} else if (this.nextTags.length > 3) return
-	// 		else {
-	// 			this.selectedTags = []
-	// 			this.recettesFilteredByTags = []
-	// 			this.nextTags.forEach(tag => this.selectedTags.push(tag))
-	// 			const Filter = new FilterV1(await this.dataByQuerySearch(), this.keyWords)
-	// 			this.recettesFilteredByTags = await Filter.filterByTags()
-	// 			// await DOMUtility.updateDOM()
-	// 			// await DOMUtility.renderDOM(this.recettesFilteredByTags)
-	// 		}
-	// 		this.previousTags = this.nextTags
-	// 	}
-	// }
 
 	/**
 	 * @description Effectue la recherche en utilisant la programmation fonctionnelle. Le switch va cibler le type donné en input
@@ -185,7 +123,7 @@ export class DomObserver {
 	 * @async
 	 * @return Recette[]
 	 */
-	private async mainFilterByType(type: "name" | "description" | "ingredients"): Promise<Recette[]> {
+	private async mainFilterByType(type: MainFilterTypes): Promise<Recette[]> {
 		const results = [] as Recette[]
 		switch (type) {
 			case "name":
@@ -251,7 +189,7 @@ export class DomObserver {
 			// USER INPUT : plus de deux caractères
 			this.filteredReceipts = await this.handleMainFilter()
 			this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false" // User Visual Feedback
-
+			console.log(this.filteredReceipts )
 			await this.updateCardsVisibility()
 			await this.updateFilterOptions()
 		} else {
@@ -269,7 +207,72 @@ export class DomObserver {
 	 * @return Recette[]
 	 */
 	async observeDomChange(): Promise<Recette[]> {
-		this.$mainSearchBar.addEventListener("input", async () => await this.userInputEvent())
+		this.$mainSearchBar.oninput = async () => await this.userInputEvent()
+
+		const $tagsContainer: HTMLDivElement = document.querySelector("#tagsWrapper") as HTMLDivElement
+		const observer: MutationObserver = new MutationObserver(
+			async mutations => await this.observerTagContainer(mutations)
+		)
+		observer.observe($tagsContainer, {childList: true})
 		return this.filteredReceipts
 	}
+
+	/**
+	 * Search receipts by tag queries
+	 * @async
+	 * @private
+	 * @memberOf observeDomChange
+	 * @return {Promise<void>}
+	 */
+	private async observerTagContainer(mutations: MutationRecord[]): Promise<void> {
+		const event: MutationRecord = mutations[0]
+		const appendTag: NodeList = event.addedNodes
+		const removeTag: NodeList = event.removedNodes
+		if (appendTag.length > 0) {
+			const {dataset, innerText}: HTMLLIElement = appendTag[0] as HTMLLIElement
+			const value: string = StringUtility.removeAccent(innerText)
+			if (dataset.tag) {
+				const type: TagFilterType = dataset.tag as TagFilterType
+				const secondFilter = await this.handleFilterByTag(value, type)
+				console.log(secondFilter)
+				navigator.clipboard.writeText(value).then()
+				//
+				// await this.updateCardsVisibility()
+				// await this.updateFilterOptions()
+			}
+		} else if (removeTag.length > 0) {
+		} else return
+	}
+
+	private async handleFilterByTag(value: string, type: TagFilterType) {
+		const results = [] as Recette[]
+		const data = this.filteredReceipts.length > 0 ? this.filteredReceipts : this.initialReceipts
+		switch (type) {
+			case "appliance":
+				data.forEach(recette => {
+					if (StringUtility.removeAccent(recette.appliance).includes(value)) results.push(recette)
+				})
+				return results
+			case "ustensiles":
+				data.forEach(recette => {
+					recette.ustensiles.map(ustensile => {
+						if (StringUtility.removeAccent(ustensile).includes(value)) results.push(recette)
+					})
+				})
+				return results
+			case "ingredients":
+				data.forEach(recette => {
+					recette.ingredients.map(({ingredient}) => {
+						if (StringUtility.removeAccent(ingredient).includes(value)) results.push(recette)
+					})
+				})
+				return results
+
+			default:
+				return results
+		}
+	}
 }
+
+type MainFilterTypes = "name" | "description" | "ingredients"
+type TagFilterType = "appliance" | "ustensiles" | "ingredients"

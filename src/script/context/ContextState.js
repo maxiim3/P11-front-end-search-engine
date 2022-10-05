@@ -51,13 +51,6 @@ export class ContextState {
         this.filter.dataset.open = "true";
         this.filter.tabIndex = 0;
         this.filter.ariaHidden = "false";
-        const filterList = this.filter.querySelector(".filtres__list");
-        if (filterList.dataset.filterName === "ingredients") {
-            const $main = document.querySelector("main");
-            $main.dataset.filtreIsOpen = "true";
-            const body = document.querySelector("body");
-            body.dataset.filtreIsOpen = "true";
-        }
         this.inputSearch.addEventListener("input", this.handleSearchForTags);
         document.addEventListener("keydown", this.closeOnKeyPress);
         document.addEventListener("click", this.closeOnClick);
