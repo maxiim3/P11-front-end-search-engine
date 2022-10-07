@@ -110,6 +110,13 @@ body > header nav div {
   transition: height 180ms ease-in-out;
 }
 
+#feedBackMessage {
+  padding-top: 10px;
+  color: red;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+}
+
 .tagInWrapper {
   height: 40px;
 }

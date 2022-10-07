@@ -10,8 +10,5 @@ app.init().catch(e => console.error(e))
  * -  faire la meme chos avec le second filtre
  */
 // todo implementer V2 algo
-// todo terminer documentation.
-// todo refactoriser si necessaire
-// todo Trouver une solution pour la scroll bar
 // todo screen shot du benchmark avec DATA
 // todo Version JS

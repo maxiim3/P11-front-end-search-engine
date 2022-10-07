@@ -29,6 +29,7 @@ export class DomObserver {
 	 * @private
 	 */
 	private $mainSearchBar: HTMLInputElement
+	private messageIsDisplayed: boolean
 
 	/**
 	 * @description Constructeur
@@ -39,6 +40,7 @@ export class DomObserver {
 		this.filteredReceipts = [] as Recette[]
 		this.initialReceipts = allReceipts as Recette[]
 		this.$mainSearchBar = document.querySelector("#searchBar") as HTMLInputElement
+		this.messageIsDisplayed = false
 	}
 
 	/**
@@ -129,38 +131,62 @@ export class DomObserver {
 		})
 	}
 
-	/**
-	 * @description Effectue la recherche en utilisant la programmation fonctionnelle. Le switch va cibler le type donné en input
-	 * @param type : string
-	 * @private
-	 * @async
-	 * @return Recette[]
-	 */
-	private async mainFilterByType(type: MainFilterTypes): Promise<Recette[]> {
+	private async filterByName() {
 		const results = [] as Recette[]
-		switch (type) {
-			case "name":
-				this.initialReceipts.forEach(recette => {
-					if (StringUtility.removeAccent(recette.name).includes(this.userInput)) results.push(recette)
-				})
-				return results
-			case "description":
-				this.initialReceipts.forEach(recette => {
-					if (StringUtility.removeAccent(recette.description).includes(this.userInput)) results.push(recette)
-				})
-				return results
+		this.initialReceipts.forEach(recette => {
+			if (StringUtility.removeAccent(recette.name).includes(this.userInput)) results.push(recette)
+		})
+		return results
+	}
 
-			case "ingredients":
-				this.initialReceipts.forEach(recette => {
-					recette.ingredients.map(({ingredient}) => {
-						if (StringUtility.removeAccent(ingredient).includes(this.userInput)) results.push(recette)
-					})
-				})
-				return results
+	private async filterByDescription() {
+		const results = [] as Recette[]
+		this.initialReceipts.forEach(recette => {
+			if (StringUtility.removeAccent(recette.description).includes(this.userInput)) results.push(recette)
+		})
+		return results
+	}
 
-			default:
-				return results
+	private async filterIngredients() {
+		const results = [] as Recette[]
+		this.initialReceipts.forEach(recette => {
+			recette.ingredients.map(({ingredient}) => {
+				if (StringUtility.removeAccent(ingredient).includes(this.userInput)) results.push(recette)
+			})
+		})
+		return results
+	}
+
+	private async filterByNameV2() {
+		const results = [] as Recette[]
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			let testName: string = StringUtility.removeAccent(recette.name)
+
+			if (StringUtility.removeAccent(recette.name).includes(this.userInput)) results.push(recette)
 		}
+		return results
+	}
+
+	private async filterByDescriptionV2() {
+		const results = [] as Recette[]
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			if (StringUtility.removeAccent(recette.description).includes(this.userInput)) results.push(recette)
+		}
+		return results
+	}
+
+	private async filterIngredientsV2() {
+		const results = [] as Recette[]
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			const ingredients = recette.ingredients
+			for (const {ingredient} of ingredients) {
+				if (StringUtility.removeAccent(ingredient).includes(this.userInput)) results.push(recette)
+			}
+		}
+		return results
 	}
 
 	/**
@@ -171,17 +197,12 @@ export class DomObserver {
 	 * @return Recette[]
 	 */
 	private async handleMainFilter(): Promise<Recette[]> {
-		const filterByName: Recette[] = await this.mainFilterByType("name")
-		if (filterByName.length > 0) return filterByName
-		else {
-			const filterByDescription: Recette[] = await this.mainFilterByType("description")
-			if (filterByDescription.length > 0) return filterByDescription
-			else {
-				const filterIngredients: Recette[] = await this.mainFilterByType("ingredients")
-				if (filterIngredients.length > 0) return filterIngredients
-				else return [] as Recette[]
-			}
-		}
+		const filterByName: Recette[] = await this.filterByName()
+		const filterByDescription: Recette[] = await this.filterByDescription()
+		const filterIngredients: Recette[] = await this.filterIngredients()
+
+		const allResults = [...filterByName, ...filterByDescription, ...filterIngredients]
+		return [...new Set(allResults)]
 	}
 
 	/**
@@ -193,19 +214,21 @@ export class DomObserver {
 	 * @memberOf observeDomChange
 	 * @return {Promise<void>}
 	 */
-	private async userInputEvent(): Promise<void> {
+	private async onUserInput(): Promise<void> {
 		this.userInput = StringUtility.removeAccent(this.$mainSearchBar.value) as string
+		this.$mainSearchBar.dataset.hasResults !== "false" && this.emptyTagContainer()
 		this.filteredReceipts = []
-		this.emptyTagContainer()
 		this.resetOptionTags()
 
 		if (this.userInput.length > 2) {
 			// USER INPUT : plus de deux caractères
 			this.filteredReceipts = await this.handleMainFilter()
-			this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false" // User Visual Feedback
-			console.log(this.filteredReceipts)
+
 			await this.updateCardsVisibility(this.filteredReceipts)
 			await this.updateFilterOptions(this.filteredReceipts)
+
+			let isResult = this.filteredReceipts.length > 0
+			this.$mainSearchBar.dataset.hasResults = isResult ? "true" : "false" // User Visual Feedback
 		} else {
 			// USER INPUT : moins de deux caractères
 			this.resetAllCardsVisibility("true")
@@ -217,12 +240,13 @@ export class DomObserver {
 	/**
 	 * @description Event Listener sur les saisies utilisateurs. Retourne les data filtrées
 	 * @async
-	 * @see userInputEvent
+	 * @see onUserInput
 	 * @return Recette[]
 	 */
 	async observeDomChange(): Promise<Recette[]> {
-		this.$mainSearchBar.oninput = async () => await this.userInputEvent()
+		this.$mainSearchBar.oninput = async () => await this.onUserInput()
 
+		this.handleFeedBackMessage()
 		const $tagsContainer: HTMLDivElement = document.querySelector("#tagsWrapper") as HTMLDivElement
 		const observer: MutationObserver = new MutationObserver(
 			async mutations => await this.observerTagContainer(mutations)
@@ -336,9 +360,30 @@ export class DomObserver {
 				return results
 		}
 	}
+
+	private handleFeedBackMessage() {
+		const observeFeedBackMessage = new MutationObserver(mutations => {
+			const input: HTMLInputElement = mutations[0].target as HTMLInputElement
+			if (input.value.length < 3 || input.dataset.hasResults === "true") {
+				this.messageIsDisplayed = false
+				this.emptyTagContainer()
+			} else if (input.dataset.hasResults === "false" && !this.messageIsDisplayed) {
+				const $tagsContainer: HTMLDivElement = document.querySelector("#tagsWrapper") as HTMLDivElement
+				this.messageIsDisplayed = true
+				const feedBackMessage: HTMLParagraphElement = document.createElement("p") as HTMLParagraphElement
+				feedBackMessage.id = "feedBackMessage"
+				feedBackMessage.textContent =
+					"« Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc."
+				const wait = setTimeout(() => {
+					$tagsContainer.appendChild(feedBackMessage)
+					clearTimeout(wait)
+				}, 250)
+			}
+		})
+		observeFeedBackMessage.observe(this.$mainSearchBar, {attributes: true})
+	}
 }
 
-type MainFilterTypes = "name" | "description" | "ingredients"
 type TagFilterType = "appliance" | "ustensiles" | "ingredients"
 type TagObjectProps = {
 	value: string

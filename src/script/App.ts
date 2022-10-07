@@ -103,7 +103,7 @@ export class App {
 
 		// Handle Updating Recettes [filters tags, cards]
 		await this.handleDOMChange()
-		await this.handleMenuContext()
 
+		await this.handleMenuContext()
 	}
 }

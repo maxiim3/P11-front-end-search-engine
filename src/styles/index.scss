@@ -170,7 +170,13 @@ body > header {
 	height: 0;
 	transition: height 180ms ease-in-out;
 }
+#feedBackMessage {
+	padding-top: 10px;
+	color : red;
+	font-family: $text-describe;
+	font-weight:bold ;
 
+}
 .tagInWrapper {
 	height: 40px;
 }

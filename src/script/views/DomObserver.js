@@ -16,6 +16,7 @@ export class DomObserver {
         this.filteredReceipts = [];
         this.initialReceipts = allReceipts;
         this.$mainSearchBar = document.querySelector("#searchBar");
+        this.messageIsDisplayed = false;
     }
     emptyTagContainer() {
         const $tagsContainer = document.querySelector("#tagsWrapper");
@@ -74,66 +75,96 @@ export class DomObserver {
             });
         });
     }
-    mainFilterByType(type) {
+    filterByName() {
         return __awaiter(this, void 0, void 0, function* () {
             const results = [];
-            switch (type) {
-                case "name":
-                    this.initialReceipts.forEach(recette => {
-                        if (StringUtility.removeAccent(recette.name).includes(this.userInput))
-                            results.push(recette);
-                    });
-                    return results;
-                case "description":
-                    this.initialReceipts.forEach(recette => {
-                        if (StringUtility.removeAccent(recette.description).includes(this.userInput))
-                            results.push(recette);
-                    });
-                    return results;
-                case "ingredients":
-                    this.initialReceipts.forEach(recette => {
-                        recette.ingredients.map(({ ingredient }) => {
-                            if (StringUtility.removeAccent(ingredient).includes(this.userInput))
-                                results.push(recette);
-                        });
-                    });
-                    return results;
-                default:
-                    return results;
+            this.initialReceipts.forEach(recette => {
+                if (StringUtility.removeAccent(recette.name).includes(this.userInput))
+                    results.push(recette);
+            });
+            return results;
+        });
+    }
+    filterByDescription() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            this.initialReceipts.forEach(recette => {
+                if (StringUtility.removeAccent(recette.description).includes(this.userInput))
+                    results.push(recette);
+            });
+            return results;
+        });
+    }
+    filterIngredients() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            this.initialReceipts.forEach(recette => {
+                recette.ingredients.map(({ ingredient }) => {
+                    if (StringUtility.removeAccent(ingredient).includes(this.userInput))
+                        results.push(recette);
+                });
+            });
+            return results;
+        });
+    }
+    filterByNameV2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            for (let i = 0; i < this.initialReceipts.length; i++) {
+                const recette = this.initialReceipts[i];
+                let testName = StringUtility.removeAccent(recette.name);
+                if (StringUtility.removeAccent(recette.name).includes(this.userInput))
+                    results.push(recette);
             }
+            return results;
+        });
+    }
+    filterByDescriptionV2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            for (let i = 0; i < this.initialReceipts.length; i++) {
+                const recette = this.initialReceipts[i];
+                if (StringUtility.removeAccent(recette.description).includes(this.userInput))
+                    results.push(recette);
+            }
+            return results;
+        });
+    }
+    filterIngredientsV2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = [];
+            for (let i = 0; i < this.initialReceipts.length; i++) {
+                const recette = this.initialReceipts[i];
+                const ingredients = recette.ingredients;
+                for (const { ingredient } of ingredients) {
+                    if (StringUtility.removeAccent(ingredient).includes(this.userInput))
+                        results.push(recette);
+                }
+            }
+            return results;
         });
     }
     handleMainFilter() {
         return __awaiter(this, void 0, void 0, function* () {
-            const filterByName = yield this.mainFilterByType("name");
-            if (filterByName.length > 0)
-                return filterByName;
-            else {
-                const filterByDescription = yield this.mainFilterByType("description");
-                if (filterByDescription.length > 0)
-                    return filterByDescription;
-                else {
-                    const filterIngredients = yield this.mainFilterByType("ingredients");
-                    if (filterIngredients.length > 0)
-                        return filterIngredients;
-                    else
-                        return [];
-                }
-            }
+            const filterByName = yield this.filterByName();
+            const filterByDescription = yield this.filterByDescription();
+            const filterIngredients = yield this.filterIngredients();
+            const allResults = [...filterByName, ...filterByDescription, ...filterIngredients];
+            return [...new Set(allResults)];
         });
     }
-    userInputEvent() {
+    onUserInput() {
         return __awaiter(this, void 0, void 0, function* () {
             this.userInput = StringUtility.removeAccent(this.$mainSearchBar.value);
+            this.$mainSearchBar.dataset.hasResults !== "false" && this.emptyTagContainer();
             this.filteredReceipts = [];
-            this.emptyTagContainer();
             this.resetOptionTags();
             if (this.userInput.length > 2) {
                 this.filteredReceipts = yield this.handleMainFilter();
-                this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false";
-                console.log(this.filteredReceipts);
                 yield this.updateCardsVisibility(this.filteredReceipts);
                 yield this.updateFilterOptions(this.filteredReceipts);
+                let isResult = this.filteredReceipts.length > 0;
+                this.$mainSearchBar.dataset.hasResults = isResult ? "true" : "false";
             }
             else {
                 this.resetAllCardsVisibility("true");
@@ -144,7 +175,8 @@ export class DomObserver {
     }
     observeDomChange() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.$mainSearchBar.oninput = () => __awaiter(this, void 0, void 0, function* () { return yield this.userInputEvent(); });
+            this.$mainSearchBar.oninput = () => __awaiter(this, void 0, void 0, function* () { return yield this.onUserInput(); });
+            this.handleFeedBackMessage();
             const $tagsContainer = document.querySelector("#tagsWrapper");
             const observer = new MutationObserver((mutations) => __awaiter(this, void 0, void 0, function* () { return yield this.observerTagContainer(mutations); }));
             observer.observe($tagsContainer, { childList: true });
@@ -243,6 +275,28 @@ export class DomObserver {
                     return results;
             }
         });
+    }
+    handleFeedBackMessage() {
+        const observeFeedBackMessage = new MutationObserver(mutations => {
+            const input = mutations[0].target;
+            if (input.value.length < 3 || input.dataset.hasResults === "true") {
+                this.messageIsDisplayed = false;
+                this.emptyTagContainer();
+            }
+            else if (input.dataset.hasResults === "false" && !this.messageIsDisplayed) {
+                const $tagsContainer = document.querySelector("#tagsWrapper");
+                this.messageIsDisplayed = true;
+                const feedBackMessage = document.createElement("p");
+                feedBackMessage.id = "feedBackMessage";
+                feedBackMessage.textContent =
+                    "« Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.";
+                const wait = setTimeout(() => {
+                    $tagsContainer.appendChild(feedBackMessage);
+                    clearTimeout(wait);
+                }, 250);
+            }
+        });
+        observeFeedBackMessage.observe(this.$mainSearchBar, { attributes: true });
     }
 }
 //# sourceMappingURL=DomObserver.js.map
