@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Recette } from "./models/Recette.js";
 import { Api } from "./api/Api.js";
-import { DomObserver } from "./filters/DomObserver.js";
-import { CardTemplate } from "./templates/CardTemplate.js";
-import { HandleOptionTags } from "./templates/HandleOptionTags.js";
+import { DomObserver } from "./views/DomObserver.js";
+import { CardTemplate } from "./views/CardTemplate.js";
+import { HandleOptionTags } from "./views/HandleOptionTags.js";
 import { ContextState } from "./context/ContextState.js";
 export class App {
     constructor() {
@@ -36,13 +36,7 @@ export class App {
             });
         });
     }
-    handleDOMChange() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const domChange = new DomObserver(this._allReceipts);
-            yield domChange.observeDomChange();
-        });
-    }
-    hydrateTags() {
+    hydrateFilterContainers() {
         return __awaiter(this, void 0, void 0, function* () {
             const advancedFilter = new HandleOptionTags(this._allReceipts);
             return advancedFilter.render();
@@ -72,13 +66,19 @@ export class App {
             }
         });
     }
+    handleDOMChange() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const domChange = new DomObserver(this._allReceipts);
+            yield domChange.observeDomChange();
+        });
+    }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.handleDataFromJson();
             yield this.hydrateCardContainer();
-            yield this.hydrateTags();
-            yield this.handleMenuContext();
+            yield this.hydrateFilterContainers();
             yield this.handleDOMChange();
+            yield this.handleMenuContext();
         });
     }
 }

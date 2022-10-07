@@ -8,7 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { StringUtility } from "../utils/StringUtility.js";
-import { HandleOptionTags } from "../templates/HandleOptionTags.js";
+import { HandleOptionTags } from "./HandleOptionTags.js";
+import { ContextState } from "../context/ContextState.js";
 export class DomObserver {
     constructor(allReceipts) {
         this.userInput = "";
@@ -20,9 +21,19 @@ export class DomObserver {
         const $tagsContainer = document.querySelector("#tagsWrapper");
         $tagsContainer.innerHTML = "";
     }
+    resetOptionTags() {
+        const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")];
+        $tagsLI.forEach($tag => {
+            $tag.setAttribute("data-visible", "true");
+            const $tagBtn = $tag.firstChild;
+            $tagBtn.disabled = false;
+        });
+    }
     resetAllCardsVisibility(value) {
         const $allRecettesCards = [...document.querySelectorAll(`.recette`)];
-        $allRecettesCards.forEach(recette => (recette.dataset.visible = value));
+        $allRecettesCards.forEach(recette => {
+            recette.dataset.visible = value;
+        });
     }
     resetAllOptionsVisibility(value) {
         const allLIElement = [...document.querySelectorAll("#filtres li")];
@@ -116,6 +127,7 @@ export class DomObserver {
             this.userInput = StringUtility.removeAccent(this.$mainSearchBar.value);
             this.filteredReceipts = [];
             this.emptyTagContainer();
+            this.resetOptionTags();
             if (this.userInput.length > 2) {
                 this.filteredReceipts = yield this.handleMainFilter();
                 this.$mainSearchBar.dataset.hasResults = this.filteredReceipts.length > 0 ? "true" : "false";
@@ -163,32 +175,29 @@ export class DomObserver {
                 value: $3rdNode && StringUtility.removeAccent($3rdNode.textContent),
                 type: $3rdNode && $3rdNode.dataset.tag,
             };
+            const wrapper = event.target;
+            $1stNode ? wrapper.classList.add("tagInWrapper") : wrapper.classList.remove("tagInWrapper");
             switch (numberOfTags) {
                 case 0:
-                    console.log("0 tag");
                     yield this.updateCardsVisibility(initialReceipts);
                     yield this.updateFilterOptions(initialReceipts);
+                    const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
+                    openFilter && new ContextState(openFilter);
                     break;
                 case 1:
-                    console.log("1 tag");
                     $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
                     yield this.updateCardsVisibility($1stFilter);
                     yield this.updateFilterOptions($1stFilter);
-                    console.log($1stFilter);
                     break;
                 case 2:
-                    console.log("2 tag");
                     $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
                     yield this.updateCardsVisibility($1stFilter);
                     yield this.updateFilterOptions($1stFilter);
                     $2ndFilter = yield this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter);
                     yield this.updateCardsVisibility($2ndFilter);
                     yield this.updateFilterOptions($2ndFilter);
-                    console.log($1stFilter);
-                    console.log($2ndFilter);
                     break;
                 case 3:
-                    console.log("3 tag");
                     $1stFilter = yield this.filterByTag($1stTag.value, $1stTag.type, initialReceipts);
                     yield this.updateCardsVisibility($1stFilter);
                     yield this.updateFilterOptions($1stFilter);
@@ -198,9 +207,6 @@ export class DomObserver {
                     $3rdFilter = yield this.filterByTag($3rdTag.value, $3rdTag.type, $2ndFilter);
                     yield this.updateCardsVisibility($3rdFilter);
                     yield this.updateFilterOptions($3rdFilter);
-                    console.log($1stFilter);
-                    console.log($2ndFilter);
-                    console.log($3rdFilter);
                     break;
                 default:
                     break;

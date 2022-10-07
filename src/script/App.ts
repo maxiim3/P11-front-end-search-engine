@@ -1,8 +1,8 @@
 import {Recette, RecetteFromJSON} from "./models/Recette.js"
 import {Api} from "./api/Api.js"
-import {DomObserver} from "./filters/DomObserver.js"
-import {CardTemplate} from "./templates/CardTemplate.js"
-import {HandleOptionTags} from "./templates/HandleOptionTags.js"
+import {DomObserver} from "./views/DomObserver.js"
+import {CardTemplate} from "./views/CardTemplate.js"
+import {HandleOptionTags} from "./views/HandleOptionTags.js"
 import {ContextState} from "./context/ContextState.js"
 
 export class App {
@@ -43,22 +43,10 @@ export class App {
 	}
 
 	/**
-	 * @description Handle Updating the DOM by queries and tags
-	 * @async
-	 * @private
-	 * @requires DomObserver
-	 * @see DomObserver
-	 */
-	private async handleDOMChange() {
-		const domChange = new DomObserver(this._allReceipts)
-		await domChange.observeDomChange()
-	}
-
-	/**
 	 * @private
 	 * @return {Promise<void>}
 	 */
-	private async hydrateTags() {
+	private async hydrateFilterContainers() {
 		const advancedFilter = new HandleOptionTags(this._allReceipts)
 		return advancedFilter.render()
 	}
@@ -90,8 +78,19 @@ export class App {
 					observer.setState("close")
 				}
 			})
-			// console.table(contextObservers)
 		}
+	}
+
+	/**
+	 * @description Handle Updating the DOM by queries and tags
+	 * @async
+	 * @private
+	 * @requires DomObserver
+	 * @see DomObserver
+	 */
+	private async handleDOMChange() {
+		const domChange = new DomObserver(this._allReceipts)
+		await domChange.observeDomChange()
 	}
 
 	async init() {
@@ -100,12 +99,11 @@ export class App {
 
 		// render data on DOM [filters, cards]
 		await this.hydrateCardContainer()
-		await this.hydrateTags()
+		await this.hydrateFilterContainers()
 
-		await this.handleMenuContext()
 		// Handle Updating Recettes [filters tags, cards]
 		await this.handleDOMChange()
+		await this.handleMenuContext()
+
 	}
 }
-
-// todo render DOM initially, then on Upload filter recette that has $card ID data set - visible

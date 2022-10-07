@@ -31,11 +31,6 @@ export class Recette {
 	 * @private
 	 */
 	private readonly _name: string
-	/*	/!**
-		 * @type number
-		 * @private
-		 *!/
-		private readonly _servings: number*/
 	/**
 	 * @type Object[]
 	 * @private
@@ -72,7 +67,6 @@ export class Recette {
 	constructor(data: RecetteFromJSON) {
 		this._id = data.id
 		this._name = data.name
-		/*this._servings = data.servings*/
 		this._ingredients = this.getIngredients(data.ingredients) as IngredientsConcat[]
 		this._time = data.time
 		this._description = data.description
@@ -95,16 +89,6 @@ export class Recette {
 	get name() {
 		return this._name
 	}
-
-	/*
-	/!**
-	 * Number
-	 * @return {number}
-	 *!/
-	get servings() {
-		return this._servings
-	}
-*/
 
 	/**
 	 * Time

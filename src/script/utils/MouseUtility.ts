@@ -1,29 +1,41 @@
-type MousePositionProps = {x: number; y: number}
-type ContainerPositionProps = {positionXLeft: number; width: number; positionYTop: number; height: number}
+type MousePositionProps = {posX: number; posY: number}
+type ContainerPositionProps = {xStart: number; xEnd: number; yStart: number; yEnd: number}
 
 export class MouseUtility {
-	static mouseInObserver(mouseProps: MousePositionProps, containerProps: ContainerPositionProps) {
-		return (
-			containerProps.positionXLeft < mouseProps.x &&
-			mouseProps.x < containerProps.positionXLeft + containerProps.width &&
-			containerProps.positionYTop < mouseProps.y &&
-			mouseProps.y < containerProps.positionYTop + containerProps.height
-		)
+	/**
+	 * @description Compare position of pointer and div element
+	 * @see mouseInObserver
+	 * @see getDivElementPosition
+	 * @param pointer
+	 * @param $div
+	 */
+	static mouseInObserver(pointer: MousePositionProps, $div: ContainerPositionProps) {
+		const xAxis = $div.xStart < pointer.posX && pointer.posX < $div.xEnd
+		const yAxis = $div.yStart < pointer.posY && pointer.posY < $div.yEnd
+		return xAxis && yAxis
 	}
 
+	/**
+	 * @description Get position of pointer
+	 * @param ev
+	 */
 	static getMousePosition(ev: MouseEvent): MousePositionProps {
 		return {
-			x: window.scrollX + ev.clientX,
-			y: window.scrollY + ev.clientY,
+			posX: window.scrollX + ev.pageX,
+			posY: window.scrollY + ev.pageY,
 		}
 	}
 
-	static getObserverPosition(observer: HTMLDivElement): ContainerPositionProps {
+	/**
+	 * @description Get position of provided divElement
+	 * @param divElement
+	 */
+	static getDivElementPosition(divElement: HTMLDivElement): ContainerPositionProps {
 		return {
-			width: observer.clientWidth,
-			height: observer.clientHeight,
-			positionXLeft: observer.offsetLeft,
-			positionYTop: observer.offsetTop - 10,
+			xStart: divElement.offsetLeft,
+			xEnd: divElement.offsetLeft + divElement.offsetWidth,
+			yStart: divElement.offsetTop,
+			yEnd: divElement.offsetTop + divElement.offsetHeight,
 		}
 	}
 }

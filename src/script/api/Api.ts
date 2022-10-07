@@ -2,6 +2,7 @@ import {RecetteFromJSON} from "../models/Recette.js"
 
 export class Api {
   /**
+   * @classdesc fetch data from url
    * @type string
    * @private
    */
@@ -15,6 +16,7 @@ export class Api {
   }
 
   /**
+   * @description fetch data
    * @return {Promise<RecetteFromJSON[]>}
    */
   async fetchData():Promise<RecetteFromJSON[]> {

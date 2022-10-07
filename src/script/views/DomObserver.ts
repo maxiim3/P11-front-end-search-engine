@@ -1,6 +1,7 @@
 import {StringUtility} from "../utils/StringUtility.js"
 import {Recette} from "../models/Recette.js"
-import {HandleOptionTags} from "../templates/HandleOptionTags.js"
+import {HandleOptionTags} from "./HandleOptionTags.js"
+import {ContextState} from "../context/ContextState.js"
 
 export class DomObserver {
 	/**
@@ -50,6 +51,16 @@ export class DomObserver {
 		$tagsContainer.innerHTML = ""
 	}
 
+	private resetOptionTags() {
+		// "Freeze" les tags si une recherche est en cours dans la barre principale
+		const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")] as HTMLLIElement[]
+		$tagsLI.forEach($tag => {
+			$tag.setAttribute("data-visible", "true")
+			const $tagBtn: HTMLButtonElement = $tag.firstChild as HTMLButtonElement
+			$tagBtn.disabled = false
+		})
+	}
+
 	/**
 	 * @description Change le data-visible pour toutes les cartes de recettes
 	 * @param value :"true" | "false"
@@ -57,7 +68,9 @@ export class DomObserver {
 	 */
 	private resetAllCardsVisibility(value: "true" | "false"): void {
 		const $allRecettesCards = [...document.querySelectorAll(`.recette`)] as HTMLLIElement[]
-		$allRecettesCards.forEach(recette => (recette.dataset.visible = value))
+		$allRecettesCards.forEach(recette => {
+			recette.dataset.visible = value
+		})
 	}
 
 	private resetAllOptionsVisibility(value: "true" | "false") {
@@ -176,7 +189,6 @@ export class DomObserver {
 	 * @see observeDomChange
 	 * @async
 	 * @private
-	 * @requires DOMUtility
 	 * @requires StringUtility
 	 * @memberOf observeDomChange
 	 * @return {Promise<void>}
@@ -185,6 +197,8 @@ export class DomObserver {
 		this.userInput = StringUtility.removeAccent(this.$mainSearchBar.value) as string
 		this.filteredReceipts = []
 		this.emptyTagContainer()
+		this.resetOptionTags()
+
 		if (this.userInput.length > 2) {
 			// USER INPUT : plus de deux caractères
 			this.filteredReceipts = await this.handleMainFilter()
@@ -231,8 +245,6 @@ export class DomObserver {
 		let $3rdFilter: Recette[]
 
 		const event: MutationRecord = mutations[0]
-		// const newTag: HTMLLIElement = event.addedNodes[0] as HTMLLIElement
-		// const removedTag: HTMLLIElement = event?.removedNodes[0] as HTMLLIElement
 		const children: HTMLLIElement[] = [...event.target.childNodes] as HTMLLIElement[]
 		const numberOfTags: 0 | 1 | 2 | 3 = children.length as 0 | 1 | 2 | 3
 
@@ -254,34 +266,34 @@ export class DomObserver {
 			type: $3rdNode && ($3rdNode.dataset.tag as TagFilterType),
 		}
 
+		const wrapper = event.target as HTMLDivElement
+
+		$1stNode ? wrapper.classList.add("tagInWrapper") : wrapper.classList.remove("tagInWrapper")
+
 		switch (numberOfTags) {
 			case 0:
-				console.log("0 tag")
 				await this.updateCardsVisibility(initialReceipts)
 				await this.updateFilterOptions(initialReceipts)
+				// get filter from document.querySelector because state changed to #document
+				const openFilter: HTMLDivElement = document.querySelector(
+					".filtres__filtre[data-open='true']"
+				) as HTMLDivElement
+				openFilter && new ContextState(openFilter)
 				break
 			case 1:
-				console.log("1 tag")
 				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
 				await this.updateCardsVisibility($1stFilter)
 				await this.updateFilterOptions($1stFilter)
-				console.log($1stFilter)
 				break
 			case 2:
-				console.log("2 tag")
-
 				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
 				await this.updateCardsVisibility($1stFilter)
 				await this.updateFilterOptions($1stFilter)
 				$2ndFilter = await this.filterByTag($2ndTag.value, $2ndTag.type, $1stFilter)
 				await this.updateCardsVisibility($2ndFilter)
 				await this.updateFilterOptions($2ndFilter)
-				console.log($1stFilter)
-				console.log($2ndFilter)
 				break
 			case 3:
-				console.log("3 tag")
-
 				$1stFilter = await this.filterByTag($1stTag.value, $1stTag.type, initialReceipts)
 				await this.updateCardsVisibility($1stFilter)
 				await this.updateFilterOptions($1stFilter)
@@ -291,10 +303,6 @@ export class DomObserver {
 				$3rdFilter = await this.filterByTag($3rdTag.value, $3rdTag.type, $2ndFilter)
 				await this.updateCardsVisibility($3rdFilter)
 				await this.updateFilterOptions($3rdFilter)
-
-				console.log($1stFilter)
-				console.log($2ndFilter)
-				console.log($3rdFilter)
 				break
 			default:
 				break

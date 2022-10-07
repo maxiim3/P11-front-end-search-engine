@@ -7,14 +7,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { TagsTemplate } from "../templates/TagsTemplate.js";
+import { TagsTemplate } from "../views/TagsTemplate.js";
 import { StringUtility } from "../utils/StringUtility.js";
 import { MouseUtility } from "../utils/MouseUtility.js";
 export class ContextState {
     constructor(filter) {
+        var _a;
+        this.resetFilterInput = () => (this.inputSearch.value = "");
         this.filter = filter;
         this.$tagsContainer = document.querySelector("#tagsWrapper");
-        this.$filterUL = this.filter.querySelector("ul");
+        this.$filterUL = (_a = this.filter) === null || _a === void 0 ? void 0 : _a.querySelector("ul");
         this.$tagsLI = [...this.$filterUL.querySelectorAll("li")];
         this.inputSearch = this.filter.querySelector("input");
         this.currentState = "close";
@@ -35,17 +37,15 @@ export class ContextState {
         this.filter.dataset.open = "false";
         this.filter.ariaHidden = "true";
         this.filter.blur();
-        const inputSearch = this.filter.querySelector("input");
-        inputSearch.value = "";
-        const mainInput = document.querySelector("#searchBar");
-        if (mainInput.value.length < 3) {
-            this.$tagsLI.forEach($tag => {
-                $tag.setAttribute("data-visible", "true");
-            });
-        }
+        this.resetFilterInput();
+        window.scroll(0, 0);
         this.inputSearch.removeEventListener("input", this.handleSearchForTags);
         this.filter.removeEventListener("keydown", this.closeOnKeyPress);
         this.filter.removeEventListener("click", this.closeOnClick);
+        this.$tagsLI.forEach($tag => {
+            $tag.classList.remove("fadeIn");
+            $tag.classList.add("fadeOut");
+        });
     }
     setActive() {
         this.filter.dataset.open = "true";
@@ -55,10 +55,11 @@ export class ContextState {
         document.addEventListener("keydown", this.closeOnKeyPress);
         document.addEventListener("click", this.closeOnClick);
         this.$tagsLI.forEach($tag => {
+            $tag.classList.remove("fadeOut");
+            $tag.classList.add("fadeIn");
             const tagBtn = $tag.firstChild;
             tagBtn.onclick = () => {
                 this.appendTagToContainer(tagBtn);
-                $tag.dataset.visivle = "true";
             };
         });
     }
@@ -84,14 +85,21 @@ export class ContextState {
         const { value, dataset } = tagBtn;
         const tagTemplate = new TagsTemplate({ value, dataset });
         if (this.$tagsContainer.childNodes.length < 3) {
-            tagBtn.disabled = true;
+            this.resetFilterInput();
             tagBtn.disabled = true;
             const $newTag = tagTemplate.createTag();
             this.$tagsContainer.appendChild($newTag);
+            $newTag.classList.remove("fadeOutWithAnimation");
+            $newTag.classList.add("fadeIn");
             const $closeTag = $newTag.querySelector(".tag__btn");
             $closeTag.onclick = () => {
                 tagBtn.disabled = false;
-                this.$tagsContainer.removeChild($newTag);
+                $newTag.classList.remove("fadeIn");
+                $newTag.classList.add("fadeOutWithAnimation");
+                const wait = setTimeout(() => {
+                    this.$tagsContainer.removeChild($newTag);
+                    clearTimeout(wait);
+                }, 350);
             };
             return $newTag;
         }
@@ -102,21 +110,18 @@ export class ContextState {
         if ((openFilter === null || openFilter === void 0 ? void 0 : openFilter.dataset.open) === "true") {
             if (e.key === "Escape" || e.key === "Enter") {
                 new ContextState(openFilter);
-                openFilter.blur();
             }
         }
     }
     closeOnClick(ev) {
         const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
         if ((openFilter === null || openFilter === void 0 ? void 0 : openFilter.dataset.open) === "true") {
-            const mouseProps = MouseUtility.getMousePosition(ev);
-            const containerProps = MouseUtility.getObserverPosition(openFilter);
-            if (MouseUtility.mouseInObserver(mouseProps, containerProps)) {
+            const pointerPosition = MouseUtility.getMousePosition(ev);
+            const divPosition = MouseUtility.getDivElementPosition(openFilter);
+            if (MouseUtility.mouseInObserver(pointerPosition, divPosition)) {
                 return;
             }
             else {
-                window.scroll(0, 0);
-                openFilter.blur();
                 new ContextState(openFilter);
             }
         }

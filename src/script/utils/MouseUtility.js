@@ -1,22 +1,21 @@
 export class MouseUtility {
-    static mouseInObserver(mouseProps, containerProps) {
-        return (containerProps.positionXLeft < mouseProps.x &&
-            mouseProps.x < containerProps.positionXLeft + containerProps.width &&
-            containerProps.positionYTop < mouseProps.y &&
-            mouseProps.y < containerProps.positionYTop + containerProps.height);
+    static mouseInObserver(pointer, $div) {
+        const xAxis = $div.xStart < pointer.posX && pointer.posX < $div.xEnd;
+        const yAxis = $div.yStart < pointer.posY && pointer.posY < $div.yEnd;
+        return xAxis && yAxis;
     }
     static getMousePosition(ev) {
         return {
-            x: window.scrollX + ev.clientX,
-            y: window.scrollY + ev.clientY,
+            posX: window.scrollX + ev.pageX,
+            posY: window.scrollY + ev.pageY,
         };
     }
-    static getObserverPosition(observer) {
+    static getDivElementPosition(divElement) {
         return {
-            width: observer.clientWidth,
-            height: observer.clientHeight,
-            positionXLeft: observer.offsetLeft,
-            positionYTop: observer.offsetTop - 10,
+            xStart: divElement.offsetLeft,
+            xEnd: divElement.offsetLeft + divElement.offsetWidth,
+            yStart: divElement.offsetTop,
+            yEnd: divElement.offsetTop + divElement.offsetHeight,
         };
     }
 }
