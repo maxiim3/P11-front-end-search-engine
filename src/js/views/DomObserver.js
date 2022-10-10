@@ -1,7 +1,7 @@
 import {StringUtility} from "../utils/StringUtility.js"
 import {HandleOptionTags} from "./HandleOptionTags.js"
 import {ContextState} from "../context/ContextState.js"
-import {Recette} from "../../script/models/Recette.js"
+import {Recette} from "../models/Recette.js"
 
 export class DomObserver {
 	/**

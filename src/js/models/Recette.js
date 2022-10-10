@@ -1,4 +1,3 @@
-
 export class Recette {
     constructor(data) {
         this._id = data.id;

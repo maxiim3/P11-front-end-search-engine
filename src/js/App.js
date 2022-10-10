@@ -66,6 +66,5 @@ export class App {
 		await this.hydrateFilterContainers()
 		await this.handleDOMChange()
 		this.handleMenuContext()
-		console.log("coucou")
 	}
 }
