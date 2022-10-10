@@ -1,5 +1,4 @@
 - Lancer le projet avec LiveServer ou avec `npm start`
   - Modifier le port directement dans package.json/script/"start"
-- Compiler TypeScript avec `tsc`
 - Compiler SASS avec `sass-c`
 - Lancer Sass Watch avec `sass-w`
