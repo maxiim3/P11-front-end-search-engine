@@ -124,27 +124,34 @@ export class DomObserver {
 
 	async filterByName() {
 		const results = []
-		this.initialReceipts.forEach(recette => {
-			if (StringUtility.removeAccent(recette.name).includes(this.userInput)) results.push(recette)
-		})
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			let testName = StringUtility.removeAccent(recette.name)
+			if (testName.includes(this.userInput)) results.push(recette)
+		}
 		return results
 	}
 
 	async filterByDescription() {
 		const results = []
-		this.initialReceipts.forEach(recette => {
-			if (StringUtility.removeAccent(recette.description).includes(this.userInput)) results.push(recette)
-		})
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			const testDescription = StringUtility.removeAccent(recette.description)
+			if (testDescription.includes(this.userInput)) results.push(recette)
+		}
 		return results
 	}
 
 	async filterIngredients() {
 		const results = []
-		this.initialReceipts.forEach(recette => {
-			recette.ingredients.map(({ingredient}) => {
-				if (StringUtility.removeAccent(ingredient).includes(this.userInput)) results.push(recette)
-			})
-		})
+		for (let i = 0; i < this.initialReceipts.length; i++) {
+			const recette = this.initialReceipts[i]
+			const ingredients = recette.ingredients
+			for (const {ingredient} of ingredients) {
+				const testIngredient = StringUtility.removeAccent(ingredient)
+				if (testIngredient.includes(this.userInput)) results.push(recette)
+			}
+		}
 		return results
 	}
 
@@ -290,29 +297,37 @@ export class DomObserver {
 	 * @param value
 	 * @param type
 	 * @param recettes
-	 * @return {Promise<*[]>}
+	 * @return {Promise<Recette[]>}
 	 */
 	async filterByTag(value, type, recettes) {
 		const results = []
 		switch (type) {
 			case "appliance":
-				recettes.forEach(recette => {
-					if (StringUtility.removeAccent(recette.appliance).includes(value)) results.push(recette)
-				})
+				for (let i = 0; i < recettes.length; i++) {
+					const recette = recettes[i]
+					let testAppliance = StringUtility.removeAccent(recette.appliance)
+					if (testAppliance.includes(value)) results.push(recette)
+				}
 				return results
 			case "ustensiles":
-				recettes.forEach(recette => {
-					recette.ustensiles.map(ustensile => {
-						if (StringUtility.removeAccent(ustensile).includes(value)) results.push(recette)
-					})
-				})
+				for (let i = 0; i < recettes.length; i++) {
+					const recette = recettes[i]
+					const ustensiles = recette.ustensiles
+					for (const ustensile of ustensiles) {
+						const testUstensile = StringUtility.removeAccent(ustensile)
+						if (testUstensile.includes(value)) results.push(recette)
+					}
+				}
 				return results
 			case "ingredients":
-				recettes.forEach(recette => {
-					recette.ingredients.map(({ingredient}) => {
-						if (StringUtility.removeAccent(ingredient).includes(value)) results.push(recette)
-					})
-				})
+				for (let i = 0; i < recettes.length; i++) {
+					const recette = recettes[i]
+					const ingredients = recette.ingredients
+					for (const {ingredient} of ingredients) {
+						const testIngredient = StringUtility.removeAccent(ingredient)
+						if (testIngredient.includes(value)) results.push(recette)
+					}
+				}
 				return results
 
 			default:
