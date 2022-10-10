@@ -163,7 +163,7 @@ export class DomObserver {
 			const recette = this.initialReceipts[i]
 			let testName: string = StringUtility.removeAccent(recette.name)
 
-			if (StringUtility.removeAccent(recette.name).includes(this.userInput)) results.push(recette)
+			if (testName.includes(this.userInput)) results.push(recette)
 		}
 		return results
 	}
