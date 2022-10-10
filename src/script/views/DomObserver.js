@@ -107,43 +107,6 @@ export class DomObserver {
             return results;
         });
     }
-    filterByNameV2() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const results = [];
-            for (let i = 0; i < this.initialReceipts.length; i++) {
-                const recette = this.initialReceipts[i];
-                let testName = StringUtility.removeAccent(recette.name);
-                if (testName.includes(this.userInput))
-                    results.push(recette);
-            }
-            return results;
-        });
-    }
-    filterByDescriptionV2() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const results = [];
-            for (let i = 0; i < this.initialReceipts.length; i++) {
-                const recette = this.initialReceipts[i];
-                if (StringUtility.removeAccent(recette.description).includes(this.userInput))
-                    results.push(recette);
-            }
-            return results;
-        });
-    }
-    filterIngredientsV2() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const results = [];
-            for (let i = 0; i < this.initialReceipts.length; i++) {
-                const recette = this.initialReceipts[i];
-                const ingredients = recette.ingredients;
-                for (const { ingredient } of ingredients) {
-                    if (StringUtility.removeAccent(ingredient).includes(this.userInput))
-                        results.push(recette);
-                }
-            }
-            return results;
-        });
-    }
     handleMainFilter() {
         return __awaiter(this, void 0, void 0, function* () {
             const filterByName = yield this.filterByName();

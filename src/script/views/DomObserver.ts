@@ -156,6 +156,7 @@ export class DomObserver {
 		})
 		return results
 	}
+/* // ! -- Version 2
 
 	private async filterByNameV2() {
 		const results = [] as Recette[]
@@ -188,6 +189,7 @@ export class DomObserver {
 		}
 		return results
 	}
+*/
 
 	/**
 	 * @description Filtre Principal : Appelle mainFilterByType() pour chaque type [name, description, ingredients]. Permet d'interrompre la recherche si un résultat est trouvé
