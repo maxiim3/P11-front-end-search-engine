@@ -2,31 +2,13 @@
   "name": "oc_projet_7",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "anymatch": "^3.1.2",
-    "fill-range": "^7.0.1",
-    "braces": "^3.0.2",
-    "binary-extensions": "^2.2.0",
-    "fsevents": "^2.3.2",
-    "glob-parent": "^5.1.2",
-    "chokidar": "^3.5.3",
-    "immutable": "^4.1.0",
-    "is-binary-path": "^2.1.0",
-    "is-extglob": "^2.1.1",
-    "normalize-path": "^3.0.0",
-    "is-number": "^7.0.0",
-    "is-glob": "^4.0.3",
-    "prettier": "^2.7.1",
-    "to-regex-range": "^5.0.1",
-    "readdirp": "^3.6.0",
-    "picomatch": "^2.3.1",
-    "sass": "^1.54.9",
-    "source-map-js": "^1.0.2"
-  },
-  "devDependencies": {},
+  "main": "src/script/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass-w": "sass --watch ./src/styles/index.scss ./src/styles/index.css",
+    "sass-c": "sass ./src/styles/index.scss ./src/styles/index.css",
+    "start": "open http://localhost:8989/oc_projet_7/index.html?_ijt=j7tdclqqaq2dd64p8mj8132iog&_ij_reload=RELOAD_ON_CHANGE"
   },
   "repository": {
     "type": "git",
@@ -38,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/maxiim3/P11-front-end-search-engine/issues"
   },
-  "homepage": "https://github.com/maxiim3/P11-front-end-search-engine#readme"
+  "homepage": "https://github.com/maxiim3/P11-front-end-search-engine#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1",
+    "sass": "^1.54.8"
+  }
 }
