@@ -34,16 +34,8 @@ li {
 	list-style: none;
 }
 
-header {
-	padding-inline: $marges;
-}
-
-main {
-	position: absolute;
-	z-index: 0;
-	top: 380px;
-	left: $marges;
-	width: calc(100% - $marges * 2);
+body {
+	overflow-x: hidden;
 }
 
 //endregion
@@ -93,28 +85,16 @@ main {
 	}
 }
 
-@mixin filterItems {
-	&[data-hidden="true"] {
-		position: absolute;
-		z-index: -999;
-		right: 0;
-		bottom: 0;
-		visibility: hidden;
-	}
-
-	&[data-hidden="false"] {
-		position: relative;
-		z-index: initial;
-		top: initial;
-		left: initial;
-		visibility: visible;
-	}
+@mixin hideWithAbsolute {
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 //endregion
 
 //region Header
-header {
+body > header {
 	z-index: 999;
 	display: flex;
 	align-items: center;
@@ -123,6 +103,8 @@ header {
 	width: 100%;
 	padding-top: 50px;
 	row-gap: 5px;
+	padding-inline: $marges;
+	padding-bottom: 60px;
 
 	h1 {
 		font-family: $text-title;
@@ -170,6 +152,11 @@ header {
 		position: absolute;
 		top: 15px;
 		right: 20px;
+		transition: color ease-in-out 250ms;
+	}
+
+	&:focus-visible + span {
+		color: gray;
 	}
 }
 
@@ -180,10 +167,23 @@ header {
 	display: flex;
 	flex-flow: row wrap;
 	column-gap: 15px;
+	height: 0;
+	transition: height 180ms ease-in-out;
+}
+#feedBackMessage {
+	padding-top: 10px;
+	color : red;
+	font-family: $text-describe;
+	font-weight:bold ;
+
+}
+.tagInWrapper {
+	height: 40px;
 }
 
 .tag {
 	@include filter();
+	height: 40px;
 	display: flex;
 	justify-content: space-between;
 
@@ -222,11 +222,12 @@ header {
 
 //endregion
 
-//region Filtresv1
+//region Filtres
 .filtres {
 	display: flex;
 	flex-flow: row wrap;
 	gap: 15px;
+	contain: size;
 
 	.fa-chevron-down {
 		position: absolute;
@@ -259,17 +260,71 @@ header {
 			display: none;
 		}
 
-		button {
+		.filtres__button {
 			@include filter();
-			position: absolute;
-			top: 0;
-			left: 0;
+			@include hideWithAbsolute;
 			width: 100%;
 			height: 100%;
 			cursor: pointer;
 			border: none;
 			padding-left: 25px;
 			text-align: left;
+			color: white;
+		}
+
+		li {
+			&[data-visible="false"] {
+				@include hideWithAbsolute;
+				visibility: hidden;
+				display: none;
+				opacity: 0;
+
+				button {
+					@include hideWithAbsolute;
+					visibility: hidden;
+					display: none;
+					opacity: 0;
+				}
+			}
+
+			&[data-visible="true"] {
+				display: block;
+				visibility: visible;
+				opacity: 1;
+
+				button {
+					display: block;
+					visibility: visible;
+					opacity: 1;
+					width: 100%;
+					padding: 5px 5px;
+					cursor: pointer;
+					border: 1px solid rgba(255, 255, 255, 0);
+					border-radius: 3px;
+					transition: opacity ease-in-out 650ms;
+					font-family: $text-main;
+					font-weight: normal;
+					font-size: 16px;
+					text-align: left;
+					color: white;
+
+					&:disabled {
+						color: rgba(51, 51, 51, 0.5);
+						cursor: no-drop;
+						font-style: italic;
+
+						&:hover {
+							border-color: initial;
+							background: initial;
+						}
+					}
+
+					&:hover {
+						border-color: rgba(255, 255, 255, 0.5);
+						background: rgba(255, 255, 255, 0.15);
+					}
+				}
+			}
 		}
 
 		&[data-open="true"] {
@@ -277,7 +332,7 @@ header {
 			height: fit-content;
 			transition: all 350ms ease-in-out;
 
-			button {
+			.filtres__button {
 				visibility: hidden;
 			}
 
@@ -304,34 +359,7 @@ header {
 				display: grid;
 				margin-top: 15px;
 				grid-template-columns: repeat(3, 1fr);
-				gap: 1px 5px;
-			}
-
-			li {
-				opacity: 100%;
-				width: 100%;
-				padding: 10px 5px;
-				cursor: pointer;
-				border: 1px solid rgba(255, 255, 255, 0);
-				border-radius: 3px;
-				transition: opacity ease-in 650ms;
-				cursor: pointer;
-
-				&[data-active="true"] {
-					color: gray;
-					cursor: no-drop;
-				}
-
-				&[data-active="false"] {
-					cursor: pointer;
-
-					&:hover {
-						border-color: rgba(255, 255, 255, 0.5);
-						background: rgba(255, 255, 255, 0.15);
-					}
-				}
-
-				@include filterItems();
+				gap: 0 15px;
 			}
 		}
 
@@ -346,18 +374,30 @@ header {
 
 			transition: all 350ms ease-in-out;
 
-			button {
+			.filtres__button {
 				font-size: 18px;
 				visibility: visible;
 			}
 
 			.searchFiltre,
 			ul {
-				//display: none;
+				opacity: 0;
+				display: none;
+				visibility: hidden;
+				transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
 
 				li {
 					opacity: 0;
+					display: none;
+					visibility: hidden;
 					transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
+
+					button {
+						opacity: 0;
+						display: none;
+						visibility: hidden;
+						transition: opacity cubic-bezier(0, 0.68, 0, 1.04) 250ms;
+					}
 				}
 			}
 		}
@@ -367,15 +407,33 @@ header {
 //endregion
 //endregion
 
+//region Main
+
+main {
+	position: relative;
+	z-index: -5;
+	top: 20px;
+	margin-inline: $marges;
+	width: calc(100% - $marges * 2);
+
+	&::-webkit-scrollbar {
+		opacity: 0;
+	}
+
+	&[data-filtre-is-open="true"] {
+		height: 1500px;
+	}
+}
+
 //region cards Recettes
 
 .container {
 	display: grid;
 	width: 100%;
-	height: 100%;
 	margin-block: 20px;
 	gap: calc($marges / 2);
 	grid-template-columns: repeat(1, 1fr);
+	padding-bottom: 50px;
 	@media screen and (min-width: 750px) {
 		grid-template-columns: repeat(2, 1fr);
 	}
@@ -389,11 +447,9 @@ header {
 
 .recette {
 	overflow: hidden;
-	//width: 380px;
 	width: 100%;
 	height: 365px;
 	border-radius: 5px;
-	@include filterItems();
 
 	header {
 		height: 50%;
@@ -471,6 +527,60 @@ header {
 		-webkit-line-clamp: 6;
 		-webkit-box-orient: vertical;
 	}
+
+	&[data-visible="false"] {
+		display: none;
+		visibility: hidden;
+		@include hideWithAbsolute;
+	}
+
+	&[data-visible="true"] {
+		visibility: visible;
+	}
 }
 
 //endregion
+//endregion
+
+.fadeOut {
+	animation: fadeOut 90ms ease-out both;
+}
+
+.fadeOutWithAnimation {
+	animation: fadeOutWithAnimation 200ms 40ms ease-out both;
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes fadeOutWithAnimation {
+	from {
+		opacity: 1;
+		translate: 0 0;
+	}
+	to {
+		opacity: 0;
+		translate: 0 50%;
+	}
+}
+
+.fadeIn {
+	animation: fadeIn 300ms 100ms ease-in-out both;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		translate: 0 50%;
+	}
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
