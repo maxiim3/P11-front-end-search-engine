@@ -19,4 +19,3 @@ export class MouseUtility {
         };
     }
 }
-//# sourceMappingURL=MouseUtility.js.map

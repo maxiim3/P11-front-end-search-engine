@@ -1,3 +1,4 @@
+
 export class Recette {
     constructor(data) {
         this._id = data.id;
@@ -29,6 +30,11 @@ export class Recette {
     get ingredients() {
         return this._ingredients;
     }
+    /**
+     * ### getIngredients
+     * @description transforms {ingredient, quantity, unit} into {ingredient, quantityUnit}
+     * @return Object[]
+     */
     getIngredients(ingredients) {
         let output = [];
         let quantityUnitOutput;
@@ -44,6 +50,13 @@ export class Recette {
         });
         return output;
     }
+
+    /**
+     * Unit
+     * @description returns formatted unit
+     * @param unit : string
+     * @return string | undefined | null): string | undefined | null
+     */
     _unitAdapter(unit) {
         if (!unit)
             return "";
@@ -58,4 +71,3 @@ export class Recette {
         return unit;
     }
 }
-//# sourceMappingURL=Recette.js.map

@@ -4,27 +4,25 @@ import {Recette} from "../models/Recette.js"
 export class HandleOptionTags {
 	/**
 	 * @type Recette[]
-	 * @private
 	 */
-	private recettes: Recette[]
+	recettes
 
 	/**
 	 * @param data : Recette[]
 	 */
-	constructor(data: Recette[]) {
+	constructor(data) {
 		this.recettes = data
 	}
 
 	/**
-	 * @private
 	 * @return Promise<IngredientsConcat[]>
 	 */
-	private async getAllIngredients(): Promise<string[]> {
-		const allIngredients = [] as string[]
+	async getAllIngredients() {
+		const allIngredients = []
 
 		this.recettes.map(recette => {
 			recette.ingredients.forEach(({ingredient}) => {
-				const ingredientFormatted = StringUtility.firstLetterToUpperCase(ingredient) as string
+				const ingredientFormatted = StringUtility.firstLetterToUpperCase(ingredient)
 				allIngredients.push(ingredientFormatted)
 			})
 		})
@@ -32,24 +30,23 @@ export class HandleOptionTags {
 	}
 
 	/**
-	 *@private
+	 *@
 	 * @return {Promise<string[]>}
 	 */
-	private async getAllAppliance(): Promise<string[]> {
-		const allAppliance = [] as string[]
+	async getAllAppliance() {
+		const allAppliance = []
 		this.recettes.forEach(({appliance}) => {
-			const applianceFormatted = StringUtility.firstLetterToUpperCase(appliance) as string
+			const applianceFormatted = StringUtility.firstLetterToUpperCase(appliance)
 			allAppliance.push(applianceFormatted)
 		})
 		return [...new Set(allAppliance)]
 	}
 
 	/**
-	 * @private
 	 * @return {Promise<string[]>}
 	 */
-	private async getAllUstensiles(): Promise<string[]> {
-		const allUstensiles = [] as string[]
+	async getAllUstensiles() {
+		const allUstensiles = []
 		this.recettes.forEach(recette => {
 			recette.ustensiles.forEach(ustensile => {
 				const ustensileFormatted = StringUtility.firstLetterToUpperCase(ustensile)
@@ -60,16 +57,16 @@ export class HandleOptionTags {
 	}
 
 	async getAllOptionTags() {
-		const ingredients = (await this.getAllIngredients()) as string[]
-		const appliance = (await this.getAllAppliance()) as string[]
-		const ustensiles = (await this.getAllUstensiles()) as string[]
+		const ingredients = await this.getAllIngredients()
+		const appliance = await this.getAllAppliance()
+		const ustensiles = await this.getAllUstensiles()
 		return {ingredients, appliance, ustensiles}
 	}
 
 	/**
 	 * @public
 	 * @async
-	 * @return {Promise<void>}
+	 * @return Promise<void>
 	 */
 	async render() {
 		if (this.recettes.length !== 0) {
@@ -83,19 +80,19 @@ export class HandleOptionTags {
 	 * @param arrayOfTags : Object {ingredients: string[]; appliance: string[]; ustensiles: string[]}
 	 * @return {Promise<void>}
 	 */
-	private async appendOptionTagsToEachFilter(arrayOfTags: {ingredients: string[]; appliance: string[]; ustensiles: string[]}) {
-		const $filterType = [...document.querySelectorAll(".filtres__list")] as HTMLUListElement[]
+	async appendOptionTagsToEachFilter(arrayOfTags) {
+		const $filterType = [...document.querySelectorAll(".filtres__list")]
 
 		$filterType.forEach($filter => {
-			const categoryName = $filter.dataset.filterName as "ingredients" | "appliance" | "ustensiles"
-			const tags: string[] = [...arrayOfTags[categoryName]]
+			const categoryName = $filter.dataset.filterName
+			const tags = [...arrayOfTags[categoryName]]
 			tags.forEach(tag => {
-				const btn = document.createElement("button") as HTMLButtonElement
+				const btn = document.createElement("button")
 				btn.textContent = tag
 				btn.value = tag
 				btn.dataset.filterType = categoryName
 
-				const li = document.createElement("li") as HTMLLIElement
+				const li = document.createElement("li")
 				li.dataset.value = StringUtility.removeAccent(tag)
 				li.dataset.visible = "true"
 				li.appendChild(btn)

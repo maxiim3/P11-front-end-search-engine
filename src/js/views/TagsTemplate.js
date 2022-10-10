@@ -21,4 +21,3 @@ export class TagsTemplate {
         return $tag;
     }
 }
-//# sourceMappingURL=TagsTemplate.js.map
