@@ -14,7 +14,7 @@ export class ContextState {
 		this.filter = filter
 		this.$tagsContainer = document.querySelector("#tagsWrapper")
 
-		this.$filterUL = this.filter?.querySelector("ul")
+		this.$filterUL = this.filter.querySelector("ul")
 		this.$tagsLI = [...this.$filterUL.querySelectorAll("li")]
 		this.inputSearch = this.filter.querySelector("input")
 		this.currentState = "close"
@@ -54,6 +54,7 @@ export class ContextState {
 			$tag.classList.add("fadeOut")
 		})
 	}
+
 	/**
 	 * @description Set Selected filter to active
 	 */
@@ -94,11 +95,15 @@ export class ContextState {
 				// get tags from openFilter.querySelector because state changed to #input
 				const $tagsLI = openFilter && [...openFilter.querySelectorAll("li")]
 				const query = StringUtility.removeAccent(inputSearch.value)
-
-				$tagsLI.map(async $tag => {
+				
+				$tagsLI.forEach(async $tag => {
 					const innerBtn = $tag.querySelector("button")
 					const formatTagName = innerBtn && StringUtility.removeAccent(innerBtn.value)
-					if (formatTagName && formatTagName.includes(query)) $tag.setAttribute("data-visible", "true")
+					if (query.length === 0) {
+						$tag.dataset.visible = $tag.dataset.active === "true" ? "true" : "false"
+					}
+					if (formatTagName && formatTagName.includes(query) && $tag.dataset.active === "true")
+						$tag.setAttribute("data-visible", "true")
 					else $tag.setAttribute("data-visible", "false")
 				})
 			}

@@ -39,6 +39,7 @@ export class DomObserver {
 		this.messageIsDisplayed = false
 	}
 
+	//region Shared
 	/**
 	 * @description Vide le conteneur qui reçoit les tags
 	 * @return void
@@ -52,6 +53,7 @@ export class DomObserver {
 		const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")]
 		$tagsLI.forEach($tag => {
 			$tag.setAttribute("data-visible", "true")
+			$tag.setAttribute("data-active", "true")
 			const $tagBtn = $tag.firstChild
 			$tagBtn.disabled = false
 		})
@@ -72,6 +74,7 @@ export class DomObserver {
 		const allLIElement = [...document.querySelectorAll("#filtres li")]
 		allLIElement.forEach(li => {
 			li.dataset.visible = value
+			li.dataset.active = value
 		})
 	}
 
@@ -97,7 +100,6 @@ export class DomObserver {
 
 	/**
 	 * @description Update option-tags in filters with filtered Data from main search. Set the [data-visible] attribute
-	 * @private
 	 */
 	async updateFilterOptions(recettes) {
 		this.resetAllOptionsVisibility("false")
@@ -118,10 +120,13 @@ export class DomObserver {
 				const applianceSelector = `li[data-value=\"${CSS.escape(StringUtility.removeAccent(optionTag))}\"]`
 				const optionNode = parentNode.querySelector(applianceSelector)
 				optionNode.dataset.visible = "true"
+				optionNode.dataset.active = "true"
 			})
 		})
 	}
+	//endregion
 
+	//region Cards
 	async filterByName() {
 		const results = []
 		this.initialReceipts.forEach(recette => {
@@ -193,6 +198,7 @@ export class DomObserver {
 			this.$mainSearchBar.dataset.hasResults = "empty" // User Visual Feedback
 		}
 	}
+	//endregion
 
 	/**
 	 * @description Event Listener sur les saisies utilisateurs. Retourne les data filtrées
@@ -210,6 +216,7 @@ export class DomObserver {
 		return this.filteredReceipts
 	}
 
+	//region TAGS
 	/**
 	 * @description Filtrer les résultats en fonction du nombre de tags sélectionnés et de leur type
 	 * @async
@@ -319,7 +326,9 @@ export class DomObserver {
 				return results
 		}
 	}
+	//endregion
 
+	//region Feedback
 	/**
 	 * @description Affiche le message de retour utilisateur si aucun résultat n'est trouvé
 	 */
@@ -344,4 +353,5 @@ export class DomObserver {
 		})
 		observeFeedBackMessage.observe(this.$mainSearchBar, {attributes: true})
 	}
+	//endregion
 }
