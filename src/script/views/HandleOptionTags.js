@@ -76,6 +76,7 @@ export class HandleOptionTags {
                     const li = document.createElement("li");
                     li.dataset.value = StringUtility.removeAccent(tag);
                     li.dataset.visible = "true";
+                    li.dataset.active = "true";
                     li.appendChild(btn);
                     $filter.appendChild(li);
                 });

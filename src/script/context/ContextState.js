@@ -70,10 +70,13 @@ export class ContextState {
             if (openFilter) {
                 const $tagsLI = openFilter && [...openFilter.querySelectorAll("li")];
                 const query = StringUtility.removeAccent(inputSearch.value);
-                $tagsLI.map(($tag) => __awaiter(this, void 0, void 0, function* () {
+                $tagsLI.forEach(($tag) => __awaiter(this, void 0, void 0, function* () {
                     const innerBtn = $tag.querySelector("button");
                     const formatTagName = innerBtn && StringUtility.removeAccent(innerBtn.value);
-                    if (formatTagName && formatTagName.includes(query))
+                    if (query.length === 0) {
+                        $tag.dataset.visible = $tag.dataset.active === "true" ? "true" : "false";
+                    }
+                    if (formatTagName && formatTagName.includes(query) && $tag.dataset.active === "true")
                         $tag.setAttribute("data-visible", "true");
                     else
                         $tag.setAttribute("data-visible", "false");

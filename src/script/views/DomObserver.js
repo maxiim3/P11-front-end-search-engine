@@ -26,6 +26,7 @@ export class DomObserver {
         const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")];
         $tagsLI.forEach($tag => {
             $tag.setAttribute("data-visible", "true");
+            $tag.setAttribute("data-active", "true");
             const $tagBtn = $tag.firstChild;
             $tagBtn.disabled = false;
         });
@@ -40,6 +41,7 @@ export class DomObserver {
         const allLIElement = [...document.querySelectorAll("#filtres li")];
         allLIElement.forEach(li => {
             li.dataset.visible = value;
+            li.dataset.active = value;
         });
     }
     updateCardsVisibility(recettes) {
@@ -71,6 +73,7 @@ export class DomObserver {
                     const applianceSelector = `li[data-value=\"${CSS.escape(StringUtility.removeAccent(optionTag))}\"]`;
                     const optionNode = parentNode.querySelector(applianceSelector);
                     optionNode.dataset.visible = "true";
+                    optionNode.dataset.active = "true";
                 });
             });
         });

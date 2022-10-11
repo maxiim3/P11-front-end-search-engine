@@ -58,6 +58,7 @@ export class DomObserver {
 		const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")] as HTMLLIElement[]
 		$tagsLI.forEach($tag => {
 			$tag.setAttribute("data-visible", "true")
+			$tag.setAttribute("data-active", "true")
 			const $tagBtn: HTMLButtonElement = $tag.firstChild as HTMLButtonElement
 			$tagBtn.disabled = false
 		})
@@ -79,6 +80,7 @@ export class DomObserver {
 		const allLIElement: HTMLLIElement[] = [...document.querySelectorAll("#filtres li")] as HTMLLIElement[]
 		allLIElement.forEach(li => {
 			li.dataset.visible = value
+			li.dataset.active = value
 		})
 	}
 
@@ -127,6 +129,7 @@ export class DomObserver {
 				)}\"]`
 				const optionNode: HTMLLIElement = parentNode.querySelector(applianceSelector) as HTMLLIElement
 				optionNode.dataset.visible = "true"
+				optionNode.dataset.active = "true"
 			})
 		})
 	}

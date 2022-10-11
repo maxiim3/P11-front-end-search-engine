@@ -87,16 +87,21 @@ export class ContextState {
 			// check that this is scoped to <article>
 			if (openFilter) {
 				// get tags from openFilter.querySelector because state changed to #input
-				const $tagsLI: HTMLLIElement[] = openFilter && [...openFilter.querySelectorAll("li")]
-				const query = StringUtility.removeAccent(inputSearch.value) as string
+				const $tagsLI = openFilter && [...openFilter.querySelectorAll("li")]
+				const query = StringUtility.removeAccent(inputSearch.value)
 
-				$tagsLI.map(async $tag => {
-					const innerBtn: HTMLButtonElement | null = $tag.querySelector("button")
-					const formatTagName = innerBtn && (StringUtility.removeAccent(innerBtn.value) as string)
-					if (formatTagName && formatTagName.includes(query)) $tag.setAttribute("data-visible", "true")
+				$tagsLI.forEach(async $tag => {
+					const innerBtn = $tag.querySelector("button")
+					const formatTagName = innerBtn && StringUtility.removeAccent(innerBtn.value)
+					if (query.length === 0) {
+						$tag.dataset.visible = $tag.dataset.active === "true" ? "true" : "false"
+					}
+					if (formatTagName && formatTagName.includes(query) && $tag.dataset.active === "true")
+						$tag.setAttribute("data-visible", "true")
 					else $tag.setAttribute("data-visible", "false")
 				})
 			}
+
 		}
 	}
 
