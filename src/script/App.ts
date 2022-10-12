@@ -31,13 +31,11 @@ export class App {
 			})
 			.then(data => {
 				this._fetchedData = data
-				console.log(data)
+				this._allReceipts = this._fetchedData.map(data => new Recette(data))
 			})
 			.catch(reason => {
 				throw new Error(reason)
 			})
-
-		this._allReceipts = this._fetchedData.map(data => new Recette(data))
 
 		return this._allReceipts
 	}
