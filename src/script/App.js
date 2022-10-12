@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Recette } from "./models/Recette.js";
-import { Api } from "./api/Api.js";
 import { DomObserver } from "./views/DomObserver.js";
 import { CardTemplate } from "./views/CardTemplate.js";
 import { HandleOptionTags } from "./views/HandleOptionTags.js";
@@ -20,16 +19,24 @@ export class App {
     }
     handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
-            const api = new Api("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json");
-            try {
-                this._fetchedData = yield api.fetchData();
-                this._allReceipts = this._fetchedData.map(data => new Recette(data));
-                return this._allReceipts;
-            }
-            catch (e) {
-                console.error(`404..${e}`);
-                return [];
-            }
+            fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
+                method: "GET",
+                mode: "cors",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then(resp => resp.json())
+                .catch(reason => {
+                throw new Error(reason);
+            })
+                .then(data => {
+                this._fetchedData = data;
+                console.log(data);
+            })
+                .catch(reason => {
+                throw new Error(reason);
+            });
+            this._allReceipts = this._fetchedData.map(data => new Recette(data));
+            return this._allReceipts;
         });
     }
     hydrateCardContainer() {
@@ -80,11 +87,17 @@ export class App {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.handleDataFromJson();
-            yield this.hydrateCardContainer();
-            yield this.hydrateFilterContainers();
-            yield this.handleDOMChange();
-            yield this.handleMenuContext();
+            try {
+                this.handleDataFromJson().then(() => __awaiter(this, void 0, void 0, function* () {
+                    yield this.hydrateCardContainer();
+                    yield this.hydrateFilterContainers();
+                    yield this.handleDOMChange();
+                    yield this.handleMenuContext();
+                }));
+            }
+            catch (e) {
+                console.warn(`404: ${e}`);
+            }
         });
     }
 }

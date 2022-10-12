@@ -1,5 +1,4 @@
 import {Recette, RecetteFromJSON} from "./models/Recette.js"
-import {Api} from "./api/Api.js"
 import {DomObserver} from "./views/DomObserver.js"
 import {CardTemplate} from "./views/CardTemplate.js"
 import {HandleOptionTags} from "./views/HandleOptionTags.js"
@@ -16,21 +15,31 @@ export class App {
 
 	/**
 	 * Fetch api and map JSON to Recette Constructor
-	 * @requires Api
 	 * @private
 	 * @async
 	 * @return {Promise<Recette[]>}
 	 */
 	private async handleDataFromJson(): Promise<Recette[]> {
-		const api = new Api("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json")
-		try {
-			this._fetchedData = await api.fetchData()
-			this._allReceipts = this._fetchedData.map(data => new Recette(data))
-			return this._allReceipts
-		} catch (e) {
-			console.error(`404..${e}`)
-			return [] as Recette[]
-		}
+		fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
+			method: "GET",
+			mode: "cors",
+			headers: {"Content-Type": "application/json"},
+		})
+			.then(resp => resp.json())
+			.catch(reason => {
+				throw new Error(reason)
+			})
+			.then(data => {
+				this._fetchedData = data
+				console.log(data)
+			})
+			.catch(reason => {
+				throw new Error(reason)
+			})
+
+		this._allReceipts = this._fetchedData.map(data => new Recette(data))
+
+		return this._allReceipts
 	}
 
 	/**
@@ -100,15 +109,15 @@ export class App {
 
 	async init() {
 		// fetch and map api to dataModel constructor
-		await this.handleDataFromJson()
-
-		// render api on DOM [filters, cards]
-		await this.hydrateCardContainer()
-		await this.hydrateFilterContainers()
-
-		// Handle Updating Recettes [filters tags, cards]
-		await this.handleDOMChange()
-
-		await this.handleMenuContext()
+		try {
+			this.handleDataFromJson().then(async () => {
+				await this.hydrateCardContainer()
+				await this.hydrateFilterContainers()
+				await this.handleDOMChange()
+				await this.handleMenuContext()
+			})
+		} catch (e) {
+			console.warn(`404: ${e}`)
+		}
 	}
 }
