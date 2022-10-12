@@ -20,23 +20,22 @@ export class App {
 	 * @return {Promise<Recette[]>}
 	 */
 	private async handleDataFromJson(): Promise<Recette[]> {
-		fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
+		await fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
 			method: "GET",
 			mode: "cors",
 			headers: {"Content-Type": "application/json"},
 		})
 			.then(resp => resp.json())
-			.catch(reason => {
-				throw new Error(reason)
-			})
 			.then(data => {
 				this._fetchedData = [...data]
+				console.log(this._fetchedData)
 				this._allReceipts = this._fetchedData.map(data => new Recette(data))
+				console.log(this._allReceipts)
 			})
 			.catch(reason => {
 				throw new Error(reason)
 			})
-
+		console.log("i'm done")
 		return this._allReceipts
 	}
 
@@ -70,6 +69,7 @@ export class App {
 	 * @private
 	 */
 	private async handleMenuContext() {
+		console.log("im here")
 		const filters: HTMLDivElement[] = [...document.querySelectorAll(".filtres__filtre")] as HTMLDivElement[]
 		const contextObservers = [] as ContextState[]
 		filters.forEach(filter => contextObservers.push(new ContextState(filter)))

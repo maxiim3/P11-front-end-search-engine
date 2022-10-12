@@ -19,22 +19,22 @@ export class App {
     }
     handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
-            fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
+            yield fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
                 method: "GET",
                 mode: "cors",
                 headers: { "Content-Type": "application/json" },
             })
                 .then(resp => resp.json())
-                .catch(reason => {
-                throw new Error(reason);
-            })
                 .then(data => {
                 this._fetchedData = [...data];
+                console.log(this._fetchedData);
                 this._allReceipts = this._fetchedData.map(data => new Recette(data));
+                console.log(this._allReceipts);
             })
                 .catch(reason => {
                 throw new Error(reason);
             });
+            console.log("i'm done");
             return this._allReceipts;
         });
     }
@@ -56,6 +56,7 @@ export class App {
     }
     handleMenuContext() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("im here");
             const filters = [...document.querySelectorAll(".filtres__filtre")];
             const contextObservers = [];
             filters.forEach(filter => contextObservers.push(new ContextState(filter)));
