@@ -82,7 +82,7 @@ export class ContextState {
 			const inputSearch: HTMLInputElement = this
 
 			// get filter from document.querySelector because state changed to #input
-			const openFilter: HTMLDivElement | null = document.querySelector(".filtres__filtre[data-open='true']")
+			const openFilter: HTMLDivElement | null = document.querySelector(".filtres__filtre[api-open='true']")
 
 			// check that this is scoped to <article>
 			if (openFilter) {
@@ -97,8 +97,8 @@ export class ContextState {
 						$tag.dataset.visible = $tag.dataset.active === "true" ? "true" : "false"
 					}
 					if (formatTagName && formatTagName.includes(query) && $tag.dataset.active === "true")
-						$tag.setAttribute("data-visible", "true")
-					else $tag.setAttribute("data-visible", "false")
+						$tag.setAttribute("api-visible", "true")
+					else $tag.setAttribute("api-visible", "false")
 				})
 			}
 
@@ -144,7 +144,7 @@ export class ContextState {
 	 */
 	private closeOnKeyPress(e: KeyboardEvent) {
 		// get filter from document.querySelector because state changed to #document
-		const openFilter: HTMLDivElement | null = document.querySelector(".filtres__filtre[data-open='true']")
+		const openFilter: HTMLDivElement | null = document.querySelector(".filtres__filtre[api-open='true']")
 		if (openFilter?.dataset.open === "true") {
 			if (e.key === "Escape" || e.key === "Enter") {
 				// create new Context and set to close by default
@@ -160,7 +160,7 @@ export class ContextState {
 	 */
 	private closeOnClick(ev: MouseEvent) {
 		// get filter from document.querySelector because state changed to #document
-		const openFilter: HTMLDivElement = document.querySelector(".filtres__filtre[data-open='true']") as HTMLDivElement
+		const openFilter: HTMLDivElement = document.querySelector(".filtres__filtre[api-open='true']") as HTMLDivElement
 
 		if (openFilter?.dataset.open === "true") {
 			const pointerPosition = MouseUtility.getMousePosition(ev)

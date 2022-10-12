@@ -66,7 +66,7 @@ export class ContextState {
     handleSearchForTags() {
         if (this instanceof HTMLInputElement) {
             const inputSearch = this;
-            const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
+            const openFilter = document.querySelector(".filtres__filtre[api-open='true']");
             if (openFilter) {
                 const $tagsLI = openFilter && [...openFilter.querySelectorAll("li")];
                 const query = StringUtility.removeAccent(inputSearch.value);
@@ -77,9 +77,9 @@ export class ContextState {
                         $tag.dataset.visible = $tag.dataset.active === "true" ? "true" : "false";
                     }
                     if (formatTagName && formatTagName.includes(query) && $tag.dataset.active === "true")
-                        $tag.setAttribute("data-visible", "true");
+                        $tag.setAttribute("api-visible", "true");
                     else
-                        $tag.setAttribute("data-visible", "false");
+                        $tag.setAttribute("api-visible", "false");
                 }));
             }
         }
@@ -109,7 +109,7 @@ export class ContextState {
         return;
     }
     closeOnKeyPress(e) {
-        const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
+        const openFilter = document.querySelector(".filtres__filtre[api-open='true']");
         if ((openFilter === null || openFilter === void 0 ? void 0 : openFilter.dataset.open) === "true") {
             if (e.key === "Escape" || e.key === "Enter") {
                 new ContextState(openFilter);
@@ -117,7 +117,7 @@ export class ContextState {
         }
     }
     closeOnClick(ev) {
-        const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
+        const openFilter = document.querySelector(".filtres__filtre[api-open='true']");
         if ((openFilter === null || openFilter === void 0 ? void 0 : openFilter.dataset.open) === "true") {
             const pointerPosition = MouseUtility.getMousePosition(ev);
             const divPosition = MouseUtility.getDivElementPosition(openFilter);

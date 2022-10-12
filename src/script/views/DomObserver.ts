@@ -57,15 +57,15 @@ export class DomObserver {
 		// "Freeze" les tags si une recherche est en cours dans la barre principale
 		const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")] as HTMLLIElement[]
 		$tagsLI.forEach($tag => {
-			$tag.setAttribute("data-visible", "true")
-			$tag.setAttribute("data-active", "true")
+			$tag.setAttribute("api-visible", "true")
+			$tag.setAttribute("api-active", "true")
 			const $tagBtn: HTMLButtonElement = $tag.firstChild as HTMLButtonElement
 			$tagBtn.disabled = false
 		})
 	}
 
 	/**
-	 * @description Change le data-visible pour toutes les cartes de recettes
+	 * @description Change le api-visible pour toutes les cartes de recettes
 	 * @param value :"true" | "false"
 	 * @private
 	 */
@@ -86,8 +86,8 @@ export class DomObserver {
 
 	/**
 	 * @description Met à jour l'affichage des recettes avec les données filtrées.
-	 * Pour chaque donnée, on récupère l'ID et on va chercher le Node en ciblant sont [data-id].
-	 * Puis on règle le [data-visible] pour l'afficher ou non
+	 * Pour chaque donnée, on récupère l'ID et on va chercher le Node en ciblant sont [api-id].
+	 * Puis on règle le [api-visible] pour l'afficher ou non
 	 * @async
 	 * @return void
 	 */
@@ -105,7 +105,7 @@ export class DomObserver {
 	}
 
 	/**
-	 * @description Update option-tags in filters with filtered Data from main search. Set the [data-visible] attribute
+	 * @description Update option-tags in filters with filtered Data from main search. Set the [api-visible] attribute
 	 * @private
 	 */
 	private async updateFilterOptions(recettes: Recette[]) {
@@ -211,7 +211,7 @@ export class DomObserver {
 	}
 
 	/**
-	 * @description Fonction appelée par l'Event Listener pour filtrer les data lorsque l'utilisateur effectue une recherche
+	 * @description Fonction appelée par l'Event Listener pour filtrer les api lorsque l'utilisateur effectue une recherche
 	 * @see observeDomChange
 	 * @async
 	 * @private
@@ -243,7 +243,7 @@ export class DomObserver {
 	}
 
 	/**
-	 * @description Event Listener sur les saisies utilisateurs. Retourne les data filtrées
+	 * @description Event Listener sur les saisies utilisateurs. Retourne les api filtrées
 	 * @async
 	 * @see onUserInput
 	 * @return Recette[]
@@ -305,7 +305,7 @@ export class DomObserver {
 				await this.updateFilterOptions(initialReceipts)
 				// get filter from document.querySelector because state changed to #document
 				const openFilter: HTMLDivElement = document.querySelector(
-					".filtres__filtre[data-open='true']"
+					".filtres__filtre[api-open='true']"
 				) as HTMLDivElement
 				openFilter && new ContextState(openFilter)
 				break

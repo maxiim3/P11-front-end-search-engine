@@ -15,14 +15,14 @@ export class App {
 	}
 
 	/**
-	 * Fetch data and map JSON to Recette Constructor
+	 * Fetch api and map JSON to Recette Constructor
 	 * @requires Api
 	 * @private
 	 * @async
 	 * @return {Promise<Recette[]>}
 	 */
 	private async handleDataFromJson(): Promise<Recette[]> {
-		const api = new Api("https://project.maxime-tamburrini.com/oc_projet_7/data/recipes.json")
+		const api = new Api("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json")
 		this._fetchedData = await api.fetchData()
 		this._allReceipts = this._fetchedData.map(data => new Recette(data))
 		return this._allReceipts
@@ -94,10 +94,10 @@ export class App {
 	}
 
 	async init() {
-		// fetch and map data to dataModel constructor
+		// fetch and map api to dataModel constructor
 		await this.handleDataFromJson()
 
-		// render data on DOM [filters, cards]
+		// render api on DOM [filters, cards]
 		await this.hydrateCardContainer()
 		await this.hydrateFilterContainers()
 

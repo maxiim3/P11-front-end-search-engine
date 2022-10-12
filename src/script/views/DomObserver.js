@@ -25,8 +25,8 @@ export class DomObserver {
     resetOptionTags() {
         const $tagsLI = [...document.querySelectorAll(".filtres__filtre li")];
         $tagsLI.forEach($tag => {
-            $tag.setAttribute("data-visible", "true");
-            $tag.setAttribute("data-active", "true");
+            $tag.setAttribute("api-visible", "true");
+            $tag.setAttribute("api-active", "true");
             const $tagBtn = $tag.firstChild;
             $tagBtn.disabled = false;
         });
@@ -179,7 +179,7 @@ export class DomObserver {
                 case 0:
                     yield this.updateCardsVisibility(initialReceipts);
                     yield this.updateFilterOptions(initialReceipts);
-                    const openFilter = document.querySelector(".filtres__filtre[data-open='true']");
+                    const openFilter = document.querySelector(".filtres__filtre[api-open='true']");
                     openFilter && new ContextState(openFilter);
                     break;
                 case 1:
