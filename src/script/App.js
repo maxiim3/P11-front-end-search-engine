@@ -21,9 +21,15 @@ export class App {
     handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
             const api = new Api("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json");
-            this._fetchedData = yield api.fetchData();
-            this._allReceipts = this._fetchedData.map(data => new Recette(data));
-            return this._allReceipts;
+            try {
+                this._fetchedData = yield api.fetchData();
+                this._allReceipts = this._fetchedData.map(data => new Recette(data));
+                return this._allReceipts;
+            }
+            catch (e) {
+                console.error(`404..${e}`);
+                return [];
+            }
         });
     }
     hydrateCardContainer() {

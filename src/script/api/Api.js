@@ -13,8 +13,13 @@ export class Api {
     }
     fetchData() {
         return __awaiter(this, void 0, void 0, function* () {
-            const promise = yield fetch(this._url);
-            return yield promise.json();
+            return yield fetch(this._url).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                else
+                    throw new Error("Error during data fetch");
+            });
         });
     }
 }
