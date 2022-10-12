@@ -21,12 +21,17 @@ export class App {
 	 */
 	private async handleDataFromJson(): Promise<Recette[]> {
 		await fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json")
-			.then(resp => resp.json())
+			.then(resp => {
+				console.log(resp.json())
+				return resp.json()
+			})
 			.then(data => {
+				console.log(data)
 				this._fetchedData = [...data]
 				console.log(this._fetchedData)
 				this._allReceipts = this._fetchedData.map(data => new Recette(data))
 				console.log(this._allReceipts)
+				return this._allReceipts
 			})
 			.catch(reason => {
 				throw new Error(reason)
