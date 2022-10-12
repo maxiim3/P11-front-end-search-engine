@@ -20,7 +20,7 @@ export class App {
     }
     handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
-            const api = new Api("recipes.json");
+            const api = new Api("/recipes.json");
             this._fetchedData = yield api.fetchData();
             this._allReceipts = this._fetchedData.map(data => new Recette(data));
             return this._allReceipts;
