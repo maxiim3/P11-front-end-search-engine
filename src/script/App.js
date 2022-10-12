@@ -19,11 +19,7 @@ export class App {
     }
     handleDataFromJson() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
-                method: "GET",
-                mode: "cors",
-                headers: { "Content-Type": "application/json" },
-            })
+            yield fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json")
                 .then(resp => resp.json())
                 .then(data => {
                 this._fetchedData = [...data];

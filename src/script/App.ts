@@ -20,11 +20,7 @@ export class App {
 	 * @return {Promise<Recette[]>}
 	 */
 	private async handleDataFromJson(): Promise<Recette[]> {
-		await fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json", {
-			method: "GET",
-			mode: "cors",
-			headers: {"Content-Type": "application/json"},
-		})
+		await fetch("https://project.maxime-tamburrini.com/oc_projet_7/api/recipes.json")
 			.then(resp => resp.json())
 			.then(data => {
 				this._fetchedData = [...data]
