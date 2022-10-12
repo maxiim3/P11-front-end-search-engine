@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass-w": "sass --watch ./src/styles/index.scss ./src/styles/index.css",
     "sass-c": "sass ./src/styles/index.scss ./src/styles/index.css",
-    "start": "open http://localhost:8989/oc_projet_7/index.html?_ijt=j7tdclqqaq2dd64p8mj8132iog&_ij_reload=RELOAD_ON_CHANGE"
+    "start": "http://localhost:8889/parser-typescript.js/index.html?_ijt=3tmphm59f9nqdrfsdnpmn2fuf3&_ij_reload=RELOAD_ON_CHANGE"
   },
   "repository": {
     "type": "git",
