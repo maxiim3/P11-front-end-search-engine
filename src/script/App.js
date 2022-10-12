@@ -29,7 +29,7 @@ export class App {
                 throw new Error(reason);
             })
                 .then(data => {
-                this._fetchedData = data;
+                this._fetchedData = [...data];
                 this._allReceipts = this._fetchedData.map(data => new Recette(data));
             })
                 .catch(reason => {
